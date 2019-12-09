@@ -26,6 +26,9 @@ namespace Giraffe
         {
             scenePlay = scene;
         }
+
+        public abstract CircleCollision[] GetCollisions();
+
         //接触判定を実行しメゾットを呼ぶ Sceneから呼ぶため
         public void CalcInteract(GameObject obj, float extend = 0)
         {
