@@ -50,7 +50,7 @@ namespace SAGASALib
             string path = name + count;
             if (!imageArrayMap.ContainsKey(path))
             {
-                //読み込めなかったらmissingを入れる           y
+                //読み込めなかったらmissingを入れる
                 try
                 {
                     int propImage = DX.LoadGraph("resources/images/" + name);
@@ -76,7 +76,7 @@ namespace SAGASALib
         //サウンドの読み込みとキャッシング
         public static int GetSound(string name,int _3D)
         {
-            DX.SetCreate3DSoundFlag(_3D);//TRUEなら3Dとして読み込む,FALSEなら2D
+            DX.SetCreate3DSoundFlag(_3D);//TRUEなら3D,FALSEなら2Dとして読み込む
             if (!soundMap.ContainsKey(name))
             {
                 //読み込めなかったらmissingを入れる

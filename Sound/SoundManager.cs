@@ -1,4 +1,5 @@
-﻿using DxLibDLL;
+﻿using System.Collections.Generic;
+using DxLibDLL;
 using SAGASALib;
 
 namespace Giraffe
@@ -7,16 +8,11 @@ namespace Giraffe
     {
         static DX.VECTOR ListenerPos;
         static DX.VECTOR ListenerDir;
-        //各BGMの状態を保存しておく変数
-        public static int titleBGM;
-        public static int playBGM;
-        public static int resultBGM;
 
-        public static DX.VECTOR titleBGMPos;
-        public static DX.VECTOR playBGMPos;
-        public static DX.VECTOR resultBGMPos;
+        public static Dictionary<string, int> bgmMap = new Dictionary<string, int>();
+        public static Dictionary<string, DX.VECTOR> bgmPos = new Dictionary<string, DX.VECTOR>();
 
-        static float BGMdis = 100.0f;//聞こえる範囲
+        static float bgmDis = 100.0f;//聞こえる範囲
         static float speed = 1.0f / 6.0f;//リスナーの移動速度
 
         public static void Load()
@@ -25,9 +21,13 @@ namespace Giraffe
             ListenerDir = DX.VGet(0.0f, 0.0f, 1.0f);//リスナーの向き
             DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);//向きと位置を設定
 
-            titleBGMPos = DX.VGet(100.0f, 0.0f, 0.0f);
-            playBGMPos = DX.VGet(250.0f, 0.0f, 0.0f);
-            resultBGMPos = DX.VGet(400.0f, 0.0f, 0.0f);
+            bgmMap["title"] = 0;
+            bgmMap["play"] = 0;
+            bgmMap["result"] = 0;
+
+            bgmPos["title"] = DX.VGet(100.0f, 0.0f, 0.0f);
+            bgmPos["play"] = DX.VGet(250.0f, 0.0f, 0.0f);
+            bgmPos["result"] = DX.VGet(400.0f, 0.0f, 0.0f);
         }
 
         public static void ListenerMove()
@@ -40,43 +40,44 @@ namespace Giraffe
             }
         }
 
-        public static int BGM(string sceneName, int BGMName, DX.VECTOR BGMPos)//書き直します
+        public static int bgmMove(string name)
         {
-            if (DX.CheckSoundMem(BGMName) != 1 && BGMPos.x - BGMdis - 10 <= ListenerPos.x && ListenerPos.x <= BGMPos.x + BGMdis + 10)
+            if (DX.CheckSoundMem(bgmMap[name]) != 1 &&
+                bgmPos[name].x - bgmDis - 10 <= ListenerPos.x && ListenerPos.x <= bgmPos[name].x + bgmDis + 10)//再生してない、範囲内の時
             {
-                DX.SetCreate3DSoundFlag(DX.TRUE);
-                BGMName = DX.LoadSoundMem("Resources/Sound/" + sceneName + "_BGM.wav");
-                DX.SetCreate3DSoundFlag(DX.FALSE);
-                DX.Set3DRadiusSoundMem(BGMdis, BGMName);
-                DX.Set3DPositionSoundMem(BGMPos, BGMName);
-                Sound.Loop(BGMName);
+                bgmMap[name] = ResourceLoader.GetSound(name + "_BGM.wav", DX.TRUE);
+                DX.Set3DRadiusSoundMem(bgmDis, bgmMap[name]);
+                DX.Set3DPositionSoundMem(bgmPos[name], bgmMap[name]);
+                Sound.Loop(bgmMap[name]);
             }
-            else if (DX.CheckSoundMem(BGMName) == 1 && (ListenerPos.x <= BGMPos.x - BGMdis - 15 || BGMPos.x + BGMdis + 15 <= ListenerPos.x))
+            else if (DX.CheckSoundMem(bgmMap[name]) == 1 &&
+                (ListenerPos.x <= bgmPos[name].x - bgmDis - 15 || bgmPos[name].x + bgmDis + 15 <= ListenerPos.x))//再生中、範囲外の時
             {
-                DX.DeleteSoundMem(BGMName);
+                ResourceLoader.RemoveSound(name + "_BGM.wav");
+                DX.DeleteSoundMem(bgmMap[name]);
             }
-            return BGMName;
+            return bgmMap[name];
         }
 
         public static void Debug()//フェードの可視化、1で再生中,0で停止中,-1でメモリにない(エラー)
         {
-            DX.DrawString(0, 15, "タイトル:" + DX.CheckSoundMem(titleBGM) +
-                     "　プレイ:" + DX.CheckSoundMem(playBGM) +
-                     "　リザルト:" + DX.CheckSoundMem(resultBGM),
-                     DX.GetColor(255, 255, 255));
+            DX.DrawString(0, 15, "　タイトル:" + DX.CheckSoundMem(bgmMap["title"]) +
+                                 "　プレイ:" + DX.CheckSoundMem(bgmMap["play"]) +
+                                 "　リザルト:" + DX.CheckSoundMem(bgmMap["result"]),
+                          DX.GetColor(255, 255, 255));
 
             // 音の再生位置を描画
             DX.DrawCircle(//タイトル,青
-                100 + (int)titleBGMPos.x, 200 + (int)titleBGMPos.z,
-                (int)BGMdis, DX.GetColor(0, 0, 255), DX.FALSE);
+                100 + (int)bgmPos["title"].x, 200 + (int)bgmPos["title"].z,
+                (int)bgmDis, DX.GetColor(0, 0, 255), DX.FALSE);
 
             DX.DrawCircle(//プレイ,黄
-                100 + (int)playBGMPos.x, 200 + (int)playBGMPos.z,
-                (int)BGMdis, DX.GetColor(255, 255, 0), DX.FALSE);
+                100 + (int)bgmPos["play"].x, 200 + (int)bgmPos["play"].z,
+                (int)bgmDis, DX.GetColor(255, 255, 0), DX.FALSE);
 
             DX.DrawCircle(//リザルト,紫
-                 100 + (int)resultBGMPos.x, 200 + (int)resultBGMPos.z,
-                 (int)BGMdis, DX.GetColor(255, 0, 255), DX.FALSE);
+                 100 + (int)bgmPos["result"].x, 200 + (int)bgmPos["result"].z,
+                 (int)bgmDis, DX.GetColor(255, 0, 255), DX.FALSE);
 
             DX.DrawCircle(//リスナー,赤
                 100 + (int)ListenerPos.x, 200 + (int)ListenerPos.z,
