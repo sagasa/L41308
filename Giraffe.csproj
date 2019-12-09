@@ -77,8 +77,8 @@
     <Compile Include="MyLib\MyMath.cs" />
     <Compile Include="MyLib\MyRandom.cs" />
     <Compile Include="MyLib\Vec2f.cs" />
-    <Compile Include="NewFolder1\Sound.cs" />
-    <Compile Include="NewFolder1\SoundManager.cs" />
+    <Compile Include="Sound\Sound.cs" />
+    <Compile Include="Sound\SoundManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MyLib\ResourceLoader.cs" />
     <Compile Include="Scenes\Change\Fade.cs" />
@@ -110,6 +110,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="DxLibW_x64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\error.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\jump_SE.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\leaf_bite_SE.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\play_BGM.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Images\missing.png">
@@ -145,22 +157,10 @@
     <Content Include="Resources\Images\player\player_tail.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\NewFolder1\error.mp3">
+    <Content Include="Resources\Sounds\result_BGM.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\NewFolder1\jump_SE.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\NewFolder1\leaf_bite_SE.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\NewFolder1\play_BGM.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\NewFolder1\result_BGM.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\NewFolder1\title_BGM.wav">
+    <Content Include="Resources\Sounds\title_BGM.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
