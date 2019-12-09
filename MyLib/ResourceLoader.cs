@@ -14,6 +14,7 @@ namespace SAGASALib
         static ResourceLoader()
         {
             MissingImage = DX.LoadGraph("resources/images/missing.png");
+            MissingSound = DX.LoadSoundMem("resources/sound/error.mp3");
         }
         //画像の読み込みとキャッシング
         public static int GetSimpleDrawable(string name,int sizeX = -1,int sizeY=-1)
@@ -84,7 +85,7 @@ namespace SAGASALib
                 catch (FileNotFoundException e)
                 {
                     Console.WriteLine(e);
-                    soundMap[name] = -1;
+                    soundMap[name] = MissingSound;
                 }
             }
             return soundMap[name];
