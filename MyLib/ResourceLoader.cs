@@ -10,6 +10,7 @@ namespace SAGASALib
     {
         private static Dictionary<string, int> imageMap = new Dictionary<string, int>();
         public static readonly int MissingImage;
+        public static readonly int MissingSound;
 
         static ResourceLoader()
         {
