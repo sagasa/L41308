@@ -15,7 +15,7 @@ namespace SAGASALib
         static ResourceLoader()
         {
             MissingImage = DX.LoadGraph("resources/images/missing.png");
-            MissingSound = DX.LoadSoundMem("resources/sound/error.mp3");
+            MissingSound = DX.LoadSoundMem("resources/sounds/error.mp3");
         }
         //画像の読み込みとキャッシング
         public static int GetSimpleDrawable(string name,int sizeX = -1,int sizeY=-1)
@@ -74,8 +74,9 @@ namespace SAGASALib
         private static Dictionary<string, int> soundMap = new Dictionary<string, int>();
 
         //サウンドの読み込みとキャッシング
-        public static int GetSound(string name)
+        public static int GetSound(string name,int _3D)
         {
+            DX.SetCreate3DSoundFlag(_3D);//TRUEなら3Dとして読み込む,FALSEなら2D
             if (!soundMap.ContainsKey(name))
             {
                 //読み込めなかったらmissingを入れる
