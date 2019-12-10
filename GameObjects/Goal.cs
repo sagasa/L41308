@@ -8,29 +8,22 @@ using SAGASALib;
 
 namespace Giraffe
 {
-    public  class Gool:GameObject
+    public  class Goal:GameObject
     {
         private int image = ResourceLoader.GetGraph("ゴール.png");
-        public Gool(Scene scene,float x,float y) : base(scene)
+        public Goal(Scene scene,float x,float y) : base(scene)
         {
-            imageWidth = 320;
-            imageHeight = 200;
-            this.x=x;
-            this.y =y;
+            pos = new Vec2f(x,y);
         }
         
         public override void Draw()
         {
-            DX.DrawGraphF(x, y, image);
+            DX.DrawGraphF(X, Y, image);
             
         }
         public override void Update()
         {
             
-        }
-        public override void OnCollision(GameObject other)
-        {
-          
         }
 
         public override void OnInteract(GameObject obj, float extend)
