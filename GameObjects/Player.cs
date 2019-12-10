@@ -125,6 +125,7 @@ namespace Giraffe
         private static readonly Vec2f DangleCenter = new Vec2f(114, 50);
         private static readonly Vec2f HeadNeckJoint = new Vec2f(77, 57);
         private static readonly Vec2f BodyNeckJoint = new Vec2f(77, 74);
+        
 
         public Vec2f GetHeadPos;
 
@@ -142,6 +143,24 @@ namespace Giraffe
                 velAngle = MyMath.Lerp(velAngle, RotateSpeed, 0.01f);
             }
 
+            if (Input.UP.IsHold())
+            {
+                pos = pos + new Vec2f(0, -1f);
+            }
+
+            if (Input.LEFT.IsHold())
+            {
+                pos = pos + new Vec2f(-1f, 0);
+            }
+            if (Input.DOWN.IsHold())
+            {
+                pos = pos + new Vec2f(0, 1f);
+            }
+
+            if (Input.RIGHT.IsHold())
+            {
+                pos = pos + new Vec2f(1f, 0);
+            }
             base.Update();
         }
 

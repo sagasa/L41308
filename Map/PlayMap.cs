@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics;
 using System.IO;
 using DxLibDLL;
+using SAGASALib;
+using Debug = System.Diagnostics.Debug;
 
 namespace Giraffe
 {
@@ -13,20 +14,36 @@ namespace Giraffe
     {
         public const int None = -1;
 
-        const int Width = 10;
-        const int Height = 25;
-        const int CellSize = 64;
+        enum MapObject
+        {
+            Goal,
+        }
+
+        //const int Width = 10;
+        //const int Height = 25;
+
+        //Tile１セルのサイズ
+        public static readonly Vec2f CellSize = new Vec2f(64,64);
+        //画面に入るセルの量
+        public static readonly Vec2f ScreenSize = Screen.Size / PlayMap.CellSize;
 
         ScenePlay scenePlay;
-        int[,] mapData;
+        public readonly int[,] MapData;
+        public readonly Vec2f MapSize;
 
         public PlayMap(ScenePlay scenePlay, string filePath)
         {
             this.scenePlay = scenePlay;
-            Load("Map/" + filePath + ".csv");
-            LoadObject("Map/" + filePath + ".csv");
+            MapData = Read("Map/" + filePath + ".csv");
+            MapSize = new Vec2f(MapData.GetLength(0), MapData.GetLength(1));
+            //LoadObject("Map/" + filePath + ".csv");
         }
 
+        //表示時のCSVの左上座標
+        private Vec2f cameraPos;
+
+
+        /* 縦横の事前定義が必要ない読込に変更
         void Load(string filePath)
         {
             mapData = new int[Width, Height];
@@ -47,8 +64,29 @@ namespace Giraffe
                     mapData[x, y] = int.Parse(splitted[x]);
                 }
             }
+        }//*/
+
+        private static readonly char[] COMMA = new[] { ',' };
+
+        private static int[,] Read(string filePath)
+        {
+            string[] allLine = File.ReadAllLines(filePath);
+            if (allLine.Length <= 0)
+                throw new IndexOutOfRangeException();
+
+            int[,] data = new int[allLine[0].Split(COMMA).Length, allLine.Length];
+            for (int y = data.GetLength(1) - 1; y >= 0; y--)
+            {
+                string[] splitted = allLine[y].Split(COMMA);
+                for (int x = 0; x < data.GetLength(0); x++)
+                {
+                    data[x, y] = int.Parse(splitted[x]);
+                }
+            }
+            return data;
         }
 
+        /*
         void LoadObject(string filePath)
         {
             string[] lines = File.ReadAllLines(filePath);
@@ -70,18 +108,17 @@ namespace Giraffe
                     SpawnObject(x, y, id);
                 }
             }
-        }
+        }//*/
 
-        void SpawnObject(int mapX, int mapY, int objectID)
+        void SpawnObject(Vec2f pos, int objectID)
         {
             // 生成位置
-            float spawnX = mapX * CellSize;
-            float spawnY = mapY * CellSize;
+            pos = pos * CellSize;
 
             if (objectID == 0) //Leaf
             {
                
-                scenePlay.gameObjects.Add( new Leaf(scenePlay,spawnX,spawnY));
+                scenePlay.gameObjects.Add( new Leaf(scenePlay,pos));
             }
             else
             {

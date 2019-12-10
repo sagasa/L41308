@@ -20,11 +20,11 @@ namespace Giraffe
             get => pos.Y;
         }
 
-        protected Scene scenePlay;
+        protected Scene scene;
 
         protected GameObject(Scene scene)
         {
-            scenePlay = scene;
+            this.scene = scene;
         }
 
         public virtual CircleCollision[] GetCollisions()
