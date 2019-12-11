@@ -30,8 +30,8 @@ namespace Giraffe
 
         public Player(Scene scene) : base(scene)
         {
-            pos = new Vec2f(400,400);
-          //  velAngle = RotateSpeed;
+            pos = new Vec2f(3,3);
+            velAngle = RotateSpeed/5;
         }
 
         public bool IsInversion()
@@ -41,7 +41,8 @@ namespace Giraffe
 
         public Vec2f GetCenter()
         {
-            return CheckAndInvert(IsDongle ? DangleCenter : StandCenter);
+            return Vec2f.ZERO;
+            //    return CheckAndInvert(IsDongle ? DangleCenter : StandCenter);
         }
 
         public Vec2f CheckAndInvert(Vec2f vec)
@@ -57,12 +58,15 @@ namespace Giraffe
             return IsDongle ? angle + (IsInversion() ? -45 : 45) : angle;
         }
 
-        private Vec2f MakeRotateOffset(Vec2f pivot, float angle_)
+        private Vec2f MakeRotateOffset(Vec2f pivot, float currentAngle, float addAngle)
         {
             //中心から軸へのベクトル
-            Vec2f offset = CheckAndInvert(pivot) - GetCenter();
+            Vec2f offset = CheckAndInvert(pivot);
             //移動分を計算
-            offset = offset.Rotate(GetAngle()) - offset.Rotate(angle_ + GetAngle());
+            Vec2f screenPos = scene.GetScreenPos(pos);
+            Debug.DrawVec2(screenPos, offset.Rotate(currentAngle));
+            Debug.DrawVec2(screenPos+ offset.Rotate(currentAngle), offset.Rotate(currentAngle + addAngle)*-1);
+            offset = offset.Rotate(currentAngle) - offset.Rotate(currentAngle + addAngle);
             return offset;
         }
 
@@ -73,25 +77,31 @@ namespace Giraffe
         private float count = 0;
         public override void Draw()
         {
-            count += MyMath.Deg2Rad * 1;
+            count ++;
+            if (60 < count)
+                count = -60;
             
-          //  headRotate = count;
+            headRotate = MyMath.Deg2Rad*(Math.Abs(count)-30);
+            neckRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30)*-1;
 
-            //頭の回転
+            Vec2f _neck = HeadNeckJoint - BodyNeckJoint;
+
+            //頭の回転 
             float _headRotate = IsDongle ? 0 : headRotate+neckRotate;
             //頭のオフセット
-            Vec2f _headOffset = IsDongle ? Vec2f.ZERO : Vec2f.ZERO;
+            Vec2f _headOffset = IsDongle ? MakeRotateOffset(DangleCenter, 0,GetAngle()) : Vec2f.ZERO;
             //首の回転
             float _neckRotate = IsDongle ? headRotate : neckRotate;
             //首のオフセット
-            Vec2f _neckOffset = IsDongle ? MakeRotateOffset(HeadNeckJoint,headRotate) : Vec2f.ZERO;
+            Vec2f _neckOffset = IsDongle ? MakeRotateOffset(DangleCenter, 0,GetAngle())+ MakeRotateOffset(HeadNeckJoint, GetAngle(), headRotate) : Vec2f.ZERO;
             //胴の回転
             float _bodyRotate = IsDongle ? headRotate+neckRotate : 0;
             //胴のオフセット
-            Vec2f _bodyOffset = IsDongle ? MakeRotateOffset(HeadNeckJoint, neckRotate) : Vec2f.ZERO;
+            Vec2f _bodyOffset = IsDongle ? MakeRotateOffset(DangleCenter, 0, GetAngle()) + MakeRotateOffset(HeadNeckJoint, GetAngle(), headRotate)
+                + MakeRotateOffset(BodyNeckJoint, GetAngle()+headRotate, neckRotate) : Vec2f.ZERO;
 
             //胴
-           // Draw(imageBody,_b);
+            Draw(imageBody,_bodyOffset,_bodyRotate);
             //頭
             //Draw(imageHorn);
             Draw(AnimationUtils.GetImage(imageHead,animationProgress),_headOffset,_headRotate);
@@ -100,20 +110,24 @@ namespace Giraffe
             //Draw(AnimationUtils.GetImageLoop(imageEye, animationProgress));
             //Draw(AnimationUtils.GetImageLoop(imageTail, animationProgress));
             //首
-            Draw(imageNeck,_neckOffset,_neckRotate);
+            Draw(imageNeck,_neckOffset,_neckRotate,1);
             
-            Debug.DrawVec2(pos+_neckOffset);
-            Debug.DrawVec2(pos);
+            Vec2f screenPos = scene.GetScreenPos(pos);
+            //Debug.DrawVec2(screenPos + _neckOffset);    
+            Debug.DrawVec2(screenPos,"Center");
             DX.DrawBoxAA(X, Y, X+80, Y+80, white,DX.FALSE);
         }
 
         //軸と角度を指定して回転を追加可能
-        private void Draw(int image,Vec2f offset = null,float angle_ = 0)
+        private void Draw(int image,Vec2f offset = null,float angle_ = 0,float exY = 1)
         {
             if (offset == null)
                 offset = Vec2f.ZERO;
 
-            DX.DrawRotaGraph2F(X + offset.X, Y + offset.Y, GetCenter().X, GetCenter().Y, 1, angle_ + GetAngle(), image, 1, IsInversion() ? DX.FALSE : DX.TRUE);
+            Vec2f screenPos = scene.GetScreenPos(pos);
+            Debug.DrawVec2(screenPos+offset);
+
+            DX.DrawRotaGraph3F(screenPos.X+ offset.X, screenPos.Y+offset.Y, GetCenter().X, GetCenter().Y, 1, exY, angle_ + GetAngle(), image, 1, IsInversion() ? DX.FALSE : DX.TRUE);
         }
 
         //回転
@@ -136,30 +150,30 @@ namespace Giraffe
             if ((Input.RIGHT.IsHold() || IsInversion())&&!Input.LEFT.IsHold())
             {
 
-                velAngle = MyMath.Lerp(velAngle, -RotateSpeed,0.01f);
+                //velAngle = MyMath.Lerp(velAngle, -RotateSpeed,0.01f);
             }
             else
             {
-                velAngle = MyMath.Lerp(velAngle, RotateSpeed, 0.01f);
+                //velAngle = MyMath.Lerp(velAngle, RotateSpeed, 0.01f);
             }
 
             if (Input.UP.IsHold())
             {
-                pos = pos + new Vec2f(0, -1f);
+                pos = pos + new Vec2f(0, -0.1f);
             }
 
             if (Input.LEFT.IsHold())
             {
-                pos = pos + new Vec2f(-1f, 0);
+                pos = pos + new Vec2f(-0.1f, 0);
             }
             if (Input.DOWN.IsHold())
             {
-                pos = pos + new Vec2f(0, 1f);
+                pos = pos + new Vec2f(0, 0.1f);
             }
 
             if (Input.RIGHT.IsHold())
             {
-                pos = pos + new Vec2f(1f, 0);
+                pos = pos + new Vec2f(0.1f, 0);
             }
             base.Update();
         }

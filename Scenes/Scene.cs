@@ -12,6 +12,11 @@ namespace Giraffe
         {
             Game = game;
         }
+
+        public virtual Vec2f GetScreenPos(Vec2f pos)
+        {
+            return pos;
+        }
         public abstract void OnLoad();
 
         public abstract void Update();

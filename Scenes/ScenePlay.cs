@@ -7,7 +7,7 @@ namespace Giraffe
     public class ScenePlay : Scene
     {
         //Map座標からScreen座標へ変換する
-        public Vec2f GetScreenPos(Vec2f mapPos)
+        public override Vec2f GetScreenPos(Vec2f mapPos)
         {
             return mapPos*PlayMap.CellSize;
         }
