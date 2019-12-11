@@ -15,31 +15,26 @@ namespace Giraffe
         public playerIcon(Scene scene) : base(scene)
         {
 
-            x = 500;
-            y = 390;
 
         }
 
         public override void Draw()
         {
-            DX.DrawGraphF(x, y, image);
+            DX.DrawGraphF(X, Y, image);
 
         }
         public override void Update()
         {
-            if(Input.UP.IsHold())
+           // if(Input.UP.IsHold())
             {
-                y -= 2;
+               // Y += 2;
             }
-            else if(Input.DOWN.IsHold())
+           // else if(Input.DOWN.IsHold())
             {
-                y += 2;
+               // Y += 2;
             }
         }
-        public override void OnCollision(GameObject other)
-        {
-
-        }
+       
 
         public override void OnInteract(GameObject obj, float extend)
         {

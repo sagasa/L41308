@@ -1,4 +1,5 @@
 ﻿using System;
+using DxLibDLL;
 using System.Collections.Generic;
 using SAGASALib;
 
@@ -19,6 +20,10 @@ namespace Giraffe
 
         private Player player;
         private Leaf leaf;
+        public playerIcon playerIcon;
+
+        private int Flag = ResourceLoader.GetGraph("ハタアイコン.png");
+        private int bar = ResourceLoader.GetGraph("マップ.png");
 
         private PlayMap map;
 
@@ -31,6 +36,7 @@ namespace Giraffe
         {
             player = new Player(this);
             leaf = new Leaf(this,new Vec2f(10,10));
+            
         }
 
 
@@ -38,6 +44,9 @@ namespace Giraffe
         {
             player.Draw();
             leaf.Draw();
+            DX.DrawGraph(520, 200, bar);
+            DX.DrawGraph(525, 150, Flag);
+           
         }
 
         public override void OnExit()
@@ -52,6 +61,7 @@ namespace Giraffe
         {
             player.Update();
             leaf.Update();
+          
         }
     }
 }
