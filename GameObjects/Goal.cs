@@ -10,6 +10,7 @@ namespace Giraffe
 {
     public  class Goal:GameObject
     {
+        Game game;
         private int image = ResourceLoader.GetGraph("ゴール.png");
         public Goal(Scene scene,float x,float y) : base(scene)
         {
@@ -28,7 +29,7 @@ namespace Giraffe
 
         public override void OnInteract(GameObject obj, float extend)
         {
-           
+            game.isGoal = true;
         }
 
         public override bool IsDead()

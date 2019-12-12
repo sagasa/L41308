@@ -63,6 +63,10 @@ namespace Giraffe
             player.Update();
             leaf.Update();
 
+            if(Game.isGoal==true)//ゴールにプレイヤーが触れたら
+            {
+
+            }
         }
     }
 }
