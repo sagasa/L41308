@@ -10,12 +10,12 @@ namespace Giraffe
         //Map座標からScreen座標へ変換する
         public override Vec2f GetScreenPos(Vec2f mapPos)
         {
-            return mapPos*PlayMap.CellSize;
+            return mapPos * PlayMap.CellSize;
         }
 
         public bool IsInScreen(Vec2f pos)
         {
-            return pos.IsInBetween(MapPos,MapPos+PlayMap.ScreenSize);
+            return pos.IsInBetween(MapPos, MapPos + PlayMap.ScreenSize);
         }
 
         private Player player;
@@ -30,13 +30,14 @@ namespace Giraffe
         //表示中の領域のMap座標の右上
         public Vec2f MapPos;
 
-        public List<GameObject> gameObjects;
+        public List<GameObject> gameObjects=new List<GameObject>();
 
         public ScenePlay(Game game) : base(game)
         {
             player = new Player(this);
-            leaf = new Leaf(this,new Vec2f(10,10));
-            
+            leaf = new Leaf(this, new Vec2f(10, 10));
+
+            map = new PlayMap(this, "map1_leaf");
         }
 
 
@@ -46,7 +47,7 @@ namespace Giraffe
             leaf.Draw();
             DX.DrawGraph(520, 200, bar);
             DX.DrawGraph(525, 150, Flag);
-           
+
         }
 
         public override void OnExit()
@@ -61,7 +62,7 @@ namespace Giraffe
         {
             player.Update();
             leaf.Update();
-          
+
         }
     }
 }

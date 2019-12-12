@@ -64,10 +64,8 @@ namespace Giraffe
                         if (_changer.Count == 0)
                             _oldScene.OnExit();
                     }
-                }
-                
-            }
-            
+                }               
+            }            
         }
 
         public void Draw()
