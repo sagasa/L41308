@@ -10,7 +10,7 @@ namespace Giraffe
         //Map座標からScreen座標へ変換する
         public override Vec2f GetScreenPos(Vec2f mapPos)
         {
-            return mapPos * PlayMap.CellSize;
+            return (mapPos- MapPos) * PlayMap.CellSize;
         }
 
         public bool IsInScreen(Vec2f pos)
@@ -26,23 +26,27 @@ namespace Giraffe
 
         private PlayMap map;
 
-        //表示中の領域のMap座標の右上
+        //表示中の領域の左上のMap座標
         public Vec2f MapPos;
 
         public List<GameObject> gameObjects=new List<GameObject>();
 
         public ScenePlay(Game game) : base(game)
         {
-            player = new Player(this);
-
             map = new PlayMap(this, "map1_leaf");
+            MapPos = new Vec2f(0, map.MapSize.Y - PlayMap.ScreenSize.Y);
+
+            player = new Player(this);
+            player.pos = MapPos+new Vec2f(2,2);
         }
 
 
         public override void Draw()
         {
-            player.Draw();
             gameObjects.ForEach(obj=>obj.Draw());
+            player.Draw();
+
+            
             DX.DrawGraph(520, 200, bar);
             DX.DrawGraph(525, 150, Flag);
 

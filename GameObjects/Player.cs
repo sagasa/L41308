@@ -30,7 +30,6 @@ namespace Giraffe
 
         public Player(Scene scene) : base(scene)
         {
-            pos = new Vec2f(3,3);
             velAngle = RotateSpeed/5;
         }
 
@@ -41,7 +40,6 @@ namespace Giraffe
 
         public Vec2f GetCenter()
         {
-            //return Vec2f.ZERO;
             return CheckAndInvert(IsDongle ? DangleCenter : StandCenter);
         }
 
@@ -56,18 +54,6 @@ namespace Giraffe
         {
 
             return IsDongle ? angle + (IsInversion() ? -45 : 45) : angle;
-        }
-
-        private Vec2f MakeRotateOffset(Vec2f pivot, float currentAngle, float addAngle)
-        {
-            //中心から軸へのベクトル
-            Vec2f offset = CheckAndInvert(pivot)-GetCenter(); ;
-            //移動分を計算
-            Vec2f screenPos = scene.GetScreenPos(pos);
-            Debug.DrawVec2(screenPos, offset.Rotate(currentAngle));
-            Debug.DrawVec2(screenPos+ offset.Rotate(currentAngle), offset.Rotate(currentAngle + addAngle)*-1);
-            offset = offset.Rotate(currentAngle) - offset.Rotate(currentAngle + addAngle);
-            return offset;
         }
 
         private float animationProgress = 0;
@@ -120,7 +106,6 @@ namespace Giraffe
             Vec2f screenPos = scene.GetScreenPos(pos);
             //Debug.DrawVec2(screenPos + _neckOffset);    
             Debug.DrawVec2(screenPos,"Center");
-            DX.DrawBoxAA(X, Y, X+80, Y+80, white,DX.FALSE);
         }
 
         //軸と角度を指定して回転を追加可能
@@ -151,11 +136,11 @@ namespace Giraffe
             if ((Input.RIGHT.IsHold() || IsInversion())&&!Input.LEFT.IsHold())
             {
 
-                //velAngle = MyMath.Lerp(velAngle, -RotateSpeed,0.01f);
+                velAngle = MyMath.Lerp(velAngle, -RotateSpeed,0.01f);
             }
             else
             {
-                //velAngle = MyMath.Lerp(velAngle, RotateSpeed, 0.01f);
+                velAngle = MyMath.Lerp(velAngle, RotateSpeed, 0.01f);
             }
 
             if (Input.UP.IsHold())
