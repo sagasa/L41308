@@ -19,7 +19,6 @@ namespace Giraffe
         }
 
         private Player player;
-        private Leaf leaf;
         public playerIcon playerIcon;
 
         private int Flag = ResourceLoader.GetGraph("ハタアイコン.png");
@@ -35,7 +34,6 @@ namespace Giraffe
         public ScenePlay(Game game) : base(game)
         {
             player = new Player(this);
-            leaf = new Leaf(this, new Vec2f(10, 10));
 
             map = new PlayMap(this, "map1_leaf");
         }
@@ -44,7 +42,7 @@ namespace Giraffe
         public override void Draw()
         {
             player.Draw();
-            leaf.Draw();
+            gameObjects.ForEach(obj=>obj.Draw());
             DX.DrawGraph(520, 200, bar);
             DX.DrawGraph(525, 150, Flag);
 
@@ -61,9 +59,10 @@ namespace Giraffe
         public override void Update()
         {
             player.Update();
-            leaf.Update();
+            gameObjects.ForEach(obj => obj.Update());
+            gameObjects.RemoveAll(obj => obj.IsDead());
 
-            if(Game.isGoal==true)//ゴールにプレイヤーが触れたら
+            if (Game.isGoal==true)//ゴールにプレイヤーが触れたら
             {
 
             }
