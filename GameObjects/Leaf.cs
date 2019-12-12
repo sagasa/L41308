@@ -18,7 +18,9 @@ namespace Giraffe
 
         public override void Draw()
         {
-            DX.DrawGraph(100, 100, image);
+            Vec2f screenPos=scene.GetScreenPos(pos);
+            Console.WriteLine(screenPos);
+            DX.DrawGraphF(screenPos.X, screenPos.Y, image);
             //DX.DrawGraph(125, 125, branch);
         }
 

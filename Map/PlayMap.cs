@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SAGASALib;
+using System;
 using System.IO;
-using DxLibDLL;
-using SAGASALib;
 using Debug = System.Diagnostics.Debug;
 
 namespace Giraffe
@@ -25,7 +20,7 @@ namespace Giraffe
         //Tile１セルのサイズ
         public static readonly Vec2f CellSize = new Vec2f(64,64);
         //画面に入るセルの量
-        public static readonly Vec2f ScreenSize = Screen.Size / PlayMap.CellSize;
+        public static readonly Vec2f ScreenSize = Screen.Size / CellSize;
 
         ScenePlay scenePlay;
         public readonly int[,] MapData;
@@ -36,8 +31,13 @@ namespace Giraffe
             this.scenePlay = scenePlay;
             MapData = Read("Map/" + filePath + ".csv");
             MapSize = new Vec2f(MapData.GetLength(0), MapData.GetLength(1));
+
+            SpawnObject();
             //LoadObject("Map/" + filePath + ".csv");
+
+            
         }
+
 
         //表示時のCSVの左上座標
         private Vec2f cameraPos;
@@ -110,20 +110,32 @@ namespace Giraffe
             }
         }//*/
 
+        void SpawnObject()
+        {
+            // 生成位置
+            for (int y = MapData.GetLength(1) - 1; y >= 0; y--)
+            {
+                for (int x = 0; x < MapData.GetLength(0); x++)
+                {
+                    int objectID = MapData[x, y];
+                    if (objectID == 0) //Leaf
+                    {
+
+                        scenePlay.gameObjects.Add(new Leaf(scenePlay, new Vec2f(x,y)));
+                    }
+                    else
+                    {
+                        Debug.Assert(false, "オブジェクトID" + objectID + "番の生成処理は未実装です。");
+                    }
+                }
+            }
+        }
+
         void SpawnObject(Vec2f pos, int objectID)
         {
             // 生成位置
-            pos = pos * CellSize;
 
-            if (objectID == 0) //Leaf
-            {
-               
-                scenePlay.gameObjects.Add( new Leaf(scenePlay,pos));
-            }
-            else
-            {
-                Debug.Assert(false, "オブジェクトID" + objectID + "番の生成処理は未実装です。");
-            }
+            
         }
 
         //public void DrawTerrain()
