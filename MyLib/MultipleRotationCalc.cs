@@ -14,7 +14,7 @@
         {
             Scale = scale;
             ScalePivot = scalePivot;
-            Offset = Vec2f.ZERO;
+            Offset = scalePivot;
             Rotate = 0;
             return this;
         }

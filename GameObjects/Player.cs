@@ -8,43 +8,27 @@ namespace Giraffe
     public class Player : GameObject
     {
         //立ってる場合はfalse
-        private bool IsDongle = true;
+        private bool IsDongle = false;
 
         //回転速度
         private const float RotateSpeed = (float)Math.PI / 30f;
         //移動速度
         private const float WalkSpeed = 0.1f;
 
-        //スケール
-        private float scale = 1f;
-
-        //首の長さ
-        private float neckExtension = 0;
-
-       // private int image = ResourceLoader.GetGraph("player.png");
+        // private int image = ResourceLoader.GetGraph("player.png");
         
        private readonly PlayerRender render;
 
         public Player(ScenePlay scene) : base(scene)
         {
             render = new PlayerRender(this);
-            velAngle = RotateSpeed/5;
+         //   velAngle = RotateSpeed/5;
         }
 
-
-        private float count = 0;
-        public override void Draw()
+        private PlayMap GetMap()
         {
-            count ++;
-            if (60 < count)
-                count = -60;
-
-            render.HeadRotate = MyMath.Deg2Rad*(Math.Abs(count)-30);
-            render.NeckRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30)*-1;
-
-            render.Draw();
+            return ((ScenePlay) scene).Map;
         }
-        
 
         public override void Update()
         {
@@ -63,9 +47,9 @@ namespace Giraffe
             else
             {
                 //接地判定
-                if (pos.Y < 0.3f)
+                if (GetMap().MapSize.Y< pos.Y)
                 {
-                    pos.SetY(0.3f);
+                    pos = pos.SetY(GetMap().MapSize.Y);
                 }
                 //左右操作
                 if (Input.LEFT.IsHold())
@@ -96,6 +80,21 @@ namespace Giraffe
 
            
             base.Update();
+        }
+
+
+        private float count = 0;
+        public override void Draw()
+        {
+            count++;
+            if (60 < count)
+                count = -60;
+
+            render.HeadRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30);
+            render.NeckRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30) * -1;
+            render.NeckExt = (Math.Abs(count)/30f)+1;
+
+            render.Draw();
         }
 
         public override bool IsDead()

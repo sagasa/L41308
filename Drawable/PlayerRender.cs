@@ -21,10 +21,13 @@ namespace Giraffe
         private static readonly Vec2f DangleCenter = new Vec2f(114, 50);
         private static readonly Vec2f HeadNeckJoint = new Vec2f(77, 57);
         private static readonly Vec2f BodyNeckJoint = new Vec2f(77, 74);
-
+        //スケール
+        public Vec2f Scale = new Vec2f(1,1);
+        //首スケール
+        public float NeckExt = 3;
         //回転
         public float NeckRotate = 0;
-        public float HeadRotate = MyMath.Deg2Rad * 30;
+        public float HeadRotate = 0;
         public bool IsDongle = true;
         //アニメーション
         public float MouthProgress = 0;
@@ -69,38 +72,38 @@ namespace Giraffe
         private readonly MultipleRotationCalc _headCalc = new MultipleRotationCalc();
         private readonly MultipleRotationCalc _neckCalc = new MultipleRotationCalc();
         private readonly MultipleRotationCalc _bodyCalc = new MultipleRotationCalc();
-        private float count = 0;
         public  void Draw()
         {
-            count++;
-            if (60 < count)
-                count = -60;
-
-            HeadRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30);
-            NeckRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30) * -1;
-
             Vec2f _neck = HeadNeckJoint - BodyNeckJoint;
 
-            Vec2f scale = new Vec2f(0.5f, 0.5f);
-            _headCalc.Init(scale, Vec2f.ZERO);
-            _neckCalc.Init(scale, Vec2f.ZERO);
-            _bodyCalc.Init(scale, Vec2f.ZERO);
+            _headCalc.Init(Scale, Vec2f.ZERO).Move(GetCenter() * -1);
+            _neckCalc.Init(Scale*new Vec2f(1,NeckExt), BodyNeckJoint-GetCenter()).Move(GetCenter() * -1);
+            _bodyCalc.Init(Scale, Vec2f.ZERO).Move(GetCenter() * -1);
+
+            Vec2f center = GetCenter();
+            _headCalc.AddRotate(center, GetAngle());
+            _neckCalc.AddRotate(center, GetAngle());
+            _bodyCalc.AddRotate(center, GetAngle());
             if (IsDongle)
             {
-                _headCalc.Move(GetCenter() * -1);
-                _neckCalc.Move(GetCenter() * -1);
-                _bodyCalc.Move(GetCenter() * -1);
-
-                Vec2f center = CheckAndInvert(DangleCenter);
-                _headCalc.AddRotate(center, GetAngle());
-                _neckCalc.AddRotate(center, GetAngle());
-                _bodyCalc.AddRotate(center, GetAngle());
                 Vec2f head = CheckAndInvert(HeadNeckJoint);
                 _neckCalc.AddRotate(head, HeadRotate);
                 _bodyCalc.AddRotate(head, HeadRotate);
                 Vec2f neck = CheckAndInvert(BodyNeckJoint);
                 _bodyCalc.AddRotate(neck, NeckRotate);
             }
+            else
+            {
+                Vec2f head = CheckAndInvert(HeadNeckJoint)+ _neck * (NeckExt - 1);
+                _headCalc.AddRotate(head, HeadRotate);
+                Vec2f neck = CheckAndInvert(BodyNeckJoint);
+                _headCalc.AddRotate(neck, NeckRotate);
+                _neckCalc.AddRotate(neck, NeckRotate);
+
+
+                _headCalc.Move(_neck.Rotate(_headCalc.Rotate) * (NeckExt - 1));
+            }
+
             //胴
             Draw(imageBody, _bodyCalc);
             //頭
@@ -114,7 +117,6 @@ namespace Giraffe
             Draw(imageNeck, _neckCalc);
 
             Vec2f screenPos = Target.scene.GetScreenPos(Target.pos);
-            //Debug.DrawVec2(screenPos + _neckOffset);    
             Debug.DrawVec2(screenPos, "Center");
         }
 
@@ -123,7 +125,9 @@ namespace Giraffe
         {
             //表示位置
             Vec2f screenPos = Target.scene.GetScreenPos(Target.pos) + calc.Offset;
-            DX.DrawRotaGraph3F(screenPos.X, screenPos.Y, calc.ScalePivot.X, calc.ScalePivot.Y, calc.Scale.X, calc.Scale.X, calc.Rotate, image, 1, IsInversion() ? DX.TRUE : DX.FALSE);
+            Debug.DrawVec2(screenPos + calc.ScalePivot,"pivot");
+            Console.WriteLine(calc.ScalePivot);
+            DX.DrawRotaGraph3F(screenPos.X, screenPos.Y, calc.ScalePivot.X, calc.ScalePivot.Y, calc.Scale.X, calc.Scale.Y, calc.Rotate, image, 1, IsInversion() ? DX.TRUE : DX.FALSE);
         }
     }
 }

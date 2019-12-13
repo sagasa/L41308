@@ -24,7 +24,7 @@ namespace Giraffe
         private int Flag = ResourceLoader.GetGraph("ハタアイコン.png");
         private int bar = ResourceLoader.GetGraph("マップ.png");
 
-        private PlayMap map;
+        public PlayMap Map { get; private set; }
 
         //表示中の領域の左上のMap座標
         public Vec2f MapPos;
@@ -33,8 +33,8 @@ namespace Giraffe
 
         public ScenePlay(Game game) : base(game)
         {
-            map = new PlayMap(this, "map1_leaf");
-            MapPos = new Vec2f(0, map.MapSize.Y - PlayMap.ScreenSize.Y);
+            Map = new PlayMap(this, "map1_leaf");
+            MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y);
 
             player = new Player(this);
             player.pos = MapPos+new Vec2f(2,2);
