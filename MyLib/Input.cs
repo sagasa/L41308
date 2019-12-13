@@ -24,7 +24,7 @@ namespace SAGASALib
         {
             binds.Clear();
             UP = new InputBind(DX.KEY_INPUT_UP);
-            DOWN = new InputBind(DX.KEY_INPUT_UP);
+            DOWN = new InputBind(DX.KEY_INPUT_DOWN);
             RIGHT = new InputBind(DX.KEY_INPUT_RIGHT);
             LEFT = new InputBind(DX.KEY_INPUT_LEFT);
             ACTION = new InputBind(DX.KEY_INPUT_SPACE);

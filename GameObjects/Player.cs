@@ -4,13 +4,16 @@ using SAGASALib;
 
 namespace Giraffe
 {
+    //プレイシーン内専用
     public class Player : GameObject
     {
         //立ってる場合はfalse
         private bool IsDongle = true;
 
         //回転速度
-        private const float RotateSpeed = (float)Math.PI / 50f;
+        private const float RotateSpeed = (float)Math.PI / 30f;
+        //移動速度
+        private const float WalkSpeed = 0.1f;
 
         //スケール
         private float scale = 1f;
@@ -19,129 +22,79 @@ namespace Giraffe
         private float neckExtension = 0;
 
        // private int image = ResourceLoader.GetGraph("player.png");
-        private int imageBody = ResourceLoader.GetGraph("player/body.png");
-        private int imageHorn = ResourceLoader.GetGraph("player/horn.png");
-        private int imageNeck = ResourceLoader.GetGraph("player/neck.png");
-        private int[] imageHead = ResourceLoader.GetGraph("player/player_head.png", 4);
-        private int[] imageEye = ResourceLoader.GetGraph("player/player_eye.png", 4);
-        private int[] imageEar = ResourceLoader.GetGraph("player/player_ear.png", 4);
-        private int[] imageLeg = ResourceLoader.GetGraph("player/player_leg.png", 6);
-        private int[] imageTail = ResourceLoader.GetGraph("player/player_tail.png", 4);
+        
+       private readonly PlayerRender render;
 
-        public Player(Scene scene) : base(scene)
+        public Player(ScenePlay scene) : base(scene)
         {
-            pos = new Vec2f(400,400);
-          //  velAngle = RotateSpeed;
+            render = new PlayerRender(this);
+            velAngle = RotateSpeed/5;
         }
 
-        public bool IsInversion()
-        {
-            return IsDongle ? velAngle < 0 : vel.X < 0;
-        }
-
-        public Vec2f GetCenter()
-        {
-            return CheckAndInvert(IsDongle ? DangleCenter : StandCenter);
-        }
-
-        public Vec2f CheckAndInvert(Vec2f vec)
-        {
-            if (!IsInversion())
-                vec = new Vec2f(128 - vec.X, vec.Y);
-            return vec;
-        }
-
-        public float GetAngle()
-        {
-
-            return IsDongle ? angle + (IsInversion() ? -45 : 45) : angle;
-        }
-
-        private Vec2f MakeRotateOffset(Vec2f pivot, float angle_)
-        {
-            //中心から軸へのベクトル
-            Vec2f offset = CheckAndInvert(pivot) - GetCenter();
-            //移動分を計算
-            offset = offset.Rotate(GetAngle()) - offset.Rotate(angle_ + GetAngle());
-            return offset;
-        }
-
-        private float animationProgress = 0;
-
-        private uint white = DX.GetColor(200, 200, 200);
 
         private float count = 0;
         public override void Draw()
         {
-            count += MyMath.Deg2Rad * 1;
-            
-          //  headRotate = count;
+            count ++;
+            if (60 < count)
+                count = -60;
 
-            //頭の回転
-            float _headRotate = IsDongle ? 0 : headRotate+neckRotate;
-            //頭のオフセット
-            Vec2f _headOffset = IsDongle ? Vec2f.ZERO : Vec2f.ZERO;
-            //首の回転
-            float _neckRotate = IsDongle ? headRotate : neckRotate;
-            //首のオフセット
-            Vec2f _neckOffset = IsDongle ? MakeRotateOffset(HeadNeckJoint,headRotate) : Vec2f.ZERO;
-            //胴の回転
-            float _bodyRotate = IsDongle ? headRotate+neckRotate : 0;
-            //胴のオフセット
-            Vec2f _bodyOffset = IsDongle ? MakeRotateOffset(HeadNeckJoint, neckRotate) : Vec2f.ZERO;
+            render.HeadRotate = MyMath.Deg2Rad*(Math.Abs(count)-30);
+            render.NeckRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30)*-1;
 
-            //胴
-           // Draw(imageBody,_b);
-            //頭
-            //Draw(imageHorn);
-            Draw(AnimationUtils.GetImage(imageHead,animationProgress),_headOffset,_headRotate);
-            //Draw(AnimationUtils.GetImageLoop(imageEar, animationProgress));
-            //Draw(AnimationUtils.GetImage(imageLeg, animationProgress));
-            //Draw(AnimationUtils.GetImageLoop(imageEye, animationProgress));
-            //Draw(AnimationUtils.GetImageLoop(imageTail, animationProgress));
-            //首
-            Draw(imageNeck,_neckOffset,_neckRotate);
-            
-            Debug.DrawVec2(pos+_neckOffset);
-            Debug.DrawVec2(pos);
-            DX.DrawBoxAA(X, Y, X+80, Y+80, white,DX.FALSE);
+            render.Draw();
         }
-
-        //軸と角度を指定して回転を追加可能
-        private void Draw(int image,Vec2f offset = null,float angle_ = 0)
-        {
-            if (offset == null)
-                offset = Vec2f.ZERO;
-
-            DX.DrawRotaGraph2F(X + offset.X, Y + offset.Y, GetCenter().X, GetCenter().Y, 1, angle_ + GetAngle(), image, 1, IsInversion() ? DX.FALSE : DX.TRUE);
-        }
-
-        //回転
-        private float neckRotate = 0;
-        private float headRotate = MyMath.Deg2Rad * 30;
-
-        //画像のポジション
-        private static readonly Vec2f StandCenter = new Vec2f(64, 64);
-        private static readonly Vec2f DangleCenter = new Vec2f(114, 50);
-        private static readonly Vec2f HeadNeckJoint = new Vec2f(77, 57);
-        private static readonly Vec2f BodyNeckJoint = new Vec2f(77, 74);
-
-        public Vec2f GetHeadPos;
+        
 
         public override void Update()
         {
-            animationProgress += 0.02f;
-            animationProgress = animationProgress % 1f;
-            if ((Input.RIGHT.IsHold() || IsInversion())&&!Input.LEFT.IsHold())
+            if (IsDongle)
             {
+                if ((Input.RIGHT.IsHold() || velAngle< 0) && !Input.LEFT.IsHold())
+                {
 
-                velAngle = MyMath.Lerp(velAngle, -RotateSpeed,0.01f);
+                    velAngle = MyMath.Lerp(velAngle, -RotateSpeed, 0.1f);
+                }
+                else
+                {
+                    velAngle = MyMath.Lerp(velAngle, RotateSpeed, 0.1f);
+                }
             }
             else
             {
-                velAngle = MyMath.Lerp(velAngle, RotateSpeed, 0.01f);
+                //接地判定
+                if (pos.Y < 0.3f)
+                {
+                    pos.SetY(0.3f);
+                }
+                //左右操作
+                if (Input.LEFT.IsHold())
+                {
+                    vel = vel.SetX(MyMath.Lerp(vel.X, -WalkSpeed, 0.1f));
+                }
+                if (Input.RIGHT.IsHold())
+                {
+                    vel = vel.SetX(MyMath.Lerp(vel.X, WalkSpeed, 0.1f));
+                }
+
+                if (!Input.LEFT.IsHold() && !Input.RIGHT.IsHold())
+                {
+                    vel = vel.SetX(MyMath.Lerp(vel.X, 0, 0.2f));
+                }
             }
 
+            if (Input.UP.IsHold())
+            {
+                pos = pos + new Vec2f(0, -0.1f);
+            }
+
+            
+            if (Input.DOWN.IsHold())
+            {
+                pos = pos + new Vec2f(0, 0.1f);
+            }
+
+           
             base.Update();
         }
 

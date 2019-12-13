@@ -20,12 +20,18 @@ namespace Giraffe
             get => pos.Y;
         }
 
-        protected Scene scenePlay;
+        public readonly Scene scene;
 
         protected GameObject(Scene scene)
         {
-            scenePlay = scene;
+            this.scene = scene;
         }
+
+        public virtual CircleCollision[] GetCollisions()
+        {
+            return new CircleCollision[]{new CircleCollision(Vec2f.ZERO, size)};
+        }
+
         //接触判定を実行しメゾットを呼ぶ Sceneから呼ぶため
         public void CalcInteract(GameObject obj, float extend = 0)
         {

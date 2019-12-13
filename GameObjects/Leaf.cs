@@ -10,15 +10,16 @@ namespace Giraffe
         private int image = ResourceLoader.GetGraph("leaf4.png");
         //private int branch = ResourceLoader.GetGraph("branch2.png");
 
-        public Leaf(Scene scene):base(scene)
+        public Leaf(ScenePlay scene, Vec2f vec2f) :base(scene)
         {
-            x = 100;
-            y = 100;
+            
+            pos = vec2f;
         }
 
         public override void Draw()
         {
-            DX.DrawGraph(100, 100, image);
+            Vec2f screenPos=scene.GetScreenPos(pos);
+            DX.DrawGraphF(screenPos.X, screenPos.Y, image);
             //DX.DrawGraph(125, 125, branch);
         }
 
