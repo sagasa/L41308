@@ -22,7 +22,8 @@ namespace Giraffe
         public Player(ScenePlay scene) : base(scene)
         {
             render = new PlayerRender(this);
-         //   velAngle = RotateSpeed/5;
+            angle = MyMath.Deg2Rad * 45;
+            //   velAngle = RotateSpeed/5;
         }
 
         private PlayMap GetMap()

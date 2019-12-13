@@ -66,7 +66,7 @@ namespace Giraffe
         private float GetAngle()
         {
 
-            return IsDongle ? Target.angle + (IsInversion() ? 45 : -45) : Target.angle;
+            return IsDongle ? Target.angle + (IsInversion() ? 45*MyMath.Deg2Rad : -45 * MyMath.Deg2Rad) : Target.angle;
         }
 
         private readonly MultipleRotationCalc _headCalc = new MultipleRotationCalc();
@@ -75,9 +75,14 @@ namespace Giraffe
         public  void Draw()
         {
             Vec2f _neck = HeadNeckJoint - BodyNeckJoint;
+            if (IsDongle)
+            {
+                _neck *= -1;
+            }
+            Vec2f extPivot = IsDongle? HeadNeckJoint - GetCenter() : BodyNeckJoint - GetCenter();
 
             _headCalc.Init(Scale, Vec2f.ZERO).Move(GetCenter() * -1);
-            _neckCalc.Init(Scale*new Vec2f(1,NeckExt), BodyNeckJoint-GetCenter()).Move(GetCenter() * -1);
+            _neckCalc.Init(Scale*new Vec2f(1,NeckExt), extPivot).Move(GetCenter() * -1);
             _bodyCalc.Init(Scale, Vec2f.ZERO).Move(GetCenter() * -1);
 
             Vec2f center = GetCenter();
@@ -89,8 +94,10 @@ namespace Giraffe
                 Vec2f head = CheckAndInvert(HeadNeckJoint);
                 _neckCalc.AddRotate(head, HeadRotate);
                 _bodyCalc.AddRotate(head, HeadRotate);
-                Vec2f neck = CheckAndInvert(BodyNeckJoint);
+                Vec2f neck = CheckAndInvert(BodyNeckJoint) + _neck * (NeckExt - 1);
                 _bodyCalc.AddRotate(neck, NeckRotate);
+
+                _bodyCalc.Move(_neck.Rotate(_bodyCalc.Rotate) * (NeckExt - 1));
             }
             else
             {
