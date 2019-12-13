@@ -27,7 +27,14 @@ namespace SAGASALib
         {
             return this/Length();
         }
-
+        public Vec2f SetX(float x)
+        {
+            return new Vec2f(x, Y);
+        }
+        public Vec2f SetY(float y)
+        {
+            return new Vec2f(X, y);
+        }
         public Vec2f Right()
         {
             return new Vec2f(Y,-X);

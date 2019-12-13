@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Drawable\IDrawable.cs" />
+    <Compile Include="Drawable\PlayerRender.cs" />
     <Compile Include="GameObjects\playerIcon.cs" />
     <Compile Include="MyLib\MultipleRotationCalc.cs" />
     <Compile Include="DxDLLW.cs" />

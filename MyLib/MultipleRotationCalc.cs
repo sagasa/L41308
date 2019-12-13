@@ -19,6 +19,12 @@
             return this;
         }
 
+        public MultipleRotationCalc Move(Vec2f move)
+        {
+            Offset += move*Scale;
+            return this;
+        }
+
         public MultipleRotationCalc AddRotate(Vec2f pivot, float angle)
         {
             pivot = pivot - ScalePivot;

@@ -20,7 +20,7 @@ namespace Giraffe
             get => pos.Y;
         }
 
-        protected Scene scene;
+        public readonly Scene scene;
 
         protected GameObject(Scene scene)
         {
