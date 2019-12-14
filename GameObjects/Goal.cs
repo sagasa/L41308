@@ -12,19 +12,19 @@ namespace Giraffe
     {
         Game game;
         private int image = ResourceLoader.GetGraph("ゴール.png");
-        public Goal(Scene scene,float x,float y) : base(scene)
+        public Goal(Scene scene,Vec2f vecsf) : base(scene)
         {
-            pos = new Vec2f(x,y);
+            pos = vecsf;
         }
         
         public override void Draw()
         {
-            DX.DrawGraphF(X, Y, image);
-            
+            Vec2f screenPos = scene.GetScreenPos(pos);
+            DX.DrawGraphF(screenPos.X, screenPos.Y, image);
         }
         public override void Update()
         {
-            
+            base.Update();
         }
 
         public override void OnInteract(GameObject obj, float extend)

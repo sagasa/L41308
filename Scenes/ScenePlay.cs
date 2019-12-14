@@ -68,7 +68,7 @@ namespace Giraffe
 
             if (Game.isGoal==true)//ゴールにプレイヤーが触れたら
             {
-
+                Game.SetScene(new Title(Game));
             }
         }
     }

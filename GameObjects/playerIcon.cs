@@ -25,13 +25,14 @@ namespace Giraffe
         }
         public override void Update()
         {
-           // if(Input.UP.IsHold())
+            if (Input.DOWN.IsHold())
             {
-               // Y += 2;
+                pos = pos + new Vec2f(0, -0.1f);
             }
-           // else if(Input.DOWN.IsHold())
+            else if (Input.UP.IsHold())
             {
-               // Y += 2;
+                pos = pos + new Vec2f(0, 0.1f);
+
             }
         }
        

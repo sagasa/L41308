@@ -124,6 +124,10 @@ namespace Giraffe
                         scenePlay.gameObjects.Add(new Leaf(scenePlay, new Vec2f(x,y)));
                        
                     }
+                    else if(objectID==1)
+                    {
+                        scenePlay.gameObjects.Add(new Goal(scenePlay, new Vec2f(x, y)));
+                    }
                     //else
                     //{
                     //    Debug.Assert(false, "オブジェクトID" + objectID + "番の生成処理は未実装です。");
