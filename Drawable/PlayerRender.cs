@@ -17,18 +17,23 @@ namespace Giraffe
         private static readonly int[] imageTail = ResourceLoader.GetGraph("player/player_tail.png", 4);
 
         //画像のポジション
-        private static readonly Vec2f StandCenter = new Vec2f(64, 64);
-        private static readonly Vec2f DangleCenter = new Vec2f(114, 50);
-        private static readonly Vec2f HeadNeckJoint = new Vec2f(77, 57);
-        private static readonly Vec2f BodyNeckJoint = new Vec2f(77, 74);
+        public static readonly Vec2f ImageSize = new Vec2f(128, 128);
+        private static readonly Vec2f StandCenterPos = new Vec2f(64, 64) / ImageSize;
+        private static readonly Vec2f DangleCenterPos = new Vec2f(114, 50) / ImageSize;
+        private static readonly Vec2f HeadNeckJointPos = new Vec2f(77, 57) / ImageSize;
+        private static readonly Vec2f BodyNeckJointPos = new Vec2f(77, 74) / ImageSize;
+
+        private Vec2f Center { get => CheckAndInvert(IsDongle ? DangleCenterPos : StandCenterPos); }
+        private Vec2f HeadNeckJoint { get => CheckAndInvert(HeadNeckJointPos); }
+        private Vec2f BodyNeckJoint { get => CheckAndInvert(BodyNeckJointPos); }
         //スケール
         public Vec2f Scale = new Vec2f(1,1);
         //首スケール
-        public float NeckExt = 3;
+        public float NeckExt = 1;
         //回転
         public float NeckRotate = 0;
         public float HeadRotate = 0;
-        public bool IsDongle = true;
+        public bool IsDongle;
         //アニメーション
         public float MouthProgress = 0;
         public float EyeProgress = 0;
@@ -36,12 +41,14 @@ namespace Giraffe
         public float LegProgress = 0;
         public float TailProgress = 0;
 
+        
 
         //表示対象
         public readonly GameObject Target;
 
-        public PlayerRender(GameObject target)
+        public PlayerRender(GameObject target,ref bool isDongle)
         {
+            IsDongle = isDongle;
             Target = target;
         }
 
@@ -51,15 +58,11 @@ namespace Giraffe
             return IsDongle ? 0 < Target.velAngle : Target.vel.X < 0;
         }
 
-        private Vec2f GetCenter()
-        {
-            return CheckAndInvert(IsDongle ? DangleCenter : StandCenter);
-        }
-
+        
         private Vec2f CheckAndInvert(Vec2f vec)
         {
             if (IsInversion())
-                vec = new Vec2f(128 - vec.X, vec.Y);
+                vec = new Vec2f(1f - vec.X, vec.Y);
             return vec;
         }
 
@@ -74,42 +77,54 @@ namespace Giraffe
         private readonly MultipleRotationCalc _bodyCalc = new MultipleRotationCalc();
         public  void Draw()
         {
+            Vec2f screenPos = Target.scene.GetScreenPos(Target.pos);
+
             Vec2f _neck = HeadNeckJoint - BodyNeckJoint;
             if (IsDongle)
             {
                 _neck *= -1;
             }
-            Vec2f extPivot = IsDongle? HeadNeckJoint - GetCenter() : BodyNeckJoint - GetCenter();
+            Vec2f extPivot = IsDongle? HeadNeckJoint - Center : BodyNeckJoint - Center;
+            
 
-            _headCalc.Init(Scale, Vec2f.ZERO).Move(GetCenter() * -1);
-            _neckCalc.Init(Scale*new Vec2f(1,NeckExt), extPivot).Move(GetCenter() * -1);
-            _bodyCalc.Init(Scale, Vec2f.ZERO).Move(GetCenter() * -1);
+            
 
-            Vec2f center = GetCenter();
-            _headCalc.AddRotate(center, GetAngle());
-            _neckCalc.AddRotate(center, GetAngle());
-            _bodyCalc.AddRotate(center, GetAngle());
+            _headCalc.Clear();
+            _neckCalc.Clear();
+            _bodyCalc.Clear();
+            //スケール
             if (IsDongle)
             {
-                Vec2f head = CheckAndInvert(HeadNeckJoint);
-                _neckCalc.AddRotate(head, HeadRotate);
-                _bodyCalc.AddRotate(head, HeadRotate);
-                Vec2f neck = CheckAndInvert(BodyNeckJoint) + _neck * (NeckExt - 1);
-                _bodyCalc.AddRotate(neck, NeckRotate);
-
-                _bodyCalc.Move(_neck.Rotate(_bodyCalc.Rotate) * (NeckExt - 1));
+                _neckCalc.Scale(new Vec2f(1, NeckExt), HeadNeckJoint);
             }
             else
             {
-                Vec2f head = CheckAndInvert(HeadNeckJoint)+ _neck * (NeckExt - 1);
-                _headCalc.AddRotate(head, HeadRotate);
-                Vec2f neck = CheckAndInvert(BodyNeckJoint);
-                _headCalc.AddRotate(neck, NeckRotate);
-                _neckCalc.AddRotate(neck, NeckRotate);
-
-
-                _headCalc.Move(_neck.Rotate(_headCalc.Rotate) * (NeckExt - 1));
+                _neckCalc.Scale(new Vec2f(1, NeckExt), BodyNeckJoint);
             }
+            //回転
+            _headCalc.Rotate(Center, GetAngle());
+            _neckCalc.Rotate(Center, GetAngle());
+            _bodyCalc.Rotate(Center, GetAngle());
+            
+            if (IsDongle)
+            {
+                _neckCalc.Rotate(HeadNeckJoint, HeadRotate);
+            }
+            else
+            {
+                _neckCalc.Rotate(BodyNeckJoint, NeckRotate);
+            }
+            //表示サイズに
+            Vec2f scale = new Vec2f(128, 128);
+            //*
+            _headCalc.Move(Center * -1);
+            _neckCalc.Move(Center * -1);
+            _bodyCalc.Move(Center * -1);
+            //*/
+            _headCalc.Scale(scale, Vec2f.ZERO);
+            _neckCalc.Scale(scale, Vec2f.ZERO);
+            _bodyCalc.Scale(scale, Vec2f.ZERO);
+
 
             //胴
             Draw(imageBody, _bodyCalc);
@@ -123,7 +138,6 @@ namespace Giraffe
             //首
             Draw(imageNeck, _neckCalc);
 
-            Vec2f screenPos = Target.scene.GetScreenPos(Target.pos);
             Debug.DrawVec2(screenPos, "Center");
         }
 
@@ -131,10 +145,8 @@ namespace Giraffe
         private void Draw(int image, MultipleRotationCalc calc)
         {
             //表示位置
-            Vec2f screenPos = Target.scene.GetScreenPos(Target.pos) + calc.Offset;
-            Debug.DrawVec2(screenPos + calc.ScalePivot,"pivot");
-            Console.WriteLine(calc.ScalePivot);
-            DX.DrawRotaGraph3F(screenPos.X, screenPos.Y, calc.ScalePivot.X, calc.ScalePivot.Y, calc.Scale.X, calc.Scale.Y, calc.Rotate, image, 1, IsInversion() ? DX.TRUE : DX.FALSE);
+            Vec2f screenPos = Target.scene.GetScreenPos(Target.pos);
+            calc.Draw(screenPos,image,IsInversion());
         }
     }
 }

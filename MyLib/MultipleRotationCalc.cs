@@ -1,48 +1,79 @@
-﻿namespace SAGASALib
+﻿using System;
+using DxLibDLL;
+
+namespace SAGASALib
 {
-    //複数の回転を追加する計算系
+    //複数の回転を追加し描画するツール
+    //回転->移動->スケール
     public class MultipleRotationCalc
     {
+        private float _rotate = 0f;
+        private Vec2f _offset = Vec2f.ZERO;
+        private readonly Vec2f[] _vertex = new Vec2f[4];
 
-        public Vec2f Scale { get; private set; } = Vec2f.ZERO;
-        public Vec2f ScalePivot { get; private set; } = Vec2f.ZERO;
-        public Vec2f Offset { get; private set; } = Vec2f.ZERO;
-        public float Rotate { get; private set; } = 0f;
-
-        //スケール等を設定して初期化
-        public MultipleRotationCalc Init(Vec2f scale,Vec2f scalePivot)
+        //位置を指定して描画
+        public void Draw(Vec2f pos,int image, bool invert)
         {
-            Scale = scale;
-            ScalePivot = scalePivot;
-            Offset = scalePivot;
-            Rotate = 0;
+            Vec2f[] vertex = new Vec2f[_vertex.Length];
+            for (var i = 0; i < _vertex.Length; i++)
+            {
+                vertex[i] = _vertex[i] + pos;
+                Debug.DrawVec2(vertex[i]);
+            }
+            if (invert)
+            {
+                DX.DrawModiGraphF(vertex[1].X, vertex[1].Y, vertex[0].X, vertex[0].Y,
+                    vertex[3].X, vertex[3].Y, vertex[2].X, vertex[2].Y, image);
+            }
+            else
+            {
+                DX.DrawModiGraphF(vertex[0].X, vertex[0].Y, vertex[1].X, vertex[1].Y,
+                    vertex[2].X, vertex[2].Y, vertex[3].X, vertex[3].Y, image);
+            }
+            
+        }
+
+        public MultipleRotationCalc Clear()
+        {
+            _vertex[0] = new Vec2f(0, 0);
+            _vertex[1] = new Vec2f(1, 0);
+            _vertex[2] = new Vec2f(1, 1);
+            _vertex[3] = new Vec2f(0, 1);
+            _rotate = 0;
+            _offset = Vec2f.ZERO;
             return this;
         }
 
-        public MultipleRotationCalc Move(Vec2f move)
+        //軸を指定してスケール
+        public MultipleRotationCalc Scale(Vec2f scale, Vec2f pivot)
         {
-            Offset += move*Scale;
+            for (var i = 0; i < _vertex.Length; i++)
+            {
+                _vertex[i] = ((_vertex[i]-pivot)*scale)+pivot;
+            }
             return this;
         }
-
-        public MultipleRotationCalc AddRotate(Vec2f pivot, float angle)
+        public MultipleRotationCalc Rotate(Vec2f pivot,float angle)
         {
-            pivot = pivot - ScalePivot;
-            pivot *= Scale;
-            //移動分を計算
-            pivot = pivot.Rotate(Rotate) - pivot.Rotate(Rotate + angle);
-            Offset += pivot;
-            Rotate += angle;
+            Vec2f scale = new Vec2f(128, 128);
+            pivot = pivot.Rotate(_rotate);
+
+            Debug.DrawVec2((pivot * scale)+new Vec2f(128,128),"rotate",DX.GetColor(0,200,0));
+            for (var i = 0; i < _vertex.Length; i++)
+            {
+                _vertex[i] = ((_vertex[i] - pivot).Rotate(angle)) + pivot;
+            }
+            _rotate += angle;
             return this;
         }
-        
-
-        public static Vec2f MakeRotateOffset(Vec2f pivot, float currentAngle, float addAngle)
+        public MultipleRotationCalc Move(Vec2f vec)
         {
-            //中心から軸へのベクトル
-            //移動分を計算
-            pivot = pivot.Rotate(currentAngle) - pivot.Rotate(currentAngle + addAngle);
-            return pivot;
+            _offset += vec;
+            for (var i = 0; i < _vertex.Length; i++)
+            {
+                _vertex[i] = _vertex[i] + vec;
+            }
+            return this;
         }
     }
 }
