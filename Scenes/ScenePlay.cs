@@ -7,6 +7,7 @@ namespace Giraffe
 {
     public class ScenePlay : Scene
     {
+        int goolTimer = 60;
         //Map座標からScreen座標へ変換する
         public override Vec2f GetScreenPos(Vec2f mapPos)
         {
@@ -72,7 +73,13 @@ namespace Giraffe
 
             if (Game.isGoal==true)//ゴールにプレイヤーが触れたら
             {
-                Game.SetScene(new Title(Game));
+                player.pos = player.oldPos;
+                goolTimer--;
+                if (goolTimer <= 0)
+                {
+                    Game.SetScene(new Title(Game));
+                }
+               
             }
         }
     }
