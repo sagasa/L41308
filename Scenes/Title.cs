@@ -10,11 +10,11 @@ namespace Giraffe
 {
     public class Title : Scene
     {
-       
-        private int head = ResourceLoader.GetGraph("player_head.png");
-        private int horn = ResourceLoader.GetGraph("触角.png");
-        private int eye = ResourceLoader.GetGraph("player_eye.png");
-        private int ear = ResourceLoader.GetGraph("player_ear.png");
+
+        private int head = ResourceLoader.GetGraph("player/player_head.png");
+        private int horn = ResourceLoader.GetGraph("player/horn.png");
+        private int eye = ResourceLoader.GetGraph("player/player_eye.png");
+        private int ear = ResourceLoader.GetGraph("player/player_ear.png");
         private int titlebg = ResourceLoader.GetGraph("title_bg.png");
         private int select1 = ResourceLoader.GetGraph("select_1.png");
         private int select2 = ResourceLoader.GetGraph("select_2.png");
