@@ -10,6 +10,7 @@ namespace Giraffe
 {
     public class playerIcon:GameObject
     {
+        int a;
         private int image = ResourceLoader.GetGraph("キリンアイコン.png");
         
         public playerIcon(Scene scene) : base(scene)
@@ -20,19 +21,16 @@ namespace Giraffe
 
         public override void Draw()
         {
-            DX.DrawGraphF(X, Y, image);
+            DX.DrawGraphF(520, Y+a, image);
 
         }
         public override void Update()
         {
-            if (Input.DOWN.IsHold())
+            a = 460;
+           
+             if (Input.UP.IsHold())
             {
-                pos = pos + new Vec2f(0, -0.1f);
-            }
-            else if (Input.UP.IsHold())
-            {
-                pos = pos + new Vec2f(0, 0.1f);
-
+                pos = pos + new Vec2f(0, -1f);
             }
         }
        
