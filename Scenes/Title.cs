@@ -47,7 +47,7 @@ namespace Giraffe
 
         public override void OnExit()
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void OnLoad()
@@ -57,13 +57,14 @@ namespace Giraffe
 
         public override void Update()
         {
+            Game.isGoal = false;
             if (y == 617 && Input.ACTION.IsPush())
             {
 
             }
-            else if(y==502&&Input.ACTION.IsPush())
+            else if (y == 502 && Input.ACTION.IsPush())
             {
-
+                Game.SetScene(new ScenePlay(Game));
             }
         }
     }
