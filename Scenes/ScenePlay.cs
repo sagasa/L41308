@@ -38,6 +38,7 @@ namespace Giraffe
 
             player = new Player(this);
             player.pos = MapPos+new Vec2f(2,2);
+            playerIcon = new playerIcon(this);
         }
 
 
@@ -49,6 +50,7 @@ namespace Giraffe
             
             DX.DrawGraph(520, 200, bar);
             DX.DrawGraph(525, 150, Flag);
+            playerIcon.Draw();
 
         }
 
@@ -64,6 +66,7 @@ namespace Giraffe
         {
             gameObjects.ForEach(obj=> player.CalcInteract(obj));
             player.Update();
+            playerIcon.Update();
             gameObjects.ForEach(obj => obj.Update());
             gameObjects.RemoveAll(obj => obj.IsDead());
 
