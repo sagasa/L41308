@@ -21,6 +21,7 @@ namespace Giraffe
         {
             Vec2f screenPos = scene.GetScreenPos(pos);
             DX.DrawGraphF(screenPos.X, screenPos.Y, image);
+            base.Draw();
         }
         public override void Update()
         {

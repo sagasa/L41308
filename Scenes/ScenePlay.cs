@@ -62,6 +62,7 @@ namespace Giraffe
 
         public override void Update()
         {
+            gameObjects.ForEach(obj=> player.CalcInteract(obj));
             player.Update();
             gameObjects.ForEach(obj => obj.Update());
             gameObjects.RemoveAll(obj => obj.IsDead());

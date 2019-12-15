@@ -1,11 +1,12 @@
 ﻿using System;
+using DxLibDLL;
 using SAGASALib;
 
 namespace Giraffe
 {
     public abstract class GameObject
     {
-        public float angle, velAngle, size;
+        public float angle, velAngle, size=10;
         public Vec2f pos = Vec2f.ZERO;
         public Vec2f oldPos = Vec2f.ZERO;
         public Vec2f vel = Vec2f.ZERO;
@@ -70,7 +71,16 @@ namespace Giraffe
             return true;
         }
         public abstract void OnInteract(GameObject obj,float extend);
-        public abstract void Draw();
+
+        private uint collisionColor = DX.GetColor(0,0,200);
+        public virtual void Draw()
+        {
+            if(Game.ShowCollision)
+                foreach (var collision in GetCollisions())
+                {
+                    Debug.DrawCircle(collision.pos+scene.GetScreenPos(pos), collision.radius, collisionColor);
+                }
+        }
         public abstract bool IsDead();
     }
 }

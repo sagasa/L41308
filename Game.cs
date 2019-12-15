@@ -13,6 +13,8 @@ namespace Giraffe
 
         public bool isGoal = false;//ゴールする判定
 
+        public static bool ShowCollision = true;
+
         public void Init()
         {
             DX.SetBackgroundColor(200, 200, 200);

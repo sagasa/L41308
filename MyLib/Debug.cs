@@ -34,6 +34,13 @@ namespace SAGASALib
             });
         }
 
+        public static void DrawCircle(Vec2f pos,float rad , uint color = 4294902015)
+        {
+            draw.Enqueue(() => {
+                DX.DrawCircleAA(pos.X,pos.Y,rad,10,color,DX.FALSE);
+            });
+        }
+
         private static void DrawThickBox(Vec2f pos,Vec2f vec, uint color, float thick=2)
         {
             Vec2f right = vec.Right().Normal()*(thick/2);

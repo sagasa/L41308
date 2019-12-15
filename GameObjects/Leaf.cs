@@ -21,6 +21,7 @@ namespace Giraffe
             Vec2f screenPos=scene.GetScreenPos(pos);
             DX.DrawGraphF(screenPos.X, screenPos.Y, image);
             //DX.DrawGraph(125, 125, branch);
+            base.Draw();
         }
 
         public override bool IsDead()
