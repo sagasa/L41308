@@ -16,6 +16,13 @@ namespace Giraffe
             pos = vec2f;
         }
 
+        private CircleCollision[] collisions = new CircleCollision[]{new CircleCollision(new Vec2f(1,1), 0.8f) };
+
+        public override CircleCollision[] GetCollisions()
+        {
+            return collisions;
+        }
+
         public override void Draw()
         {
             Vec2f screenPos=scene.GetScreenPos(pos);

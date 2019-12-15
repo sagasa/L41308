@@ -46,9 +46,8 @@ namespace Giraffe
         //表示対象
         public readonly GameObject Target;
 
-        public PlayerRender(GameObject target,ref bool isDongle)
+        public PlayerRender(GameObject target)
         {
-            IsDongle = isDongle;
             Target = target;
         }
 

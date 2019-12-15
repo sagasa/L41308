@@ -6,7 +6,7 @@ namespace Giraffe
 {
     public abstract class GameObject
     {
-        public float angle, velAngle, size=10;
+        public float angle, velAngle, size=1;
         public Vec2f pos = Vec2f.ZERO;
         public Vec2f oldPos = Vec2f.ZERO;
         public Vec2f vel = Vec2f.ZERO;
@@ -36,14 +36,21 @@ namespace Giraffe
         //接触判定を実行しメゾットを呼ぶ Sceneから呼ぶため
         public void CalcInteract(GameObject obj, float extend = 0)
         {
-            float distance = (pos - obj.pos).Length();
-            if (distance < size + obj.size + extend)
+            foreach (var c0 in GetCollisions())
             {
-                //キャンセル可能に
-                if (this.PreInteract(obj, extend) && obj.PreInteract(this, extend))
+                foreach (var c1 in obj.GetCollisions())
                 {
-                    this.OnInteract(obj, extend);
-                    obj.OnInteract(this, extend);
+                    float distance = (pos+c0.pos - obj.pos-c1.pos).Length();
+                    if (distance < c0.radius + c1.radius + extend)
+                    {
+                        //キャンセル可能に
+                        if (this.PreInteract(obj, extend) && obj.PreInteract(this, extend))
+                        {
+                            this.OnInteract(obj, extend);
+                            obj.OnInteract(this, extend);
+                        }
+                        return;
+                    } 
                 }
             }
         }
@@ -78,7 +85,7 @@ namespace Giraffe
             if(Game.ShowCollision)
                 foreach (var collision in GetCollisions())
                 {
-                    Debug.DrawCircle(collision.pos+scene.GetScreenPos(pos), collision.radius, collisionColor);
+                    Debug.DrawCircle(scene.GetScreenPos(pos+ collision.pos), collision.radius*PlayMap.CellSize.X, collisionColor);
                 }
         }
         public abstract bool IsDead();
