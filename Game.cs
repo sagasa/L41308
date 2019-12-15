@@ -11,7 +11,7 @@ namespace Giraffe
         //回転テスト 邪魔なら消して
         List<StaticMapObject> objList = new List<StaticMapObject>();
 
-        public bool isGoal = false;//ゴールする判定
+        public static bool isGoal = false;//ゴールする判定
 
         public static bool ShowCollision = true;
 
