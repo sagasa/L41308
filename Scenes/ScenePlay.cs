@@ -57,6 +57,7 @@ namespace Giraffe
 
         public override void OnExit()
         {
+            Game.soundManager.Remove("play");
         }
 
         public override void OnLoad()
@@ -65,6 +66,7 @@ namespace Giraffe
 
         public override void Update()
         {
+            Game.soundManager.CrossFade("title", "play",3);
             gameObjects.ForEach(obj=> player.CalcInteract(obj));
             player.Update();
             playerIcon.Update();

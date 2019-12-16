@@ -19,7 +19,6 @@ namespace SAGASALib
             for (var i = 0; i < _vertex.Length; i++)
             {
                 vertex[i] = _vertex[i] + pos;
-                Debug.DrawPos(pos, _vertex[i]);
             }
             if (invert)
             {
@@ -57,16 +56,7 @@ namespace SAGASALib
         }
         public MultipleRotationCalc Rotate(Vec2f pivot,float angle)
         {
-            Vec2f scale = new Vec2f(128, 128);
-            Debug.DrawPos(new Vec2f(128, 128) , pivot * scale, "pivot", DX.GetColor(0, 100, 200));
             Vec2f rotatePivot = (pivot - _offset).Rotate(_rotate) + _oldPivot;
-            Debug.DrawPos(new Vec2f(128, 128),Vec2f.ZERO, "center", DX.GetColor(0, 0, 200));
-
-            Debug.DrawVec2(new Vec2f(64, 128), (pivot - _offset).Rotate(_rotate)*scale);
-
-            Debug.DrawPos(new Vec2f(128, 128), rotatePivot * scale, "pivot", DX.GetColor(0, 200, 200));
-            Debug.DrawAngle((rotatePivot * scale) + new Vec2f(128, 128), _rotate, "rotate", DX.GetColor(200, 0, 0));
-
             for (var i = 0; i < _vertex.Length; i++)
             {
                 _vertex[i] = ((_vertex[i] - rotatePivot).Rotate(angle)) + rotatePivot;

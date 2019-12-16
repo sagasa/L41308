@@ -20,6 +20,10 @@ namespace Giraffe
         private int select2 = ResourceLoader.GetGraph("select_2.png");
         int y = 502;
 
+        //SE
+        private int cursor_SE = ResourceLoader.GetSound("cursor_SE.mp3",DX.FALSE);
+        private int decision_SE = ResourceLoader.GetSound("decision_SE.mp3", DX.FALSE);
+
         public Title(Game game) : base(game)
         {
 
@@ -57,13 +61,21 @@ namespace Giraffe
 
         public override void Update()
         {
+            Game.soundManager.FadeIn("title",3);
             Game.isGoal = false;
+
+            if (Input.DOWN.IsPush() || Input.UP.IsPush())
+            {
+                Sound.Play(cursor_SE);
+            }
+
             if (y == 617 && Input.ACTION.IsPush())
             {
 
             }
             else if (y == 502 && Input.ACTION.IsPush())
             {
+                Sound.Play(decision_SE);
                 Game.SetScene(new ScenePlay(Game));
             }
         }
