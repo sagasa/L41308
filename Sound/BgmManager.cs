@@ -12,10 +12,11 @@ namespace Giraffe
         Dictionary<string, int> bgmMap = new Dictionary<string, int>();
         Dictionary<string, DX.VECTOR> bgmPos = new Dictionary<string, DX.VECTOR>();
 
+        public static bool fadeInit = true;
+
         float bgmDis = 100.0f;//聞こえる範囲
         float interval = 150.0f;//bgmDisとintervalでクロスフェードの重なりを調整する
         
-        public bool fadeInit = true;
 
         public void Load()
         {
@@ -89,7 +90,7 @@ namespace Giraffe
             }
             PlayBgm(name);
         }
-        
+
         public void CrossFade(string name1, string name2, int time)
         {
             if (fadeInit)
@@ -104,7 +105,7 @@ namespace Giraffe
                 {
                     ListenerPos.z -= 0.7f;
                 }
-                if(ListenerPos.z < 0)
+                if (ListenerPos.z < 0)
                 {
                     ListenerPos.z = 0;
                 }
