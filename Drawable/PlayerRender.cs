@@ -79,6 +79,7 @@ namespace Giraffe
             Vec2f screenPos = Target.scene.GetScreenPos(Target.pos);
 
             Vec2f _neck = HeadNeckJoint - BodyNeckJoint;
+            _neck *= (NeckExt - 1);
             if (IsDongle)
             {
                 _neck *= -1;
@@ -108,10 +109,15 @@ namespace Giraffe
             if (IsDongle)
             {
                 _neckCalc.Rotate(HeadNeckJoint, HeadRotate);
+                _bodyCalc.Rotate(HeadNeckJoint, HeadRotate);
+                _bodyCalc.Rotate(BodyNeckJoint, NeckRotate);
             }
             else
             {
                 _neckCalc.Rotate(BodyNeckJoint, NeckRotate);
+                _headCalc.Rotate(BodyNeckJoint, NeckRotate);
+                _headCalc.Rotate(HeadNeckJoint+ _neck, HeadRotate);
+                _headCalc.Move(_neck);
             }
             //表示サイズに
             Vec2f scale = new Vec2f(128, 128);
@@ -137,7 +143,7 @@ namespace Giraffe
             //首
             Draw(imageNeck, _neckCalc);
 
-            Debug.DrawVec2(screenPos, "Center");
+            Debug.DrawPos(Vec2f.ZERO, screenPos, "Center");
         }
 
         //軸と角度を指定して回転を追加可能

@@ -15,22 +15,12 @@ namespace SAGASALib
             Y = y;
         }
 
-        public float Length()
-        {
-            return (float) Math.Sqrt(X * X + Y * Y);
-        }
-        public Vec2f Rotate(float angle)
-        {
-            return new Vec2f(X * (float)Math.Cos(angle) - Y * (float)Math.Sin(angle), X * (float)Math.Sin(angle) + Y * (float)Math.Cos(angle));
-        }
-        public Vec2f Normal()
-        {
-            return this/Length();
-        }
-        public Vec2f SetX(float x)
-        {
-            return new Vec2f(x, Y);
-        }
+        public float Length() => (float) Math.Sqrt(X * X + Y * Y);
+        
+        public Vec2f Rotate(float angle) => new Vec2f(X * (float)Math.Cos(angle) - Y * (float)Math.Sin(angle), X * (float)Math.Sin(angle) + Y * (float)Math.Cos(angle));
+        
+        public Vec2f Normal()=>this/Length();
+        public Vec2f SetX(float x) => new Vec2f(x, Y);
         public Vec2f SetY(float y)
         {
             return new Vec2f(X, y);

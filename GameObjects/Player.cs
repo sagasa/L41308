@@ -32,7 +32,7 @@ namespace Giraffe
         {
             size = 0.6f;
             render = new PlayerRender(this);
-            angle = MyMath.Deg2Rad * 0;
+            angle = MyMath.Deg2Rad * 90;
             //velAngle = RotateSpeed/10;
         }
 
@@ -56,6 +56,23 @@ namespace Giraffe
                 pos = pos.SetX(PlayMap.ScreenSize.X);
             if (PlayMap.ScreenSize.X<pos.X)
                 pos = pos.SetX(0);
+            //スクロール
+            if (Screen.Height * 0.8f< scene.GetScreenPos(pos).Y)
+            {
+                ((ScenePlay) scene).MapPos = ((ScenePlay) scene).MapPos.SetY(((ScenePlay) scene).MapPos.Y+0.03f);
+            }
+            if (scene.GetScreenPos(pos).Y < Screen.Height * 0.4f)
+            {
+                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y - 0.03f);
+            }
+            if (Screen.Height * 0.9f < scene.GetScreenPos(pos).Y)
+            {
+                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y + 0.1f);
+            }
+            if (scene.GetScreenPos(pos).Y < Screen.Height * 0.2f)
+            {
+                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y - 0.3f);
+            }
 
             //操作系+状態変更
             if (_state==PlayerState.Dongle)
@@ -151,9 +168,9 @@ namespace Giraffe
             if (60 < count)
                 count = -60;
 
-            //render.HeadRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30);
-            //render.NeckRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30) * -1;
-            //render.NeckExt = (Math.Abs(count)/30f)+1;
+            render.HeadRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30);
+            render.NeckRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30) * -1;
+            render.NeckExt = (Math.Abs(count)/30f)+1;
             Debug.DrawVec2(scene.GetScreenPos(pos),(new Vec2f(-1,0)*velAngle).Normal().Rotate(angle)*50);
             render.Draw();
             base.Draw();
@@ -162,6 +179,12 @@ namespace Giraffe
         public override bool IsDead()
         {
             return false;
+        }
+
+        private CircleCollision[] collision = new CircleCollision[]{ new CircleCollision(Vec2f.ZERO, 0.1f) };
+        public override CircleCollision[] GetCollisions()
+        {
+            return collision;
         }
 
         //このアップデートで触れている葉
