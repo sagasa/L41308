@@ -22,8 +22,8 @@ namespace Giraffe
         int y = 502;
 
         //SE
-        private int cursor_SE = ResourceLoader.GetSound("cursor_SE.mp3",DX.FALSE);
-        private int decision_SE = ResourceLoader.GetSound("decision_SE.mp3", DX.FALSE);
+        //private int cursor_SE = ResourceLoader.GetSound("cursor_SE.mp3",DX.FALSE);
+        //private int decision_SE = ResourceLoader.GetSound("decision_SE.mp3", DX.FALSE);
 
         public Title(Game game) : base(game)
         {
@@ -57,7 +57,7 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-
+            Game.soundManager.fadeInit = true;
         }
 
         public override void Update()
@@ -67,7 +67,7 @@ namespace Giraffe
 
             if (Input.DOWN.IsPush() || Input.UP.IsPush())
             {
-                Sound.Play(cursor_SE);
+                Sound.Play("cursor_SE.mp3");
             }
 
             if (y == 617 && Input.ACTION.IsPush())
@@ -78,7 +78,7 @@ namespace Giraffe
             {
                 if (!wait)
                 {
-                    Sound.Play(decision_SE);
+                    Sound.Play("decision_SE.mp3");
                     Game.SetScene(new ScenePlay(Game), new Fade(300, true, true));
                     wait = !wait;
                 }

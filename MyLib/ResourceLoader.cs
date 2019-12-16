@@ -74,9 +74,28 @@ namespace SAGASALib
         private static Dictionary<string, int> soundMap = new Dictionary<string, int>();
 
         //サウンドの読み込みとキャッシング
-        public static int GetSound(string name,int _3D)
+        public static int GetSound(string name)
         {
-            DX.SetCreate3DSoundFlag(_3D);//TRUEなら3D,FALSEなら2Dとして読み込む
+            DX.SetCreate3DSoundFlag(DX.FALSE);
+            if (!soundMap.ContainsKey(name))
+            {
+                //読み込めなかったらmissingを入れる
+                try
+                {
+                    soundMap[name] = DX.LoadSoundMem("resources/sounds/" + name);
+                }
+                catch (FileNotFoundException e)
+                {
+                    Console.WriteLine(e);
+                    soundMap[name] = MissingSound;
+                }
+            }
+            return soundMap[name];
+        }
+
+        public static int GetSound3D(string name)
+        {
+            DX.SetCreate3DSoundFlag(DX.TRUE);
             if (!soundMap.ContainsKey(name))
             {
                 //読み込めなかったらmissingを入れる

@@ -122,10 +122,10 @@ namespace Giraffe
                 bgmPos[name].x - bgmDis - 5 <= ListenerPos.x && ListenerPos.x <= bgmPos[name].x + bgmDis + 5 &&
                 bgmPos[name].z - bgmDis - 5 <= ListenerPos.z && ListenerPos.z <= bgmPos[name].z + bgmDis + 5)//再生してない、範囲内の時
             {
-                bgmMap[name] = ResourceLoader.GetSound(name + "_BGM.wav", DX.TRUE);//読み込み
+                bgmMap[name] = ResourceLoader.GetSound3D(name + "_BGM.wav");//読み込み
                 DX.Set3DRadiusSoundMem(bgmDis, bgmMap[name]);
                 DX.Set3DPositionSoundMem(bgmPos[name], bgmMap[name]);
-                Sound.Loop(bgmMap[name]);//再生
+                Sound.Loop3D(bgmMap[name]);//再生
             }
             else if (DX.CheckSoundMem(bgmMap[name]) == 1 &&
                 (ListenerPos.x <= bgmPos[name].x - bgmDis - 10 || bgmPos[name].x + bgmDis + 10 <= ListenerPos.x ||
@@ -148,7 +148,7 @@ namespace Giraffe
                                  "　プレイ:" + DX.CheckSoundMem(bgmMap["play"]) +
                                  "　リザルト:" + DX.CheckSoundMem(bgmMap["result"]) +
                                  "　リスナー x:" + ListenerPos.x + "　z:" + ListenerPos.z,
-                                 DX.GetColor(255, 255, 255));
+                                 DX.GetColor(0, 0, 0));
 
             // 音の再生位置を描画
             DX.DrawCircle(//タイトル,青

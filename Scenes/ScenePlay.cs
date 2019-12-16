@@ -66,6 +66,7 @@ namespace Giraffe
 
         public override void OnLoad()
         {
+            Game.soundManager.fadeInit = true;
         }
 
         public override void Update()
