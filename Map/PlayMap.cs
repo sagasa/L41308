@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using Debug = System.Diagnostics.Debug;
+using DxLibDLL;
 
 namespace Giraffe
 {
@@ -25,6 +26,7 @@ namespace Giraffe
         ScenePlay scenePlay;
         public readonly int[,] MapData;
         public readonly Vec2f MapSize;
+      
 
         public PlayMap(ScenePlay scenePlay, string filePath)
         {
@@ -181,11 +183,6 @@ namespace Giraffe
 
         //    return mapData[mapX, mapY]; // 二次元配列から地形IDを取り出して返却する
         //}
-
-        public void Draw()
-        {
-           
-        }
     }
 }
 
