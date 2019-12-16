@@ -47,7 +47,11 @@ namespace Giraffe
         public readonly GameObject Target;
 
         //口の位置取得
-    
+        public Vec2f GetMouthPos()
+        {
+            Vec2f pos = Target.pos;
+            return pos;
+        }
 
         public PlayerRender(GameObject target)
         {

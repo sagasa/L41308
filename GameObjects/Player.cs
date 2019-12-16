@@ -32,7 +32,7 @@ namespace Giraffe
         {
             size = 0.6f;
             render = new PlayerRender(this);
-            angle = MyMath.Deg2Rad * 90;
+            angle = MyMath.Deg2Rad * 0;
             //velAngle = RotateSpeed/10;
         }
 
