@@ -89,7 +89,7 @@ namespace Giraffe
             if (fadeInit)
             {
                 ListenerPos.x = bgmPos[name1].x;
-                ListenerPos.z = bgmPos[name1].z;
+                ListenerPos.z = 0;
                 bgmPos[name2] = DX.VGet(bgmPos[name1].x + interval, 0.0f, 0.0f);
                 fadeInit = false;
             }
@@ -108,12 +108,12 @@ namespace Giraffe
             PlayBgm(name2);
         }
 
-        void BgmMove(string name)//検証用
-        {
-            bgmPos[name] = DX.VGet(bgmPos[name].x - fadeSpeed, bgmPos[name].y, bgmPos[name].z);
-            DX.Set3DPositionSoundMem(bgmPos[name], bgmMap[name]);
-            PlayBgm(name);
-        }
+        //void BgmMove(string name)//検証用
+        //{
+        //    bgmPos[name] = DX.VGet(bgmPos[name].x - fadeSpeed, bgmPos[name].y, bgmPos[name].z);
+        //    DX.Set3DPositionSoundMem(bgmPos[name], bgmMap[name]);
+        //    PlayBgm(name);
+        //}
 
         void PlayBgm(string name)
         {

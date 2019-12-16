@@ -11,7 +11,7 @@ namespace Giraffe
         //回転テスト 邪魔なら消して
         List<StaticMapObject> objList = new List<StaticMapObject>();
 
-        public BgmManager soundManager = new BgmManager();
+        public BgmManager bgmManager = new BgmManager();
 
         public static bool isGoal = false;//ゴールする判定
 
@@ -20,7 +20,7 @@ namespace Giraffe
         public void Init()
         {
             DX.SetBackgroundColor(200, 200, 200);
-            soundManager.Load();
+            bgmManager.Load();
             SetScene(new Title(this));
             for (int i = 0; i < 16; i++)
             {
@@ -93,7 +93,7 @@ namespace Giraffe
 
             Debug.Draw();
 
-            //soundManager.Debug();
+            //bgmManager.Debug();
         }
     }
 }

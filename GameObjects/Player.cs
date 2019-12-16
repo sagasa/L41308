@@ -102,6 +102,7 @@ namespace Giraffe
                 if (Input.ACTION.IsHold()&&IsOnGround())
                 {
                     Jamp();
+                    Sound.Play("jump_SE.mp3");
                 }
 
                 //左右操作

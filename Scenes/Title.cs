@@ -53,12 +53,12 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-            Game.soundManager.fadeInit = true;
+            Game.bgmManager.fadeInit = true;
         }
 
         public override void Update()
         {
-            Game.soundManager.FadeIn("title",3);
+            Game.bgmManager.FadeIn("title", 3);
             Game.isGoal = false;
 
             if (Input.DOWN.IsPush() || Input.UP.IsPush())
@@ -75,7 +75,7 @@ namespace Giraffe
                 if (!wait)
                 {
                     Sound.Play("decision_SE.mp3");
-                    Game.SetScene(new ScenePlay(Game), new Fade(300, true, true));
+                    Game.SetScene(new ScenePlay(Game), new Fade(120, true, true));
                     wait = !wait;
                 }
             }

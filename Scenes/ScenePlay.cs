@@ -7,7 +7,7 @@ namespace Giraffe
 {
     public class ScenePlay : Scene
     {
-        int goolTimer = 60;
+        int goolTimer = 300;
         //Map座標からScreen座標へ変換する
         public override Vec2f GetScreenPos(Vec2f mapPos)
         {
@@ -61,17 +61,21 @@ namespace Giraffe
 
         public override void OnExit()
         {
-            Game.soundManager.Remove("play");
+            Game.bgmManager.Remove("play");
         }
 
         public override void OnLoad()
         {
-            Game.soundManager.fadeInit = true;
+            Game.bgmManager.fadeInit = true;
         }
 
         public override void Update()
         {
-            Game.soundManager.CrossFade("title", "play",3);
+            if (!Game.isGoal)
+            {
+                Game.bgmManager.CrossFade("title", "play", 10);
+            }
+
             gameObjects.ForEach(obj=> player.CalcInteract(obj));
             player.Update();
             playerIcon.Update();
@@ -80,15 +84,18 @@ namespace Giraffe
 
             if (Game.isGoal==true)//ゴールにプレイヤーが触れたら
             {
-                Game.soundManager.Remove("play");
-                Sound.Play("goal_jingle.mp3");
                 player.pos = player.oldPos;
-                goolTimer--;
-                if (goolTimer <= 0)
+
+                Game.bgmManager.Remove("play");
+                if (goolTimer == 300)
                 {
-                    Game.SetScene(new Title(Game));
+                    Sound.Play("goal_jingle.mp3");
                 }
-               
+                goolTimer--;
+                if (goolTimer == 0)
+                {
+                    Game.SetScene(new Title(Game),new Fade(120,true,true));
+                }
             }
         }
     }
