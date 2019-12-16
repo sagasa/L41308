@@ -15,15 +15,16 @@ namespace SAGASALib
 
         private static readonly uint white = DX.GetColor(255, 255, 255);
 
-        public static void DrawVec2(Vec2f vec,string name = "",uint color= 4294902015)
+        public static void DrawPos(Vec2f offset,Vec2f pos,string name = "",uint color= 4294902015)
         {
-            draw.Enqueue(()=>{
-                DX.DrawBoxAA(vec.X - 15, vec.Y-1, vec.X + 15, vec.Y+1, color,DX.TRUE);
-                DX.DrawBoxAA(vec.X-1, vec.Y - 15, vec.X+1, vec.Y + 15, color, DX.TRUE);
-                DX.DrawStringToHandle((int)vec.X, (int)vec.Y + 2, name + "(" + vec.X + "," + vec.Y+")", black, Handle,white);
+            draw.Enqueue(()=>
+            {
+                offset += pos;
+                DX.DrawBoxAA(offset.X - 15, offset.Y-1, offset.X + 15, offset.Y+1, color,DX.TRUE);
+                DX.DrawBoxAA(offset.X-1, offset.Y - 15, offset.X+1, offset.Y + 15, color, DX.TRUE);
+                DX.DrawStringToHandle((int)offset.X, (int)offset.Y + 2, name + "(" + pos.X + "," + pos.Y+")", black, Handle,white);
             });
         }
-
         public static void DrawVec2(Vec2f pos, Vec2f vec, string name = "", uint color = 4294902015)
         {
             draw.Enqueue(() => {
@@ -33,7 +34,6 @@ namespace SAGASALib
                 DX.DrawStringToHandle((int)(vec+pos).X, (int)(vec + pos).Y + 2, name + "(" + vec.X + "," + vec.Y + ")", black, Handle, white);
             });
         }
-
         public static void DrawCircle(Vec2f pos,float rad , uint color = 4294902015)
         {
             draw.Enqueue(() => {
@@ -41,7 +41,16 @@ namespace SAGASALib
             });
         }
 
-        private static void DrawThickBox(Vec2f pos,Vec2f vec, uint color, float thick=2)
+        private static readonly Vec2f UP = new Vec2f(0,-30);
+        public static void DrawAngle(Vec2f pos, float rad, string name = "", uint color = 4294902015)
+        {
+            draw.Enqueue(() => {
+                DrawThickBox(pos,UP.Rotate(rad) , color,2);
+                DX.DrawStringToHandle((int)(pos).X, (int)(pos).Y + 2, name + "(" + rad*MyMath.Rad2Deg + "° )", black, Handle, white);
+            });
+        }
+
+        private static void DrawThickBox(Vec2f pos,Vec2f vec, uint color, float thick=1)
         {
             Vec2f right = vec.Right().Normal()*(thick/2);
             Vec2f left = vec.Left().Normal() * (thick / 2);
@@ -59,10 +68,12 @@ namespace SAGASALib
 
         public static void Draw()
         {
+#if DEBUG
             while (0<draw.Count)
             {
                 draw.Dequeue().Invoke();
             }
+#endif
         }
     }
 }
