@@ -11,7 +11,7 @@ namespace Giraffe
         //回転テスト 邪魔なら消して
         List<StaticMapObject> objList = new List<StaticMapObject>();
 
-        public SoundManager soundManager = new SoundManager();
+        public BgmManager soundManager = new BgmManager();
 
         public static bool isGoal = false;//ゴールする判定
 

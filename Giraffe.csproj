@@ -86,7 +86,7 @@
     <Compile Include="MyLib\MyRandom.cs" />
     <Compile Include="MyLib\Vec2f.cs" />
     <Compile Include="Sound\Sound.cs" />
-    <Compile Include="Sound\SoundManager.cs" />
+    <Compile Include="Sound\BgmManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MyLib\ResourceLoader.cs" />
     <Compile Include="Scenes\Change\Fade.cs" />

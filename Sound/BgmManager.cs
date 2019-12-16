@@ -4,7 +4,7 @@ using SAGASALib;
 
 namespace Giraffe
 {
-    public class SoundManager
+    public class BgmManager
     {
         DX.VECTOR ListenerPos;
         DX.VECTOR ListenerDir;
