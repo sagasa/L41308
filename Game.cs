@@ -21,7 +21,7 @@ namespace Giraffe
         {
             DX.SetBackgroundColor(200, 200, 200);
             soundManager.Load();
-            SetScene(new ScenePlay(this));
+            SetScene(new Title(this));
             for (int i = 0; i < 16; i++)
             {
                 //これ消せばクルクル消えます

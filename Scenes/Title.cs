@@ -76,7 +76,7 @@ namespace Giraffe
             else if (y == 502 && Input.ACTION.IsPush())
             {
                 Sound.Play(decision_SE);
-                Game.SetScene(new ScenePlay(Game));
+                Game.SetScene(new ScenePlay(Game),new Fade(300,true,true));
             }
         }
     }
