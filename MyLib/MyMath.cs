@@ -6,6 +6,7 @@ namespace SAGASALib
     {
         public const float PI = (float)Math.PI;
         public const float Deg2Rad = PI / 180f; // 度からラジアンに変換する定数
+        public const float Rad2Deg = 180f / PI; // ラジアンから度に変換する定数
 
         public static float Lerp(float a, float b, float t)
         {

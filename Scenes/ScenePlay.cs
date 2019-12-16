@@ -24,6 +24,8 @@ namespace Giraffe
 
         private int Flag = ResourceLoader.GetGraph("ハタアイコン.png");
         private int bar = ResourceLoader.GetGraph("マップ.png");
+        private int playbg = ResourceLoader.GetGraph("play_bg.png"); //背景描画
+
 
         public PlayMap Map { get; private set; }
 
@@ -45,6 +47,8 @@ namespace Giraffe
 
         public override void Draw()
         {
+            Vec2f pos = GetScreenPos(Vec2f.ZERO);
+            DX.DrawGraph((int)pos.X, (int)pos.Y, playbg);
             gameObjects.ForEach(obj=>obj.Draw());
             player.Draw();
 
@@ -57,6 +61,7 @@ namespace Giraffe
 
         public override void OnExit()
         {
+            Game.soundManager.Remove("play");
         }
 
         public override void OnLoad()
@@ -65,6 +70,7 @@ namespace Giraffe
 
         public override void Update()
         {
+            Game.soundManager.CrossFade("title", "play",3);
             gameObjects.ForEach(obj=> player.CalcInteract(obj));
             player.Update();
             playerIcon.Update();

@@ -4,22 +4,23 @@ using SAGASALib;
 
 namespace Giraffe
 {
-    public static class SoundManager
+    public class SoundManager
     {
-        static DX.VECTOR ListenerPos;
-        static DX.VECTOR ListenerDir;
+        DX.VECTOR ListenerPos;
+        DX.VECTOR ListenerDir;
 
-        public static Dictionary<string, int> bgmMap = new Dictionary<string, int>();
-        public static Dictionary<string, DX.VECTOR> bgmPos = new Dictionary<string, DX.VECTOR>();
+        Dictionary<string, int> bgmMap = new Dictionary<string, int>();
+        Dictionary<string, DX.VECTOR> bgmPos = new Dictionary<string, DX.VECTOR>();
 
         static float bgmDis = 100.0f;//聞こえる範囲
-        static float interval = 150.0f;
+        static float interval = 150.0f;//bgmDisとintervalでクロスフェードの重なりを調整する
 
-        static float fadeSpeed = bgmDis / 60.0f;
-        static float crossSpeed = interval / 60.0f;
+        float fadeSpeed = bgmDis / 60.0f;//1秒でフェード、これをタイムで割る
+        float crossSpeed = interval / 60.0f;//クロスフェード用
 
-        public static bool fadeInit = false;
-        public static void Load()
+        public bool fadeInit = true;
+
+        public void Load()
         {
             ListenerPos = DX.VGet(0.0f, 1.0f, 0.0f);//リスナーの位置
             ListenerDir = DX.VGet(0.0f, -1.0f, 0.0f);//リスナーの向き
@@ -38,13 +39,13 @@ namespace Giraffe
             bgmPos["play_fast"] = bgmPos["play"];
         }
 
-        public static void FadeIn(string name, int time)
+        public void FadeIn(string name, int time)
         {
-            if (!fadeInit)//初期化
+            if (fadeInit)//初期化
             {
                 ListenerPos.x = bgmPos[name].x;
                 ListenerPos.z = bgmPos[name].z + bgmDis;
-                fadeInit = true;
+                fadeInit = false;
             }
 
             if (ListenerPos.z > bgmPos[name].z)
@@ -61,13 +62,13 @@ namespace Giraffe
             PlayBgm(name);
         }
 
-        public static void FadeOut(string name, int time)
+        public void FadeOut(string name, int time)
         {
-            if (!fadeInit)//初期化
+            if (fadeInit)//初期化
             {
                 ListenerPos.x = bgmPos[name].x;
                 ListenerPos.z = bgmPos[name].z;
-                fadeInit = true;
+                fadeInit = false;
             }
 
             if (ListenerPos.z < bgmPos[name].z + bgmDis + 10)
@@ -80,18 +81,17 @@ namespace Giraffe
                 ListenerPos.z = bgmPos[name].z + bgmDis + 10;
                 DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
             }
-
             PlayBgm(name);
         }
 
-        public static void CrossFade(string name1, string name2, int time)
+        public void CrossFade(string name1, string name2, int time)
         {
-            if (!fadeInit)
+            if (fadeInit)
             {
                 ListenerPos.x = bgmPos[name1].x;
                 ListenerPos.z = bgmPos[name1].z;
                 bgmPos[name2] = DX.VGet(bgmPos[name1].x + interval, 0.0f, 0.0f);
-                fadeInit = true;
+                fadeInit = false;
             }
 
             if (ListenerPos.x < bgmPos[name2].x)
@@ -108,20 +108,14 @@ namespace Giraffe
             PlayBgm(name2);
         }
 
-        public static void BgmMove(string name)
+        void BgmMove(string name)//検証用
         {
             bgmPos[name] = DX.VGet(bgmPos[name].x - fadeSpeed, bgmPos[name].y, bgmPos[name].z);
             DX.Set3DPositionSoundMem(bgmPos[name], bgmMap[name]);
             PlayBgm(name);
         }
 
-        public static void ListenerMove(int time)//テスト用、使い終わったら消去します
-        {
-            ListenerPos.x += fadeSpeed / time;
-            DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
-        }
-
-        public static void PlayBgm(string name)//テストで使うのでpublic、使い終わったらpublicは消す
+        void PlayBgm(string name)
         {
             //BGMの当たり判定、斜め移動してないのでとりあえず四角形で計算
             if (DX.CheckSoundMem(bgmMap[name]) != 1 &&
@@ -142,7 +136,13 @@ namespace Giraffe
             }
         }
 
-        public static void Debug()
+        public void Remove(string name)//強制停止用
+        {
+            ResourceLoader.RemoveSound(name + "_BGM.wav");//消去
+            DX.DeleteSoundMem(bgmMap[name]);
+        }
+
+        public void Debug()
         {//フェードの可視化、1で再生中,0で停止中,-1でメモリにない(エラー)
             DX.DrawString(0, 15, "　タイトル:" + DX.CheckSoundMem(bgmMap["title"]) +
                                  "　プレイ:" + DX.CheckSoundMem(bgmMap["play"]) +

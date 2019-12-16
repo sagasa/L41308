@@ -16,7 +16,7 @@ namespace Giraffe
             pos = vec2f;
         }
 
-        private CircleCollision[] collisions = new CircleCollision[]{new CircleCollision(new Vec2f(1,1), 0.8f) };
+        private CircleCollision[] collisions = new CircleCollision[]{new CircleCollision(new Vec2f(1,1.1f), 0.6f) };
 
         public override CircleCollision[] GetCollisions()
         {
