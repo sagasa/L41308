@@ -11,6 +11,8 @@ namespace Giraffe
         //回転テスト 邪魔なら消して
         List<StaticMapObject> objList = new List<StaticMapObject>();
 
+        public SoundManager soundManager = new SoundManager();
+
         public static bool isGoal = false;//ゴールする判定
 
         public static bool ShowCollision = true;
@@ -18,6 +20,7 @@ namespace Giraffe
         public void Init()
         {
             DX.SetBackgroundColor(200, 200, 200);
+            soundManager.Load();
             SetScene(new ScenePlay(this));
             for (int i = 0; i < 16; i++)
             {
@@ -89,6 +92,8 @@ namespace Giraffe
             objList.ForEach(obj=>obj.Draw());
 
             Debug.Draw();
+
+            //soundManager.Debug();
         }
     }
 }
