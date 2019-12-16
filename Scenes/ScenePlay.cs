@@ -80,6 +80,8 @@ namespace Giraffe
 
             if (Game.isGoal==true)//ゴールにプレイヤーが触れたら
             {
+                Game.soundManager.Remove("play");
+                Sound.Play("goal_jingle.mp3");
                 player.pos = player.oldPos;
                 goolTimer--;
                 if (goolTimer <= 0)

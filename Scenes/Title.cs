@@ -20,11 +20,7 @@ namespace Giraffe
         private int select1 = ResourceLoader.GetGraph("select_1.png");
         private int select2 = ResourceLoader.GetGraph("select_2.png");
         int y = 502;
-
-        //SE
-        //private int cursor_SE = ResourceLoader.GetSound("cursor_SE.mp3",DX.FALSE);
-        //private int decision_SE = ResourceLoader.GetSound("decision_SE.mp3", DX.FALSE);
-
+        
         public Title(Game game) : base(game)
         {
 
