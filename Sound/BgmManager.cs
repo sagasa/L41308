@@ -61,11 +61,20 @@ namespace Giraffe
 
         public void FadeOut(string name, int time)
         {
-            if (fadeInit)//初期化
+            if (ListenerPos.x != bgmPos[name].x)
             {
-                ListenerPos.x = bgmPos[name].x;
-                ListenerPos.z = bgmPos[name].z;
-                fadeInit = false;
+                if (ListenerPos.x > bgmPos[name].x + 1)
+                {
+                    ListenerPos.x -= 0.7f;
+                }
+                else if (ListenerPos.x < bgmPos[name].x - 1)
+                {
+                    ListenerPos.x += 0.7f;
+                }
+                else if (ListenerPos.x != bgmPos[name].x)
+                {
+                    ListenerPos.x = bgmPos[name].x;
+                }
             }
 
             if (ListenerPos.z < bgmPos[name].z + bgmDis + 10)
@@ -80,15 +89,25 @@ namespace Giraffe
             }
             PlayBgm(name);
         }
-
+        
         public void CrossFade(string name1, string name2, int time)
         {
             if (fadeInit)
             {
-                ListenerPos.x = bgmPos[name1].x;
-                ListenerPos.z = 0;
                 bgmPos[name2] = DX.VGet(bgmPos[name1].x + interval, 0.0f, 0.0f);
                 fadeInit = false;
+            }
+
+            if (ListenerPos.z != 0)
+            {
+                if (ListenerPos.z > 0)
+                {
+                    ListenerPos.z -= 0.7f;
+                }
+                if(ListenerPos.z < 0)
+                {
+                    ListenerPos.z = 0;
+                }
             }
 
             if (ListenerPos.x < bgmPos[name2].x)
