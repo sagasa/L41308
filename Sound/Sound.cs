@@ -25,9 +25,9 @@ namespace Giraffe
             DX.PlaySoundMem(handle, DX.DX_PLAYTYPE_LOOP);
         }
         
-        public static void Stop(int handle)
+        public static void Stop(string handle)
         {
-            DX.StopSoundMem(handle);
+            DX.StopSoundMem(ResourceLoader.GetSound(handle));
         }
     }
 }

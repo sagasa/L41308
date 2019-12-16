@@ -9,7 +9,7 @@ namespace Giraffe
     {
         //立ってる場合はfalse
         private bool IsDongle = false;
-
+        
         //回転速度
         private const float RotateSpeed = (float)Math.PI / 30f;
         //移動速度
@@ -118,6 +118,11 @@ namespace Giraffe
                 {
                     vel = vel.SetX(MyMath.Lerp(vel.X, 0, 0.2f));
                 }
+
+                if ((Input.LEFT.IsPush() && !Input.RIGHT.IsHold()) || (Input.RIGHT.IsPush() && !Input.LEFT.IsHold()))
+                {
+                    Sound.Loop("step_SE.mp3");
+                }
             }
             else if(_state == PlayerState.Fly)
             {
@@ -154,6 +159,11 @@ namespace Giraffe
                     _state = PlayerState.Dongle;
                     render.IsDongle = true;
                 }
+            }
+
+            if (_state != PlayerState.Stand || (!Input.LEFT.IsHold() && !Input.RIGHT.IsHold()))
+            {
+                Sound.Stop("step_SE.mp3");
             }
 
             base.Update();
