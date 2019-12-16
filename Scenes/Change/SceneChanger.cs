@@ -5,7 +5,7 @@
         /// <summary>
         /// 0～1で進捗表現
         /// </summary>
-        public float Progress => (float)_time / _count;
+        public float Progress => (float)_count / _time;
         protected SceneChanger(int time)
         {
             _time = time;
