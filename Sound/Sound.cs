@@ -13,5 +13,10 @@ namespace Giraffe
         {//ループ、主にBGM用
             DX.PlaySoundMem(handle, DX.DX_PLAYTYPE_LOOP);
         }
+
+        public static void Stop(int handle)
+        {
+            DX.StopSoundMem(handle);
+        }
     }
 }

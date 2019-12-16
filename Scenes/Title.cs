@@ -10,6 +10,7 @@ namespace Giraffe
 {
     public class Title : Scene
     {
+        bool wait = false;
 
         private int head = ResourceLoader.GetGraph("player/player_head.png");
         private int horn = ResourceLoader.GetGraph("player/horn.png");
@@ -75,8 +76,12 @@ namespace Giraffe
             }
             else if (y == 502 && Input.ACTION.IsPush())
             {
-                Sound.Play(decision_SE);
-                Game.SetScene(new ScenePlay(Game),new Fade(300,true,true));
+                if (!wait)
+                {
+                    Sound.Play(decision_SE);
+                    Game.SetScene(new ScenePlay(Game), new Fade(300, true, true));
+                    wait = !wait;
+                }
             }
         }
     }
