@@ -57,6 +57,7 @@ namespace Giraffe
 
         public override void Update()
         {
+            Game.soundManager.FadeIn("title",3);
             Game.isGoal = false;
             if (y == 617 && Input.ACTION.IsPush())
             {
