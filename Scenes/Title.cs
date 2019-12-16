@@ -10,7 +10,9 @@ namespace Giraffe
 {
     public class Title : Scene
     {
-        bool wait = false;
+        private bool wait = false;
+
+        private int fadeTime = 180;
 
         private int head = ResourceLoader.GetGraph("player/player_head.png");
         private int horn = ResourceLoader.GetGraph("player/horn.png");
@@ -53,13 +55,18 @@ namespace Giraffe
 
         public override void OnLoad()
         {
+            wait = false;
             Game.bgmManager.fadeInit = true;
         }
 
         public override void Update()
         {
-            Game.bgmManager.FadeIn("title", 3);
             Game.isGoal = false;
+
+            if(!wait)
+            {
+                Game.bgmManager.FadeIn("title", fadeTime);
+            }
 
             if (Input.DOWN.IsPush() || Input.UP.IsPush())
             {
@@ -68,14 +75,14 @@ namespace Giraffe
 
             if (y == 617 && Input.ACTION.IsPush())
             {
-
+                Sound.Play("cancel_SE.mp3");
             }
             else if (y == 502 && Input.ACTION.IsPush())
             {
                 if (!wait)
                 {
                     Sound.Play("decision_SE.mp3");
-                    Game.SetScene(new ScenePlay(Game), new Fade(120, true, true));
+                    Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
                     wait = !wait;
                 }
             }

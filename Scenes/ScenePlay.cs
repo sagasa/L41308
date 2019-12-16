@@ -26,6 +26,7 @@ namespace Giraffe
         private int bar = ResourceLoader.GetGraph("マップ.png");
         private int playbg = ResourceLoader.GetGraph("play_bg.png"); //背景描画
 
+        private int fadeTime = 300;
 
         public PlayMap Map { get; private set; }
 
@@ -71,9 +72,9 @@ namespace Giraffe
 
         public override void Update()
         {
-            if (!Game.isGoal)
+            if (goolTimer == 300)
             {
-                Game.bgmManager.CrossFade("title", "play", 10);
+                Game.bgmManager.CrossFade("title", "play",fadeTime);
             }
 
             gameObjects.ForEach(obj=> player.CalcInteract(obj));
@@ -85,8 +86,11 @@ namespace Giraffe
             if (Game.isGoal==true)//ゴールにプレイヤーが触れたら
             {
                 player.pos = player.oldPos;
+                if (goolTimer > 240)
+                {
+                    Game.bgmManager.FadeOut("play", 30);
+                }
 
-                Game.bgmManager.Remove("play");
                 if (goolTimer == 300)
                 {
                     Sound.Play("goal_jingle.mp3");
@@ -94,7 +98,7 @@ namespace Giraffe
                 goolTimer--;
                 if (goolTimer == 0)
                 {
-                    Game.SetScene(new Title(Game),new Fade(120,true,true));
+                    Game.SetScene(new Title(Game),new Fade(fadeTime,true,true));
                 }
             }
         }

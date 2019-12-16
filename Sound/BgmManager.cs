@@ -12,12 +12,9 @@ namespace Giraffe
         Dictionary<string, int> bgmMap = new Dictionary<string, int>();
         Dictionary<string, DX.VECTOR> bgmPos = new Dictionary<string, DX.VECTOR>();
 
-        static float bgmDis = 100.0f;//聞こえる範囲
-        static float interval = 150.0f;//bgmDisとintervalでクロスフェードの重なりを調整する
-
-        float fadeSpeed = bgmDis / 60.0f;//1秒でフェード、これをタイムで割る
-        float crossSpeed = interval / 60.0f;//クロスフェード用
-
+        float bgmDis = 100.0f;//聞こえる範囲
+        float interval = 150.0f;//bgmDisとintervalでクロスフェードの重なりを調整する
+        
         public bool fadeInit = true;
 
         public void Load()
@@ -50,7 +47,7 @@ namespace Giraffe
 
             if (ListenerPos.z > bgmPos[name].z)
             {
-                ListenerPos.z -= fadeSpeed / time;
+                ListenerPos.z -= bgmDis / time;
                 DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
             }
             else if (ListenerPos.z < bgmPos[name].z)
@@ -73,7 +70,7 @@ namespace Giraffe
 
             if (ListenerPos.z < bgmPos[name].z + bgmDis + 10)
             {
-                ListenerPos.z += fadeSpeed / time;
+                ListenerPos.z += bgmDis / time;
                 DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
             }
             else if (ListenerPos.z > bgmPos[name].z + bgmDis + 10)
@@ -96,7 +93,7 @@ namespace Giraffe
 
             if (ListenerPos.x < bgmPos[name2].x)
             {
-                ListenerPos.x += crossSpeed / time;
+                ListenerPos.x += interval / time;
                 DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
             }
             else if (ListenerPos.x > bgmPos[name2].x)

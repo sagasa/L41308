@@ -92,6 +92,7 @@ namespace Giraffe
                 {
                     _state = PlayerState.Fly;
                     vel = (new Vec2f(-1, 0) * velAngle).Rotate(angle);
+                    Sound.Play("jump_SE.mp3");
                 }
             }
             else if(_state == PlayerState.Stand)
@@ -156,13 +157,14 @@ namespace Giraffe
                 //葉の接触
                 if (currentLeaf != null && Input.ACTION.IsHold())
                 {
+                    Sound.Play("leaf_bite_SE.mp3");
                     vel = Vec2f.ZERO;
                     _state = PlayerState.Dongle;
                     render.IsDongle = true;
                 }
             }
 
-            if (_state != PlayerState.Stand || (!Input.LEFT.IsHold() && !Input.RIGHT.IsHold()))
+            if (!IsOnGround() || (!Input.LEFT.IsHold() && !Input.RIGHT.IsHold()))
             {
                 Sound.Stop("step_SE.mp3");
             }
