@@ -12,7 +12,7 @@ namespace Giraffe
         Dictionary<string, int> bgmMap = new Dictionary<string, int>();
         Dictionary<string, DX.VECTOR> bgmPos = new Dictionary<string, DX.VECTOR>();
 
-        public static bool fadeInit = true;
+        public bool fadeInit = true;
 
         float bgmDis = 100.0f;//聞こえる範囲
         float interval = 150.0f;//bgmDisとintervalでクロスフェードの重なりを調整する
@@ -150,6 +150,18 @@ namespace Giraffe
             {
                 ResourceLoader.RemoveSound(name + "_BGM.wav");//消去
                 DX.DeleteSoundMem(bgmMap[name]);
+            }
+        }
+
+        public bool CheckPlayBgm (string name)//なっていたらtrue
+        {
+            if(DX.CheckSoundMem(bgmMap[name])==1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 

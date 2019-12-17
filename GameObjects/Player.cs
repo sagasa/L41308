@@ -120,11 +120,6 @@ namespace Giraffe
                 {
                     vel = vel.SetX(MyMath.Lerp(vel.X, 0, 0.2f));
                 }
-
-                if ((Input.LEFT.IsPush() && !Input.RIGHT.IsHold()) || (Input.RIGHT.IsPush() && !Input.LEFT.IsHold()))
-                {
-                    Sound.Loop("step_SE.mp3");
-                }
             }
             else if(_state == PlayerState.Fly)
             {
@@ -164,6 +159,10 @@ namespace Giraffe
                 }
             }
 
+            if (IsOnGround()&&((Input.LEFT.IsPush() && !Input.RIGHT.IsHold()) || (Input.RIGHT.IsPush() && !Input.LEFT.IsHold())))
+            {
+                Sound.Loop("step_SE.mp3");
+            }
             if (!IsOnGround() || (!Input.LEFT.IsHold() && !Input.RIGHT.IsHold()))
             {
                 Sound.Stop("step_SE.mp3");

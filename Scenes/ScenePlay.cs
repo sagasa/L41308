@@ -62,16 +62,21 @@ namespace Giraffe
 
         public override void OnExit()
         {
-            Game.bgmManager.Remove("play");
         }
 
         public override void OnLoad()
         {
-            Game.bgmManager.fadeInit = true;
+            //Game.bgmManager.fadeInit = true;
         }
 
         public override void Update()
         {
+            if (!Game.bgmManager.fadeInit&&!Game.bgmManager.CheckPlayBgm("play"))
+            {
+                Game.bgmManager.fadeInit = true;
+            }
+
+
             if (goolTimer == 300)
             {
                 Game.bgmManager.CrossFade("title", "play",fadeTime);
@@ -94,6 +99,7 @@ namespace Giraffe
                 if (goolTimer == 300)
                 {
                     Sound.Play("goal_jingle.mp3");
+                    Game.bgmManager.fadeInit = true;
                 }
                 goolTimer--;
                 if (goolTimer == 0)

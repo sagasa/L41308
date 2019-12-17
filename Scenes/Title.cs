@@ -56,7 +56,6 @@ namespace Giraffe
         public override void OnLoad()
         {
             wait = false;
-            Game.bgmManager.fadeInit = true;
         }
 
         public override void Update()
