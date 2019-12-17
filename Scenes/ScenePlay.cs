@@ -26,7 +26,7 @@ namespace Giraffe
         private int bar = ResourceLoader.GetGraph("マップ.png");
         private int playbg = ResourceLoader.GetGraph("play_bg.png"); //背景描画
 
-        private int fadeTime = 300;
+        private int fadeTime = 180;
 
         public PlayMap Map { get; private set; }
 
@@ -66,17 +66,10 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-            //Game.bgmManager.fadeInit = true;
         }
 
         public override void Update()
         {
-            if (!Game.bgmManager.fadeInit&&!Game.bgmManager.CheckPlayBgm("play"))
-            {
-                Game.bgmManager.fadeInit = true;
-            }
-
-
             if (goolTimer == 300)
             {
                 Game.bgmManager.CrossFade("title", "play",fadeTime);

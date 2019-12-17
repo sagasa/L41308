@@ -80,10 +80,13 @@ namespace Giraffe
             {
                 if (!wait)
                 {
+                    Game.bgmManager.fadeInit = true;
                     Sound.Play("decision_SE.mp3");
                     Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
                     wait = !wait;
                 }
+
+                Game.bgmManager.CrossFade("title", "play", fadeTime);
             }
         }
     }
