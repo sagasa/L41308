@@ -17,7 +17,6 @@ namespace Giraffe
         float bgmDis = 100.0f;//聞こえる範囲
         float interval = 150.0f;//bgmDisとintervalでクロスフェードの重なりを調整する
         
-
         public void Load()
         {
             ListenerPos = DX.VGet(0.0f, 1.0f, 0.0f);//リスナーの位置
@@ -135,16 +134,16 @@ namespace Giraffe
         void PlayBgm(string name)
         {
             //BGMの当たり判定、斜め移動してないのでとりあえず四角形で計算
-            if (DX.CheckSoundMem(bgmMap[name]) != 1 &&
+            if (!CheckPlayBgm(name) &&
                 bgmPos[name].x - bgmDis - 5 <= ListenerPos.x && ListenerPos.x <= bgmPos[name].x + bgmDis + 5 &&
                 bgmPos[name].z - bgmDis - 5 <= ListenerPos.z && ListenerPos.z <= bgmPos[name].z + bgmDis + 5)//再生してない、範囲内の時
             {
                 bgmMap[name] = ResourceLoader.GetSound3D(name + "_BGM.wav");//読み込み
                 DX.Set3DRadiusSoundMem(bgmDis, bgmMap[name]);
                 DX.Set3DPositionSoundMem(bgmPos[name], bgmMap[name]);
-                Sound.Loop3D(bgmMap[name]);//再生
+                DX.PlaySoundMem(bgmMap[name], DX.DX_PLAYTYPE_LOOP);
             }
-            else if (DX.CheckSoundMem(bgmMap[name]) == 1 &&
+            else if (CheckPlayBgm(name) &&
                 (ListenerPos.x <= bgmPos[name].x - bgmDis - 10 || bgmPos[name].x + bgmDis + 10 <= ListenerPos.x ||
                  ListenerPos.z <= bgmPos[name].z - bgmDis - 10 || bgmPos[name].z + bgmDis + 10 <= ListenerPos.z))//再生中、範囲外の時
             {
@@ -153,23 +152,19 @@ namespace Giraffe
             }
         }
 
-        public bool CheckPlayBgm (string name)//なっていたらtrue
+        bool CheckPlayBgm (string name)//鳴っていたらtrue
         {
             if(DX.CheckSoundMem(bgmMap[name])==1)
-            {
                 return true;
-            }
             else
-            {
                 return false;
-            }
         }
 
-        public void Remove(string name)//強制停止用
-        {
-            ResourceLoader.RemoveSound(name + "_BGM.wav");//消去
-            DX.DeleteSoundMem(bgmMap[name]);
-        }
+        //public void Remove(string name)//強制停止用
+        //{
+        //    ResourceLoader.RemoveSound(name + "_BGM.wav");//消去
+        //    DX.DeleteSoundMem(bgmMap[name]);
+        //}
 
         public void Debug()
         {//フェードの可視化、1で再生中,0で停止中,-1でメモリにない(エラー)

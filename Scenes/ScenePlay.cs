@@ -70,7 +70,7 @@ namespace Giraffe
 
         public override void Update()
         {
-            if (goalTimer == 300)
+            if (!Game.isGoal)
             {
                 Game.bgmManager.CrossFade("title", "play",fadeTime);
             }
@@ -81,7 +81,7 @@ namespace Giraffe
             gameObjects.ForEach(obj => obj.Update());
             gameObjects.RemoveAll(obj => obj.IsDead());
 
-            if (Game.isGoal==true)//ゴールにプレイヤーが触れたら
+            if (Game.isGoal)//ゴールにプレイヤーが触れたら
             {
                 player.pos = player.oldPos;
                 if (goalTimer > 240)

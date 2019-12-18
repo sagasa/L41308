@@ -14,16 +14,6 @@ namespace Giraffe
         {
             DX.PlaySoundMem(ResourceLoader.GetSound(handle), DX.DX_PLAYTYPE_LOOP);
         }
-
-        public static void Play3D(int handle)
-        {
-            DX.PlaySoundMem(handle, DX.DX_PLAYTYPE_BACK);
-        }
-
-        public static void Loop3D(int handle)
-        {
-            DX.PlaySoundMem(handle, DX.DX_PLAYTYPE_LOOP);
-        }
         
         public static void Stop(string handle)
         {
