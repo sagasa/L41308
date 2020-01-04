@@ -46,10 +46,13 @@ namespace Giraffe
         //表示対象
         public readonly GameObject Target;
 
-        //口の位置取得
+        //Map座標で口の位置取得
         public Vec2f GetMouthPos()
         {
+            if (IsDongle)
+                return Target.pos;
             Vec2f pos = Target.pos;
+            pos += (HeadNeckJoint - Center).Rotate(HeadRotate);
             return pos;
         }
 
@@ -61,7 +64,7 @@ namespace Giraffe
 
         private bool IsInversion()
         {
-            return IsDongle ? 0 < Target.velAngle : Target.vel.X < 0;
+            return 0 == Target.velAngle ? Target.vel.X < 0 : 0 < Target.velAngle;
         }
 
         
