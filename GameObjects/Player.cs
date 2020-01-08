@@ -15,6 +15,9 @@ namespace Giraffe
         //移動速度
         private const float WalkSpeed = 0.1f;
 
+        //飛び出すときの速度倍率
+        private static readonly Vec2f ShootSpeed = new Vec2f(1,1.2f);
+
         //接地時の中心の高さ
         private const float StandOffset = 1f;
 
@@ -33,7 +36,7 @@ namespace Giraffe
             size = 0.6f;
             render = new PlayerRender(this);
             angle = MyMath.Deg2Rad * 0;
-            //velAngle = RotateSpeed/3;
+         //   velAngle = RotateSpeed/3;
         }
 
         private PlayMap GetMap()
@@ -74,7 +77,15 @@ namespace Giraffe
                 ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y - 0.3f);
             }
 
+
             /*
+            if (_state == PlayerState.Dongle && Input.ACTION.IsPush())
+                _state = PlayerState.Fly;
+            else if (_state == PlayerState.Fly && Input.ACTION.IsPush())
+                _state = PlayerState.Stand;
+            else if (_state == PlayerState.Stand && Input.ACTION.IsPush())
+                _state = PlayerState.Dongle;
+            render.State = _state;
             base.Update();
             return;
             //*/
@@ -94,9 +105,15 @@ namespace Giraffe
 
                 if (!Input.ACTION.IsHold())
                 {
-                    _state = PlayerState.Fly;
+                    //飛び出す
                     vel = (new Vec2f(-1, 0) * velAngle).Rotate(angle);
+                    vel *= ShootSpeed;
+
+                    //姿勢変更時に中心の移動分補完
+                    _state = PlayerState.Fly;
                     render.State = _state;
+                    pos -= render.GetMouthOffset();
+                    velAngle *= 2.5f;
                     Sound.Play("jump_SE.mp3");
                 }
             }
@@ -131,6 +148,8 @@ namespace Giraffe
                 //飛翔
                 //重力
                 vel += Gravity/3;
+                //回転の減速
+                velAngle = MyMath.Lerp(velAngle, velAngle < 0 ? -RotateSpeed : RotateSpeed, 0.02f);
                 //接地判定
                 if (IsOnGround())
                 {
@@ -158,9 +177,16 @@ namespace Giraffe
                 if (currentLeaf != null && Input.ACTION.IsHold())
                 {
                     Sound.Play("leaf_bite_SE.mp3");
-                    vel = Vec2f.ZERO;
+                    //姿勢変更時に中心の移動分補完
+                    pos += render.GetMouthOffset();
+                    //立っていた状態からの場合初速を与える
+                    if (_state == PlayerState.Stand)
+                        velAngle = 0 <= vel.X ? RotateSpeed * -0.3f : RotateSpeed * 0.3f;
                     _state = PlayerState.Dongle;
                     render.State = _state;
+                    
+                    vel = Vec2f.ZERO;
+
                 }
             }
 
@@ -181,6 +207,7 @@ namespace Giraffe
         private float count = 0;
         public override void Draw()
         {
+            /*
             count++;
             if (60 < count)
                 count = -60;
@@ -188,6 +215,7 @@ namespace Giraffe
             render.HeadRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30);
             render.NeckRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30) * -1;
             render.NeckExt = (Math.Abs(count)/20f)+1;
+            //*/
             Debug.DrawVec2(scene.GetScreenPos(pos),(new Vec2f(-1,0)*velAngle).Normal().Rotate(angle)*50);
             render.Draw();
             base.Draw();
@@ -201,6 +229,7 @@ namespace Giraffe
         private CircleCollision[] collision = new CircleCollision[]{ new CircleCollision(Vec2f.ZERO, 0.1f) };
         public override CircleCollision[] GetCollisions()
         {
+            collision[0] = new CircleCollision(render.GetMouthOffset(),0.1f);
             return collision;
         }
 

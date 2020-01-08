@@ -25,7 +25,7 @@ namespace Giraffe
             for (int i = 0; i < 16; i++)
             {
                 //これ消せばクルクル消えます
-                objList.Add(new StaticMapObject( i, 0 ));
+               // objList.Add(new StaticMapObject( i, 0 ));
             }
             Vec2f vec2 = new Vec2f(1,1);
             Vec2f test = vec2 * 2;

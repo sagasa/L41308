@@ -48,13 +48,44 @@ namespace Giraffe
         public readonly GameObject Target;
 
         //Map座標で口の位置取得
-        public Vec2f GetMouthPos()
+        public Vec2f GetMouthOffset()
         {
-            if (State==Player.PlayerState.Dongle)
-                return Target.pos;
+            switch (State)
+            {
+                case Player.PlayerState.Dongle:
+                    return Vec2f.ZERO;
+                case Player.PlayerState.Fly:
+                {
+                    //テクスチャ座標系で頭の位置を算出
+                    Vec2f body = BodyNeckJoint - CheckAndInvert(StandCenterPos);
+                    Vec2f neck = HeadNeckJoint - BodyNeckJoint;
+                    neck *= NeckExt*0.5f;
+                    
+                    Vec2f res = (body+neck).Rotate(GetAngle());
+                    Vec2f head = CheckAndInvert(DangleCenterPos) - HeadNeckJoint;
+                    head = head.Rotate(GetAngle() + HeadRotate);
+                    res += head;
+                    //変換して返す
+                    return res * ImageSize * Scale / PlayMap.CellSize;
+                }
+                case Player.PlayerState.Stand:
+                {
+                    //テクスチャ座標系で頭の位置を算出
+                    Vec2f body = (BodyNeckJoint - CheckAndInvert(StandCenterPos)).Rotate(GetAngle());
+                    Vec2f neck = HeadNeckJoint - BodyNeckJoint;
+                    neck *= NeckExt;
+                    neck = neck.Rotate(GetAngle() + NeckRotate);
+                    Vec2f head = CheckAndInvert(DangleCenterPos) - HeadNeckJoint;
+                    head = head.Rotate(GetAngle() + NeckRotate + HeadRotate);
+                    Vec2f res = body + neck + head;
+                    //変換して返す
+                    return res * ImageSize * Scale / PlayMap.CellSize;
+                }
+            }
+
             Vec2f pos = Target.pos;
             pos += (HeadNeckJoint - Center).Rotate(HeadRotate);
-            return pos;
+            return Vec2f.ZERO;
         }
 
         public PlayerRender(GameObject target)
@@ -78,8 +109,8 @@ namespace Giraffe
 
         private float GetAngle()
         {
-
-            return State==Player.PlayerState.Dongle ? Target.angle + (IsInversion() ? 45*MyMath.Deg2Rad : -45 * MyMath.Deg2Rad) : Target.angle;
+            return Target.angle;
+            //return State==Player.PlayerState.Dongle ? Target.angle + (IsInversion() ? 45*MyMath.Deg2Rad : -45 * MyMath.Deg2Rad) : Target.angle;
         }
 
         private readonly MultipleRotationCalc _headCalc = new MultipleRotationCalc();
@@ -123,7 +154,6 @@ namespace Giraffe
                     _bodyCalc.Move(_neck.Rotate(GetAngle()+HeadRotate));
                     break;
                 case Player.PlayerState.Fly:
-                    //_neckCalc.Rotate(BodyNeckJoint, NeckRotate);
                     _headCalc.Rotate(HeadNeckJoint, HeadRotate);
                     _headCalc.Move(_neck.Rotate(GetAngle()) * 0.5f);
                     _neck = _neck * -1;
@@ -137,16 +167,8 @@ namespace Giraffe
                     _headCalc.Move(_neck.Rotate(GetAngle()));
                     break;
             }
-            if (State == Player.PlayerState.Dongle)
-            {
-                
-            }
-            else
-            {
-                
-            }
             //表示サイズに
-            Vec2f scale = new Vec2f(128, 128);
+            Vec2f scale = new Vec2f(128, 128)* Scale;
             //*
             _headCalc.Move(Center * -1);
             _neckCalc.Move(Center * -1);
@@ -169,7 +191,7 @@ namespace Giraffe
             //首
             Draw(imageNeck, _neckCalc);
 
-            Debug.DrawPos(Vec2f.ZERO, screenPos, "Center");
+            //Debug.DrawPos(Vec2f.ZERO, screenPos, "Center");
         }
 
         //軸と角度を指定して回転を追加可能
