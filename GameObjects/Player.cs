@@ -33,7 +33,7 @@ namespace Giraffe
             size = 0.6f;
             render = new PlayerRender(this);
             angle = MyMath.Deg2Rad * 0;
-            //velAngle = RotateSpeed/10;
+            //velAngle = RotateSpeed/3;
         }
 
         private PlayMap GetMap()
@@ -74,7 +74,10 @@ namespace Giraffe
                 ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y - 0.3f);
             }
 
+            /*
+            base.Update();
             return;
+            //*/
             //操作系+状態変更
             if (_state==PlayerState.Dongle)
             {

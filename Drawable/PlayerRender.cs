@@ -35,7 +35,7 @@ namespace Giraffe
         //回転
         public float NeckRotate = 0;
         public float HeadRotate = 0;
-        public Player.PlayerState State;
+        public Player.PlayerState State = Player.PlayerState.Stand;
         //アニメーション
         public float MouthProgress = 0;
         public float EyeProgress = 0;
@@ -120,14 +120,15 @@ namespace Giraffe
                     _bodyCalc.Rotate(HeadNeckJoint, HeadRotate);
                     _bodyCalc.Rotate(BodyNeckJoint, NeckRotate);
                     _neck = _neck *= -1;
-                    _bodyCalc.Move(_neck.Rotate(GetAngle()));
+                    _bodyCalc.Move(_neck.Rotate(GetAngle()+HeadRotate));
                     break;
                 case Player.PlayerState.Fly:
-                    _neckCalc.Rotate(BodyNeckJoint, NeckRotate);
-                    _headCalc.Rotate(BodyNeckJoint, NeckRotate);
-                    _headCalc.Rotate(HeadNeckJoint + _neck, HeadRotate);
+                    //_neckCalc.Rotate(BodyNeckJoint, NeckRotate);
+                    _headCalc.Rotate(HeadNeckJoint, HeadRotate);
                     _headCalc.Move(_neck.Rotate(GetAngle()) * 0.5f);
-                    _bodyCalc.Move(_neck.Rotate(GetAngle()) * -0.5f);
+                    _neck = _neck * -1;
+                    _bodyCalc.Rotate(BodyNeckJoint, -NeckRotate);
+                    _bodyCalc.Move(_neck.Rotate(GetAngle()) * 0.5f);
                     break;
                 case Player.PlayerState.Stand:
                     _neckCalc.Rotate(BodyNeckJoint, NeckRotate);
