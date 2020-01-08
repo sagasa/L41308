@@ -113,6 +113,9 @@ namespace Giraffe
             //return State==Player.PlayerState.Dongle ? Target.angle + (IsInversion() ? 45*MyMath.Deg2Rad : -45 * MyMath.Deg2Rad) : Target.angle;
         }
 
+        //矢印のリソース
+        private static readonly int VectorImage = ResourceLoader.GetGraph("vector.png");
+
         private readonly MultipleRotationCalc _headCalc = new MultipleRotationCalc();
         private readonly MultipleRotationCalc _neckCalc = new MultipleRotationCalc();
         private readonly MultipleRotationCalc _bodyCalc = new MultipleRotationCalc();
@@ -190,7 +193,15 @@ namespace Giraffe
             Draw(AnimationUtils.GetImageLoop(imageTail, TailProgress), _bodyCalc);
             //首
             Draw(imageNeck, _neckCalc);
+            //矢印
+            if (State == Player.PlayerState.Dongle)
+            {
+                const float deg90 = MyMath.PI / 2f;
+                Vec2f vectorPos = screenPos + CheckAndInvert(new Vec2f(20, 20)).Rotate(GetAngle());
+                DX.DrawRotaGraphF(vectorPos.X, vectorPos.Y, 2f, GetAngle() + (IsInversion()? -deg90: deg90), VectorImage);
 
+            }
+            
             //Debug.DrawPos(Vec2f.ZERO, screenPos, "Center");
         }
 

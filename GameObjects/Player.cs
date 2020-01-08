@@ -203,7 +203,6 @@ namespace Giraffe
             currentLeaf = null;
         }
 
-
         private float count = 0;
         public override void Draw()
         {
@@ -216,6 +215,7 @@ namespace Giraffe
             render.NeckRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30) * -1;
             render.NeckExt = (Math.Abs(count)/20f)+1;
             //*/
+           
             Debug.DrawVec2(scene.GetScreenPos(pos),(new Vec2f(-1,0)*velAngle).Normal().Rotate(angle)*50);
             render.Draw();
             base.Draw();
