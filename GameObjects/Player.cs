@@ -19,7 +19,7 @@ namespace Giraffe
         private const float StandOffset = 1f;
 
         // private int image = ResourceLoader.GetGraph("player.png");
-        enum PlayerState
+        public enum PlayerState
         {
             Fly,Stand,Dongle
         }
@@ -74,6 +74,7 @@ namespace Giraffe
                 ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y - 0.3f);
             }
 
+            return;
             //操作系+状態変更
             if (_state==PlayerState.Dongle)
             {
@@ -92,6 +93,7 @@ namespace Giraffe
                 {
                     _state = PlayerState.Fly;
                     vel = (new Vec2f(-1, 0) * velAngle).Rotate(angle);
+                    render.State = _state;
                     Sound.Play("jump_SE.mp3");
                 }
             }
@@ -132,7 +134,7 @@ namespace Giraffe
                     angle = 0;
                     velAngle = 0;
                     _state = PlayerState.Stand;
-                    render.IsDongle = false;
+                    render.State = _state;
                 }
                 
             }
@@ -155,7 +157,7 @@ namespace Giraffe
                     Sound.Play("leaf_bite_SE.mp3");
                     vel = Vec2f.ZERO;
                     _state = PlayerState.Dongle;
-                    render.IsDongle = true;
+                    render.State = _state;
                 }
             }
 
@@ -182,7 +184,7 @@ namespace Giraffe
 
             render.HeadRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30);
             render.NeckRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30) * -1;
-            render.NeckExt = (Math.Abs(count)/30f)+1;
+            render.NeckExt = (Math.Abs(count)/20f)+1;
             Debug.DrawVec2(scene.GetScreenPos(pos),(new Vec2f(-1,0)*velAngle).Normal().Rotate(angle)*50);
             render.Draw();
             base.Draw();

@@ -22,10 +22,12 @@ namespace Giraffe
         private static readonly Vec2f DangleCenterPos = new Vec2f(114, 50) / ImageSize;
         private static readonly Vec2f HeadNeckJointPos = new Vec2f(77, 57) / ImageSize;
         private static readonly Vec2f BodyNeckJointPos = new Vec2f(77, 74) / ImageSize;
+        private static readonly Vec2f NeckCenterPos = (HeadNeckJointPos - BodyNeckJointPos) * 0.5f + BodyNeckJointPos;
 
-        private Vec2f Center { get => CheckAndInvert(IsDongle ? DangleCenterPos : StandCenterPos); }
+        private Vec2f Center { get => CheckAndInvert(State==Player.PlayerState.Dongle ? DangleCenterPos : StandCenterPos); }
         private Vec2f HeadNeckJoint { get => CheckAndInvert(HeadNeckJointPos); }
         private Vec2f BodyNeckJoint { get => CheckAndInvert(BodyNeckJointPos); }
+        private Vec2f NeckCenter {get => CheckAndInvert(NeckCenterPos); }
         //スケール
         public Vec2f Scale = new Vec2f(1,1);
         //首スケール
@@ -33,7 +35,7 @@ namespace Giraffe
         //回転
         public float NeckRotate = 0;
         public float HeadRotate = 0;
-        public bool IsDongle;
+        public Player.PlayerState State;
         //アニメーション
         public float MouthProgress = 0;
         public float EyeProgress = 0;
@@ -41,7 +43,6 @@ namespace Giraffe
         public float LegProgress = 0;
         public float TailProgress = 0;
 
-        
 
         //表示対象
         public readonly GameObject Target;
@@ -49,7 +50,7 @@ namespace Giraffe
         //Map座標で口の位置取得
         public Vec2f GetMouthPos()
         {
-            if (IsDongle)
+            if (State==Player.PlayerState.Dongle)
                 return Target.pos;
             Vec2f pos = Target.pos;
             pos += (HeadNeckJoint - Center).Rotate(HeadRotate);
@@ -78,7 +79,7 @@ namespace Giraffe
         private float GetAngle()
         {
 
-            return IsDongle ? Target.angle + (IsInversion() ? 45*MyMath.Deg2Rad : -45 * MyMath.Deg2Rad) : Target.angle;
+            return State==Player.PlayerState.Dongle ? Target.angle + (IsInversion() ? 45*MyMath.Deg2Rad : -45 * MyMath.Deg2Rad) : Target.angle;
         }
 
         private readonly MultipleRotationCalc _headCalc = new MultipleRotationCalc();
@@ -90,41 +91,58 @@ namespace Giraffe
 
             Vec2f _neck = HeadNeckJoint - BodyNeckJoint;
             _neck *= (NeckExt - 1);
-            if (IsDongle)
-            {
-                _neck *= -1;
-            }
 
             _headCalc.Clear();
             _neckCalc.Clear();
             _bodyCalc.Clear();
             //スケール
-            if (IsDongle)
+            switch (State)
             {
-                _neckCalc.Scale(new Vec2f(1, NeckExt), HeadNeckJoint);
-            }
-            else
-            {
-                _neckCalc.Scale(new Vec2f(1, NeckExt), BodyNeckJoint);
+                case Player.PlayerState.Dongle:
+                    _neckCalc.Scale(new Vec2f(1, NeckExt), HeadNeckJoint);
+                    break;
+                case Player.PlayerState.Fly:
+                    _neckCalc.Scale(new Vec2f(1, NeckExt), NeckCenter);
+                    break;
+                case Player.PlayerState.Stand:
+                    _neckCalc.Scale(new Vec2f(1, NeckExt), BodyNeckJoint);
+                    break;
             }
             //回転
             _headCalc.Rotate(Center, GetAngle());
             _neckCalc.Rotate(Center, GetAngle());
             _bodyCalc.Rotate(Center, GetAngle());
-            
-            if (IsDongle)
+
+            switch (State)
             {
-                _neckCalc.Rotate(HeadNeckJoint, HeadRotate);
-                _bodyCalc.Rotate(HeadNeckJoint, HeadRotate);
-                _bodyCalc.Rotate(BodyNeckJoint, NeckRotate);
-                _bodyCalc.Move(_neck.Rotate(GetAngle()));
+                case Player.PlayerState.Dongle:
+                    _neckCalc.Rotate(HeadNeckJoint, HeadRotate);
+                    _bodyCalc.Rotate(HeadNeckJoint, HeadRotate);
+                    _bodyCalc.Rotate(BodyNeckJoint, NeckRotate);
+                    _neck = _neck *= -1;
+                    _bodyCalc.Move(_neck.Rotate(GetAngle()));
+                    break;
+                case Player.PlayerState.Fly:
+                    _neckCalc.Rotate(BodyNeckJoint, NeckRotate);
+                    _headCalc.Rotate(BodyNeckJoint, NeckRotate);
+                    _headCalc.Rotate(HeadNeckJoint + _neck, HeadRotate);
+                    _headCalc.Move(_neck.Rotate(GetAngle()) * 0.5f);
+                    _bodyCalc.Move(_neck.Rotate(GetAngle()) * -0.5f);
+                    break;
+                case Player.PlayerState.Stand:
+                    _neckCalc.Rotate(BodyNeckJoint, NeckRotate);
+                    _headCalc.Rotate(BodyNeckJoint, NeckRotate);
+                    _headCalc.Rotate(HeadNeckJoint + _neck, HeadRotate);
+                    _headCalc.Move(_neck.Rotate(GetAngle()));
+                    break;
+            }
+            if (State == Player.PlayerState.Dongle)
+            {
+                
             }
             else
             {
-                _neckCalc.Rotate(BodyNeckJoint, NeckRotate);
-                _headCalc.Rotate(BodyNeckJoint, NeckRotate);
-                _headCalc.Rotate(HeadNeckJoint+ _neck, HeadRotate);
-                _headCalc.Move(_neck.Rotate(GetAngle()));
+                
             }
             //表示サイズに
             Vec2f scale = new Vec2f(128, 128);
