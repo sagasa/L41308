@@ -66,6 +66,7 @@ namespace Giraffe
 
         public override void OnLoad()
         {
+            Game.isGoal = false;
         }
 
         public override void Update()
