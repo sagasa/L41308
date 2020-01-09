@@ -40,7 +40,6 @@ namespace Giraffe
             if (Input.DOWN.IsPush())
             {
                 y = 617;
-
             }
             if (Input.UP.IsPush())
             {
@@ -55,7 +54,6 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-            Game.isGoal = false;
             wait = false;
         }
 
@@ -73,8 +71,13 @@ namespace Giraffe
 
             if (y == 617 && Input.ACTION.IsPush())
             {
-                Sound.Play("cancel_SE.mp3");
-                Game.SetScene(new Tutolal(Game));
+                if(!wait)
+                {
+                    Sound.Play("decision_SE.mp3");
+                    Game.SetScene(new Tutolal(Game), new Fade(60, true, true));
+                    wait = true;
+                }
+                Game.bgmManager.CrossFade("title", "tutorial", fadeTime);
             }
             else if (y == 502 && Input.ACTION.IsPush())
             {
@@ -82,13 +85,10 @@ namespace Giraffe
                 {
                     Sound.Play("decision_SE.mp3");
                     Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
-                    Game.bgmManager.fadeInit = true;
                     wait = true;
                 }
-
                 Game.bgmManager.CrossFade("title", "play", fadeTime);
             }
         }
     }
 }
-

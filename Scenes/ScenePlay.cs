@@ -93,7 +93,6 @@ namespace Giraffe
                 if (goalTimer == 300)
                 {
                     Sound.Play("goal_jingle.mp3");
-                    Game.bgmManager.fadeInit = true;
                 }
                 goalTimer--;
                 if (goalTimer == 0)
