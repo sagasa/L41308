@@ -10,7 +10,16 @@ namespace Giraffe
 {
     public class Tutolal : Scene
     {
+        public override Vec2f GetScreenPos(Vec2f mapPos)
+        {
+            return (mapPos - MapPos) * tutomap.CellSize;
+        }
+        public tutomap Map { get; private set; }
+        public Vec2f MapPos;
+        public List<GameObject> gameObjects = new List<GameObject>();
 
+
+        private Player player;
         int count = 0;
         private int head = ResourceLoader.GetGraph("player/player_head.png");
         private int horn = ResourceLoader.GetGraph("player/horn.png");
@@ -22,6 +31,7 @@ namespace Giraffe
         private int setumei = ResourceLoader.GetGraph("プレイ画面スクショ.jpg");
         private int bg = ResourceLoader.GetGraph("t.bg.png");
         private int window = ResourceLoader.GetGraph("ant1.png");
+        private int playbg = ResourceLoader.GetGraph("play_bg.png");
 
         private int waku = ResourceLoader.GetGraph("81917.png");
         int y = 502;
@@ -41,7 +51,12 @@ namespace Giraffe
 
         public Tutolal(Game game) : base(game)
         {
+            Map = new tutomap(this, "map1_leaf");
+            MapPos = new Vec2f(0, Map.MapSize.Y - tutomap.ScreenSize.Y);
+
+
         }
+
 
         public override void Draw()
         {
@@ -126,7 +141,10 @@ namespace Giraffe
             }
             if (count >= 100)
             {
-
+                DX.DrawGraph(0, 0, playbg);
+                Vec2f pos = GetScreenPos(Vec2f.ZERO);
+                DX.DrawGraph((int)pos.X, (int)pos.Y, playbg);
+                gameObjects.ForEach(obj => obj.Draw());
             }
 
         }
@@ -161,15 +179,26 @@ namespace Giraffe
             {
                 count -= 1;
             }
-            if (count >= 7 && count <= 99)
+            if (count >= 7 && count <= 10)
             {
                 count = 7;
+            }
+            else if (count <= 100 && count >= 11)
+            {
+                count = 100;
             }
 
             if (count == 7 && Input.ACTION.IsPush())
             {
                 count = 0;
                 y = 502;
+            }
+            if (count >= 100)
+            {
+
+                gameObjects.ForEach(obj => obj.Update());
+                gameObjects.RemoveAll(obj => obj.IsDead());
+
             }
         }
     }

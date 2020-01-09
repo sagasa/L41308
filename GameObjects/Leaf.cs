@@ -15,6 +15,10 @@ namespace Giraffe
             
             pos = vec2f;
         }
+        public Leaf(Tutolal tutolal, Vec2f vec2) : base(tutolal)
+        {
+            pos = vec2;
+        }
 
         private CircleCollision[] collisions = new CircleCollision[]{new CircleCollision(new Vec2f(1,1.1f), 0.6f) };
 
