@@ -15,6 +15,8 @@ namespace SAGASALib
 
         public static readonly InputBind ACTION;
 
+        public static readonly InputBind BACK;
+
         //ダブルクリックのタイムアウト(ms
         internal const int CLICK_TIMEOUT = 300;
 
@@ -28,6 +30,7 @@ namespace SAGASALib
             RIGHT = new InputBind(DX.KEY_INPUT_RIGHT);
             LEFT = new InputBind(DX.KEY_INPUT_LEFT);
             ACTION = new InputBind(DX.KEY_INPUT_SPACE);
+            BACK = new InputBind(DX.KEY_INPUT_X);
         }
 
         // 最新の入力状況に更新する処理。

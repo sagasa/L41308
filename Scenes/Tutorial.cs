@@ -161,6 +161,10 @@ namespace Giraffe
 
         public override void Update()
         {
+            if (count == 0 && Input.BACK.IsPush())
+            {
+                Game.SetScene(new Title(Game));
+            }
             if (y == 617 && Input.ACTION.IsPush())
             {
                 count += 1;
@@ -177,7 +181,14 @@ namespace Giraffe
             }
             else if (y == 0 && Input.UP.IsPush())
             {
-                count -= 1;
+                if (count <= 2)
+                {
+                    count += 0;
+                }
+                else
+                {
+                    count -= 1;
+                }
             }
             if (count >= 7 && count <= 10)
             {
