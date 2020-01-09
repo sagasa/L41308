@@ -74,6 +74,7 @@ namespace Giraffe
             if (y == 617 && Input.ACTION.IsPush())
             {
                 Sound.Play("cancel_SE.mp3");
+                Game.SetScene(new Tutolal(Game));
             }
             else if (y == 502 && Input.ACTION.IsPush())
             {
