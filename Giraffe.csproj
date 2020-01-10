@@ -87,6 +87,7 @@
     <Compile Include="MyLib\MyRandom.cs" />
     <Compile Include="MyLib\Vec2f.cs" />
     <Compile Include="Scenes\Tutorial.cs" />
+    <Compile Include="GameObjects\ScoreLeaf.cs" />
     <Compile Include="Sound\Sound.cs" />
     <Compile Include="Sound\BgmManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -334,6 +335,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Images\rank_3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\scoreleaf.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Images\select_1.png">
