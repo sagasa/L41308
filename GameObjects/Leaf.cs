@@ -7,7 +7,7 @@ namespace Giraffe
     class Leaf : GameObject
     {
         private int leafImage = ResourceLoader.GetGraph("leaf4.png");
-        private int scoreLeafImage = ResourceLoader.GetGraph("scoreleaf.png");
+        private int scoreLeafImage = ResourceLoader.GetGraph("s_leaf4.png");
         //private int branch = ResourceLoader.GetGraph("branch2.png");
 
         public int score;
