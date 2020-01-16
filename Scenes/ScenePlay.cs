@@ -7,7 +7,10 @@ namespace Giraffe
 {
     public class ScenePlay : Scene
     {
+        int score = 0;
+
         int goalTimer = 300;
+        
         //Map座標からScreen座標へ変換する
         public override Vec2f GetScreenPos(Vec2f mapPos)
         {
@@ -25,6 +28,8 @@ namespace Giraffe
         private int Flag = ResourceLoader.GetGraph("ハタアイコン.png");
         private int bar = ResourceLoader.GetGraph("マップ.png");
         private int playbg = ResourceLoader.GetGraph("play_bg.png"); //背景描画
+        private int scoreImage = ResourceLoader.GetGraph("image_play/score.png");
+        private int stageName = ResourceLoader.GetGraph("image_play/stagename_1.png");
 
         private int fadeTime = 180;
 
@@ -58,6 +63,10 @@ namespace Giraffe
             DX.DrawGraph(525, 150, Flag);
             playerIcon.Draw();
 
+            DX.DrawGraph(0, 0, stageName);
+            DX.DrawGraph(250, 0, scoreImage);
+            DX.DrawString(410, 15, score + "", DX.GetColor(0, 0, 0));
+            //DX.DrawString()
         }
 
         public override void OnExit()
