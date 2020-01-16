@@ -42,7 +42,7 @@ namespace Giraffe
 
         public ScenePlay(Game game) : base(game)
         {
-            Map = new PlayMap(this, "map1_leaf");
+            Map = new PlayMap(this, "map_2");
             MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y);
 
             player = new Player(this);
