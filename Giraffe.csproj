@@ -86,6 +86,8 @@
     <Compile Include="MyLib\MyMath.cs" />
     <Compile Include="MyLib\MyRandom.cs" />
     <Compile Include="MyLib\Vec2f.cs" />
+    <Compile Include="Particle.cs" />
+    <Compile Include="ParticleManager.cs" />
     <Compile Include="Scenes\Tutorial.cs" />
     <Compile Include="GameObjects\ScoreLeaf.cs" />
     <Compile Include="Sound\Sound.cs" />
