@@ -105,15 +105,16 @@ namespace Giraffe
 
                 if (!Input.ACTION.IsHold())
                 {
-                    //飛び出す
+                    //飛び出す 過度な加速はしない
                     vel = (new Vec2f(-1, 0) * velAngle).Rotate(angle);
                     vel *= ShootSpeed;
+                    if (Math.Abs(velAngle) < RotateSpeed * 2)
+                        velAngle *= 2.5f;
 
                     //姿勢変更時に中心の移動分補完
                     _state = PlayerState.Fly;
                     render.State = _state;
                     pos -= render.GetMouthOffset();
-                    velAngle *= 2.5f;
                     Sound.Play("jump_SE.mp3");
                 }
             }
@@ -216,7 +217,7 @@ namespace Giraffe
             render.NeckExt = (Math.Abs(count)/20f)+1;
             //*/
            
-            Debug.DrawVec2(scene.GetScreenPos(pos),(new Vec2f(-1,0)*velAngle).Normal().Rotate(angle)*50);
+            //Debug.DrawVec2(scene.GetScreenPos(pos),(new Vec2f(-1,0)*velAngle).Normal().Rotate(angle)*50);
             render.Draw();
             base.Draw();
         }

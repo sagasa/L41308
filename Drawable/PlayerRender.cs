@@ -181,7 +181,7 @@ namespace Giraffe
             _neckCalc.Scale(scale, Vec2f.ZERO);
             _bodyCalc.Scale(scale, Vec2f.ZERO);
 
-
+            
             //胴
             Draw(imageBody, _bodyCalc);
             //頭
@@ -199,7 +199,6 @@ namespace Giraffe
                 const float deg90 = MyMath.PI / 2f;
                 Vec2f vectorPos = screenPos + CheckAndInvert(new Vec2f(20, 20)).Rotate(GetAngle());
                 DX.DrawRotaGraphF(vectorPos.X, vectorPos.Y, 2f, GetAngle() + (IsInversion()? -deg90: deg90), VectorImage);
-
             }
             
             //Debug.DrawPos(Vec2f.ZERO, screenPos, "Center");
