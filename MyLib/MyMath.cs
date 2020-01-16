@@ -30,7 +30,12 @@ namespace SAGASALib
                 sub -= (float)Math.PI*2;
             return from + sub * progress;
         }
-        
+
+        //0-1にクランプ
+        public static float Clamp(float value)
+        {
+            return Math.Abs(value)%1f;
+        }
 
         public static float Distance(float x0,float y0,float x1,float y1)
         {
