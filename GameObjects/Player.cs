@@ -7,8 +7,6 @@ namespace Giraffe
     //プレイシーン内専用
     public class Player : GameObject
     {
-        int score = 0;//検証用
-
         //立ってる場合はfalse
         private bool IsDongle = false;
         
@@ -181,7 +179,7 @@ namespace Giraffe
                 {
                     if (currentLeaf.score != 0)
                     {
-                        score += currentLeaf.score;
+                        ScenePlay.score += currentLeaf.score;
                         currentLeaf.score = 0;
                     }
                     Sound.Play("leaf_bite_SE.mp3");
@@ -226,7 +224,6 @@ namespace Giraffe
             //Debug.DrawVec2(scene.GetScreenPos(pos),(new Vec2f(-1,0)*velAngle).Normal().Rotate(angle)*50);
             render.Draw();
             base.Draw();
-            //DX.DrawString(0, 0, "score:" + score, DX.GetColor(255, 0, 0));//検証用
         }
 
         public override bool IsDead()

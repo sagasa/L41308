@@ -7,13 +7,11 @@ namespace Giraffe
 {
     public class ScenePlay : Scene
     {
-        int score = 0;
+        public static int score = 0;
         int[] time = new int[] { 0, 0, 0 };
         
-        
-
         int goalTimer = 300;
-        
+        int fadeTime = 180;
         //Map座標からScreen座標へ変換する
         public override Vec2f GetScreenPos(Vec2f mapPos)
         {
@@ -33,24 +31,11 @@ namespace Giraffe
         private int playbg = ResourceLoader.GetGraph("play_bg.png"); //背景描画
         private int scoreImage = ResourceLoader.GetGraph("image_play/score.png");
         
-        private int stageName = ResourceLoader.GetGraph("image_play/stagename_1.png");
+        private int stageName = ResourceLoader.GetGraph("image_play/stagename_0.png");
         private int watch = ResourceLoader.GetGraph("tokei.png");
-
-        private int font0 = ResourceLoader.GetGraph("image_effect/time_0.png");
-        private int font1 = ResourceLoader.GetGraph("image_effect/time_1.png");
-        private int font2 = ResourceLoader.GetGraph("image_effect/time_2.png");
-        private int font3 = ResourceLoader.GetGraph("image_effect/time_3.png");
-        private int font4 = ResourceLoader.GetGraph("image_effect/time_4.png");
-        private int font5 = ResourceLoader.GetGraph("image_effect/time_5.png");
-        private int font6 = ResourceLoader.GetGraph("image_effect/time_6.png");
-        private int font7 = ResourceLoader.GetGraph("image_effect/time_7.png");
-        private int font8 = ResourceLoader.GetGraph("image_effect/time_8.png");
-        private int font9 = ResourceLoader.GetGraph("image_effect/time_9.png");
-
-        private int fadeTime = 180;
-
+        
         public PlayMap Map { get; private set; }
-
+         
         //表示中の領域の左上のMap座標
         public Vec2f MapPos;
 
@@ -73,64 +58,71 @@ namespace Giraffe
             DX.DrawGraph((int)pos.X, (int)pos.Y, playbg);
             gameObjects.ForEach(obj => obj.Draw());
             player.Draw();
-
-
+            
             DX.DrawGraph(520, 200, bar);
             DX.DrawGraph(525, 150, Flag);
             playerIcon.Draw();
 
-            DX.DrawRotaGraph(128, 22, 0.8, 0, stageName);
-            DX.DrawRotaGraph(Screen.Width / 2 + 30, 22, 0.8, 0, scoreImage);
-            DX.DrawRotaGraph(Screen.Width - 150, 22, 0.6, 0, watch);
-
-            DX.DrawString(Screen.Width / 2 + 30, 15, score + "", DX.GetColor(0, 0, 0));
+            DX.DrawRotaGraph(100, 23 , 0.6, 0, stageName);
+            DX.DrawRotaGraph(Screen.Width / 2 - 22, 23, 0.6, 0, scoreImage);
+            DX.DrawRotaGraph(Screen.Width - 155, 25, 0.55, 0, watch);
+            
             for (int i = 0; i < 10; i++)
             {
+                //スコア
+                if (score / 10000 == i)//10000
+                    DX.DrawRotaGraph(Screen.Width / 2 - 10, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                if (score / 1000 % 10 == i)//1000
+                    DX.DrawRotaGraph(Screen.Width / 2 + 15, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                if (score / 100 % 10 == i)//100
+                    DX.DrawRotaGraph(Screen.Width / 2 + 40, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                if (score / 10 % 10 == i)//10
+                    DX.DrawRotaGraph(Screen.Width / 2 + 65, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                if (score % 10 == i)//1
+                    DX.DrawRotaGraph(Screen.Width / 2 + 90, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                //タイム
                 if (time[0] / 10 == i)//10分
-                {
-                    DX.DrawRotaGraph(Screen.Width - 118, 22, 0.5, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
-                }
+                    DX.DrawRotaGraph(Screen.Width - 120, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
                 if (time[0] % 10 == i)//1分
-                {
-                    DX.DrawRotaGraph(Screen.Width - 90, 22, 0.5, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
-                }
+                    DX.DrawRotaGraph(Screen.Width - 95, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
                 if (time[1] / 10 == i)//10秒
-                {
-                    DX.DrawRotaGraph(Screen.Width - 53, 22, 0.5, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
-                }
+                    DX.DrawRotaGraph(Screen.Width - 55, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
                 if (time[1] % 10 == i)//1秒
-                {
-                    DX.DrawRotaGraph(Screen.Width - 25, 22, 0.5, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
-                }
+                    DX.DrawRotaGraph(Screen.Width - 30, 25 , 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
             }
         }
 
         public override void OnExit()
         {
+
         }
 
         public override void OnLoad()
         {
             Game.isGoal = false;
+            time[0] = 0;
+            time[1] = 0;
+            time[2] = 0;
+            score = 0;
         }
 
         public override void Update()
         {
-            time[2]++;
-            if(time[2]>=60)
-            {
-                time[1]++;
-                time[2] = 0;
-            }
-            if(time[1]>=60)
-            {
-                time[0]++;
-                time[1] = 0;
-            }
-
             if (!Game.isGoal)
             {
                 Game.bgmManager.CrossFade("title", "play",fadeTime);
+
+                time[2]++;
+                if (time[2] >= 60)
+                {
+                    time[1]++;
+                    time[2] = 0;
+                }
+                if (time[1] >= 60)
+                {
+                    time[0]++;
+                    time[1] = 0;
+                }
             }
 
             gameObjects.ForEach(obj=> player.CalcInteract(obj));
