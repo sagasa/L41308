@@ -29,7 +29,9 @@ namespace Giraffe
         private int bar = ResourceLoader.GetGraph("マップ.png");
         private int playbg = ResourceLoader.GetGraph("play_bg.png"); //背景描画
         private int scoreImage = ResourceLoader.GetGraph("image_play/score.png");
+        
         private int stageName = ResourceLoader.GetGraph("image_play/stagename_1.png");
+        private int tokei = ResourceLoader.GetGraph("tokei.png");
 
         private int fadeTime = 180;
 
@@ -63,10 +65,10 @@ namespace Giraffe
             DX.DrawGraph(525, 150, Flag);
             playerIcon.Draw();
 
-            DX.DrawGraph(0, 0, stageName);
+            DX.DrawRotaGraph(100, 20, 0.75, 0, stageName);
             DX.DrawGraph(250, 0, scoreImage);
             DX.DrawString(410, 15, score + "", DX.GetColor(0, 0, 0));
-            //DX.DrawString()
+            DX.DrawGraph(550, 0, tokei);
         }
 
         public override void OnExit()
