@@ -226,7 +226,7 @@ namespace Giraffe
             //Debug.DrawVec2(scene.GetScreenPos(pos),(new Vec2f(-1,0)*velAngle).Normal().Rotate(angle)*50);
             render.Draw();
             base.Draw();
-            DX.DrawString(0, 0, "score:" + score, DX.GetColor(255, 0, 0));//検証用
+            //DX.DrawString(0, 0, "score:" + score, DX.GetColor(255, 0, 0));//検証用
         }
 
         public override bool IsDead()

@@ -8,6 +8,9 @@ namespace Giraffe
     public class ScenePlay : Scene
     {
         int score = 0;
+        int[] time = new int[] { 0, 0, 0 };
+        
+        
 
         int goalTimer = 300;
         
@@ -31,7 +34,18 @@ namespace Giraffe
         private int scoreImage = ResourceLoader.GetGraph("image_play/score.png");
         
         private int stageName = ResourceLoader.GetGraph("image_play/stagename_1.png");
-        private int tokei = ResourceLoader.GetGraph("tokei.png");
+        private int watch = ResourceLoader.GetGraph("tokei.png");
+
+        private int font0 = ResourceLoader.GetGraph("image_effect/time_0.png");
+        private int font1 = ResourceLoader.GetGraph("image_effect/time_1.png");
+        private int font2 = ResourceLoader.GetGraph("image_effect/time_2.png");
+        private int font3 = ResourceLoader.GetGraph("image_effect/time_3.png");
+        private int font4 = ResourceLoader.GetGraph("image_effect/time_4.png");
+        private int font5 = ResourceLoader.GetGraph("image_effect/time_5.png");
+        private int font6 = ResourceLoader.GetGraph("image_effect/time_6.png");
+        private int font7 = ResourceLoader.GetGraph("image_effect/time_7.png");
+        private int font8 = ResourceLoader.GetGraph("image_effect/time_8.png");
+        private int font9 = ResourceLoader.GetGraph("image_effect/time_9.png");
 
         private int fadeTime = 180;
 
@@ -57,18 +71,38 @@ namespace Giraffe
         {
             Vec2f pos = GetScreenPos(Vec2f.ZERO);
             DX.DrawGraph((int)pos.X, (int)pos.Y, playbg);
-            gameObjects.ForEach(obj=>obj.Draw());
+            gameObjects.ForEach(obj => obj.Draw());
             player.Draw();
 
-            
+
             DX.DrawGraph(520, 200, bar);
             DX.DrawGraph(525, 150, Flag);
             playerIcon.Draw();
 
-            DX.DrawRotaGraph(100, 20, 0.75, 0, stageName);
-            DX.DrawGraph(250, 0, scoreImage);
-            DX.DrawString(410, 15, score + "", DX.GetColor(0, 0, 0));
-            DX.DrawGraph(550, 0, tokei);
+            DX.DrawRotaGraph(128, 22, 0.8, 0, stageName);
+            DX.DrawRotaGraph(Screen.Width / 2 + 30, 22, 0.8, 0, scoreImage);
+            DX.DrawRotaGraph(Screen.Width - 150, 22, 0.6, 0, watch);
+
+            DX.DrawString(Screen.Width / 2 + 30, 15, score + "", DX.GetColor(0, 0, 0));
+            for (int i = 0; i < 10; i++)
+            {
+                if (time[0] / 10 == i)//10分
+                {
+                    DX.DrawRotaGraph(Screen.Width - 118, 22, 0.5, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                }
+                if (time[0] % 10 == i)//1分
+                {
+                    DX.DrawRotaGraph(Screen.Width - 90, 22, 0.5, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                }
+                if (time[1] / 10 == i)//10秒
+                {
+                    DX.DrawRotaGraph(Screen.Width - 53, 22, 0.5, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                }
+                if (time[1] % 10 == i)//1秒
+                {
+                    DX.DrawRotaGraph(Screen.Width - 25, 22, 0.5, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                }
+            }
         }
 
         public override void OnExit()
@@ -82,6 +116,18 @@ namespace Giraffe
 
         public override void Update()
         {
+            time[2]++;
+            if(time[2]>=60)
+            {
+                time[1]++;
+                time[2] = 0;
+            }
+            if(time[1]>=60)
+            {
+                time[0]++;
+                time[1] = 0;
+            }
+
             if (!Game.isGoal)
             {
                 Game.bgmManager.CrossFade("title", "play",fadeTime);
