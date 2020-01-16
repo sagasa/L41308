@@ -30,9 +30,9 @@ namespace Giraffe
         private int bar = ResourceLoader.GetGraph("マップ.png");
         private int playbg = ResourceLoader.GetGraph("play_bg.png"); //背景描画
         private int scoreImage = ResourceLoader.GetGraph("image_play/score.png");
-        
-        private int stageName = ResourceLoader.GetGraph("image_play/stagename_0.png");
+        private int stageName = ResourceLoader.GetGraph("image_play/stagename_" + 1 + ".png");
         private int watch = ResourceLoader.GetGraph("tokei.png");
+        private int colon = ResourceLoader.GetGraph("image_play/colon.png");
         
         public PlayMap Map { get; private set; }
          
@@ -66,7 +66,7 @@ namespace Giraffe
             DX.DrawRotaGraph(100, 23 , 0.6, 0, stageName);
             DX.DrawRotaGraph(Screen.Width / 2 - 22, 23, 0.6, 0, scoreImage);
             DX.DrawRotaGraph(Screen.Width - 155, 25, 0.55, 0, watch);
-            
+            DX.DrawRotaGraph(Screen.Width - 75, 25, 0.8, 0, colon);
             for (int i = 0; i < 10; i++)
             {
                 //スコア
@@ -94,7 +94,8 @@ namespace Giraffe
 
         public override void OnExit()
         {
-
+            Game.currentScore = score;
+            Game.currentTime = time;
         }
 
         public override void OnLoad()
