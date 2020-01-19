@@ -16,16 +16,21 @@ namespace Giraffe
         public static bool isGoal = false;//ゴールする判定
 
         public static bool ShowCollision = true;
+        
+        public static int highScore = 500;//ハイスコア
+        public static int[] fastestTime = new int[] { 5, 0, 0 };//最速タイム
+        public static int currentScore = 0;//現在のスコア
+        public static int[] currentTime = new int[] { 0, 0, 0 };//現在のタイム
 
         public void Init()
         {
             DX.SetBackgroundColor(200, 200, 200);
             bgmManager.Load();
             SetScene(new Title(this));
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 1; i++)
             {
                 //これ消せばクルクル消えます
-               // objList.Add(new StaticMapObject( i, 0 ));
+                //objList.Add(new StaticMapObject( i, 0 ));
             }
             Vec2f vec2 = new Vec2f(1,1);
             Vec2f test = vec2 * 2;

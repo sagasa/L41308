@@ -177,6 +177,11 @@ namespace Giraffe
                 //葉の接触
                 if (currentLeaf != null && Input.ACTION.IsHold())
                 {
+                    if (currentLeaf.score != 0)
+                    {
+                        ScenePlay.score += currentLeaf.score;
+                        currentLeaf.score = 0;
+                    }
                     Sound.Play("leaf_bite_SE.mp3");
                     //姿勢変更時に中心の移動分補完
                     pos += render.GetMouthOffset();
@@ -187,7 +192,6 @@ namespace Giraffe
                     render.State = _state;
                     
                     vel = Vec2f.ZERO;
-
                 }
             }
 

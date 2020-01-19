@@ -11,11 +11,13 @@ namespace Giraffe
 
         private const float maxX = 16;
 
-        private int image = ResourceLoader.GetGraph("off2.png");
+        private int[] image = ResourceLoader.GetGraph("branch.png", 7);
+
+        private int[] image2 = ResourceLoader.GetGraph("leaf.png", 7);
 
         private float offsetAngle;
 
-        const float viewAngle = (float)PI / 180f * 80f;
+        const float viewAngle = (float)PI / 180f * 90f;
 
         private int sizeX;
         private int sizeY;
@@ -23,7 +25,8 @@ namespace Giraffe
         {
             this.x = x;
             this.y = y;
-            DX.GetGraphSize(image, out sizeX, out sizeY);
+            // DX.GetGraphSize(image, out sizeX, out sizeY);
+            DX.GetGraphSize(AnimationUtils.GetImage(image2, 0.5f), out sizeX, out sizeY);
             offsetAngle = (float)PI * 2f * (x / maxX) + (float)PI / 11f;
         }
 
@@ -31,6 +34,12 @@ namespace Giraffe
         public void Draw()
         {
             offsetAngle += (float)PI / 180;
+            float nomalAngle = offsetAngle % (2 * (float)PI);
+            System.Console.WriteLine(nomalAngle);
+            if (nomalAngle > PI / 2 && nomalAngle < PI / 2f * 3)
+            {
+                return;
+            }
 
             float scaleX = (float)Cos(offsetAngle) * 0.5f;
             float scaleY = 0.5f;
@@ -42,7 +51,13 @@ namespace Giraffe
             DX.DrawModiGraphF(posX - sizeX / 2f * scaleX, posY - sizeY / 2f * scaleY + a,
                               posX + sizeX / 2f * scaleX, posY - sizeY / 2f * scaleY - a,
                               posX + sizeX / 2f * scaleX, posY + sizeY / 2f * scaleY - a,
-                              posX - sizeX / 2f * scaleX, posY + sizeY / 2f * scaleY + a, image);
+                              posX - sizeX / 2f * scaleX, posY + sizeY / 2f * scaleY + a, AnimationUtils.GetImage(image, (nomalAngle / (float)PI + 0.5f) % 1));
+
+
+            DX.DrawModiGraphF(posX - sizeX / 2f * scaleX, posY - sizeY / 2f * scaleY + a,
+                            posX + sizeX / 2f * scaleX, posY - sizeY / 2f * scaleY - a,
+                            posX + sizeX / 2f * scaleX, posY + sizeY / 2f * scaleY - a,
+                            posX - sizeX / 2f * scaleX, posY + sizeY / 2f * scaleY + a, AnimationUtils.GetImage(image2, (nomalAngle / (float)PI + 0.5f) % 1));
         }
     }
 }

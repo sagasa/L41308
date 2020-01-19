@@ -122,15 +122,16 @@ namespace Giraffe
                     int objectID = MapData[x, y];
                     if (objectID == 0) //Leaf
                     {
-
-                        scenePlay.gameObjects.Add(new Leaf(scenePlay, new Vec2f(x,y)));
-                       
+                        scenePlay.gameObjects.Add(new Leaf(scenePlay, new Vec2f(x, y), 0));
                     }
                     else if(objectID==1)
                     {
                         scenePlay.gameObjects.Add(new Goal(scenePlay, new Vec2f(x, y)));
                     }
-                    //else
+                    else if(objectID==2)
+                    {
+                        scenePlay.gameObjects.Add(new Leaf(scenePlay, new Vec2f(x, y), 100));
+                    }                    //else
                     //{
                     //    Debug.Assert(false, "オブジェクトID" + objectID + "番の生成処理は未実装です。");
                     //}                    
@@ -141,7 +142,6 @@ namespace Giraffe
         void SpawnObject(Vec2f pos, int objectID)
         {
             // 生成位置
-
             
         }
 
@@ -185,6 +185,3 @@ namespace Giraffe
         //}
     }
 }
-
-
-
