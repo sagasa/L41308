@@ -23,7 +23,6 @@ namespace Giraffe
         public new Vec2f MapPos;
         public List<GameObject> GameObjects = new List<GameObject>();
 
-
         private Player player;
         int count = 0;
         int SousaCount = 0;
@@ -42,10 +41,12 @@ namespace Giraffe
         private int bg = ResourceLoader.GetGraph("t.bg.png");
         private int window = ResourceLoader.GetGraph("ant1.png");
         private int playbg = ResourceLoader.GetGraph("play_bg.png");
-
         private int waku = ResourceLoader.GetGraph("81917.png");
-        int y = 502;
-        string[] GamenText = new string[]
+        private int mes = ResourceLoader.GetGraph("mes11_02_.png");
+
+        int y = 502;//キリンの頭の座標
+
+        string[] GamenText = new string[]//画面説明用コメント
         {
           "画面説明です",
           "この生き物はキリン、このゲームの主人公。 ","プレーヤーはこのキャラを操作します",
@@ -56,22 +57,25 @@ namespace Giraffe
           "チュートリアル画面トップへ戻りますか？","戻る場合は決定ボタンを押してください"
         };
 
-        string[] Gamennamae = new string[] { "～画面説明～","・キリン","・木の枝",
-            "・スコア", "・ミニマップ", "・タイマー", "・画面説明を終了" };
-
-        string[] SousaText = new string[]
+        string[] Gamennamae = new string[] //画面説明項目用コメント
         {
-            "画面説明です",
-            "十字キーの⇒を押すと、","プレイヤーは右の方向に移動します",
-            "十字キーの⇐を押すと、","プレイヤーは左の方向に移動します",
-            "地面に足がついている状態でスペース","キーを押すと、ジャンプをすることができます",
-            "スペースキーを押している状態で木の枝に触れ","ると、噛んでつかまることができます",
-            "木の枝に噛みついているとき、","キリンは自動でぐるぐる回り始めます",
-            "回転の向きは、十字キーの左右で変えることができます",
-            "十字キーの上下を押すとキリンの首","が長くなったり縮んだりします",
-            "うまく首の長さを調節して、","うまく木の枝を飛び移りましょう",
-            "※これにて操作説明のチュートリアルは終了です",
-            "チュートリアル画面トップへ戻ります",
+            "～画面説明～","・キリン","・木の枝",
+            "・スコア", "・ミニマップ", "・タイマー", "・画面説明を終了"
+        };
+
+        string[] SousaText = new string[]//操作説明用コメント
+        {
+            "画面説明です",//1
+            "十字キーの⇒を押すと、","プレイヤーは右の方向に移動します",//右,2,3
+            "十字キーの⇐を押すと、","プレイヤーは左の方向に移動します",//左,4,5
+            "地面に足がついている状態でスペース","キーを押すと、ジャンプをすることができます",//ジャンプ,6,7
+            "スペースキーを押している状態で木の枝に触れ","ると、噛んでつかまることができます",//噛みつき,8,9
+            "木の枝に噛みついているとき、","キリンは自動でぐるぐる回り始めます",//方向転換,10
+            "回転の向きは、十字キーの左右で変えることができます",//方向転換,11
+            "十字キーの上下を押すとキリンの首","が長くなったり縮んだりします",//首伸び縮み,12,13
+            "うまく首の長さを調節して、","うまく木の枝を飛び移りましょう",//まとめ,14
+            "※これにて操作説明のチュートリアルは終了です",//画面終了,15
+            "チュートリアル画面トップへ戻ります",//16
         };
 
 
@@ -84,6 +88,8 @@ namespace Giraffe
             player.pos = MapPos + new Vec2f(2, 2);
         }
 
+        uint white = DX.GetColor(255, 255, 255);//白
+        uint black = DX.GetColor(0, 0, 0);//黒
 
         public override void Draw()
         {
@@ -117,55 +123,55 @@ namespace Giraffe
                 DX.DrawGraph(-20, 30, setumei);
                 DX.DrawGraph(-10, 610, window);
                 DX.DrawGraph(390, 30, waku);
-                DX.DrawString(420, 70, Gamennamae[0], DX.GetColor(255, 255, 255));
-                DX.DrawString(400, 140, Gamennamae[1], DX.GetColor(255, 255, 255));
-                DX.DrawString(400, 200, Gamennamae[2], DX.GetColor(255, 255, 255));
-                DX.DrawString(400, 260, Gamennamae[3], DX.GetColor(255, 255, 255));
-                DX.DrawString(400, 320, Gamennamae[4], DX.GetColor(255, 255, 255));
-                DX.DrawString(400, 380, Gamennamae[5], DX.GetColor(255, 255, 255));
-                DX.DrawString(400, 440, Gamennamae[6], DX.GetColor(255, 255, 255));
+                DX.DrawString(420, 70, Gamennamae[0], white);
+                DX.DrawString(400, 140, Gamennamae[1], white);
+                DX.DrawString(400, 200, Gamennamae[2], white);
+                DX.DrawString(400, 260, Gamennamae[3], white);
+                DX.DrawString(400, 320, Gamennamae[4], white);
+                DX.DrawString(400, 380, Gamennamae[5], white);
+                DX.DrawString(400, 440, Gamennamae[6], white);
             }
             if (count == 1)//画面説明(タイトル)
             {
-                DX.DrawString(20, 640, GamenText[0], DX.GetColor(255, 255, 255));
+                DX.DrawString(20, 640, GamenText[0], white);
 
             }
             if (count == 2)//画面説明(キリン)
             {
-                DX.DrawString(10, 640, GamenText[1], DX.GetColor(255, 255, 255));
-                DX.DrawString(10, 690, GamenText[2], DX.GetColor(255, 255, 255));
-                DX.DrawLine(410, 170, 520, 170, DX.GetColor(0, 0, 0));
-                DX.DrawBox(180, 460, 250, 560, DX.GetColor(0, 0, 0), DX.FALSE);
+                DX.DrawString(20, 640, GamenText[1], white);
+                DX.DrawString(20, 690, GamenText[2], white);
+                DX.DrawLine(410, 170, 520, 170, black);
+                DX.DrawBox(180, 460, 250, 560, black, DX.FALSE);
             }
             if (count == 3)//画面説明(木の枝)
             {
-                DX.DrawString(10, 640, GamenText[3], DX.GetColor(255, 255, 255));
-                DX.DrawString(10, 690, GamenText[4], DX.GetColor(255, 255, 255));
-                DX.DrawLine(410, 230, 520, 230, DX.GetColor(0, 0, 0), DX.FALSE);
+                DX.DrawString(10, 640, GamenText[3], white);
+                DX.DrawString(10, 690, GamenText[4], white);
+                DX.DrawLine(410, 230, 520, 230, black, DX.FALSE);
             }
             if (count == 4)//画面説明(スコア)
             {
-                DX.DrawString(10, 640, GamenText[5], DX.GetColor(255, 255, 255));
-                DX.DrawString(10, 690, GamenText[6], DX.GetColor(255, 255, 255));
-                DX.DrawLine(410, 290, 520, 290, DX.GetColor(0, 0, 0), DX.FALSE);
+                DX.DrawString(10, 640, GamenText[5], white);
+                DX.DrawString(10, 690, GamenText[6], white);
+                DX.DrawLine(410, 290, 520, 290, black, DX.FALSE);
             }
             if (count == 5)//画面説明(ミニマップ)
             {
-                DX.DrawString(10, 640, GamenText[7], DX.GetColor(255, 255, 255));
-                DX.DrawString(10, 690, GamenText[8], DX.GetColor(255, 255, 255));
-                DX.DrawLine(410, 350, 570, 350, DX.GetColor(0, 0, 0), DX.FALSE);
+                DX.DrawString(10, 640, GamenText[7], white);
+                DX.DrawString(10, 690, GamenText[8], white);
+                DX.DrawLine(410, 350, 570, 350, black, DX.FALSE);
             }
             if (count == 6)//画面説明(タイマー)
             {
-                DX.DrawString(10, 640, GamenText[9], DX.GetColor(255, 255, 255));
-                DX.DrawString(10, 690, GamenText[10], DX.GetColor(255, 255, 255));
-                DX.DrawLine(410, 410, 540, 410, DX.GetColor(0, 0, 0), DX.FALSE);
+                DX.DrawString(10, 640, GamenText[9], white);
+                DX.DrawString(10, 690, GamenText[10], white);
+                DX.DrawLine(410, 410, 540, 410, black, DX.FALSE);
             }
             if (count == 7)//画面説明(修了)
             {
-                DX.DrawString(10, 640, GamenText[11], DX.GetColor(255, 255, 255));
-                DX.DrawString(10, 690, GamenText[12], DX.GetColor(255, 255, 255));
-                DX.DrawLine(410, 470, 620, 470, DX.GetColor(0, 0, 0), DX.FALSE);
+                DX.DrawString(10, 640, GamenText[11], white);
+                DX.DrawString(10, 690, GamenText[12], white);
+                DX.DrawLine(410, 470, 620, 470, black, DX.FALSE);
             }
             if (count >= 99)//操作画面(タイトル)
             {
@@ -174,17 +180,51 @@ namespace Giraffe
                 DX.DrawGraph((int)pos.X, (int)pos.Y, playbg);
                 gameObjects.ForEach(obj => obj.Draw());
                 player.Draw();
+                DX.DrawGraph(-90, 0, mes);
 
-                if (count == 99)
+                if (count >= 99 && count <= 100)//右
                 {
+                    DX.DrawString(100, 30, SousaText[1], black);
+                    DX.DrawString(100, 60, SousaText[2], black);
+                }
+                if (count >= 101 && count <= 102)//左
+                {
+                    DX.DrawString(100, 30, SousaText[3], black);
+                    DX.DrawString(100, 60, SousaText[4], black);
+                }
+                if (count >= 103 && count <= 104)//ジャンプ
+                {
+                    DX.DrawString(100, 30, SousaText[5], black);
+                    DX.DrawString(100, 60, SousaText[6], black);
+                }
+                if (count >= 105 && count <= 106)//噛みつき
+                {
+                    DX.DrawString(100, 30, SousaText[7], black);
+                    DX.DrawString(100, 60, SousaText[8], black);
+                }
+                if (count >= 107 && count <= 108)//方向転換
+                {
+                    DX.DrawString(100, 30, SousaText[9], black);
+                    DX.DrawString(100, 60, SousaText[10], black);
+                    DX.DrawString(100, 90, SousaText[11], black);
 
+                }
+                if (count >= 109 && count <= 110)//首伸び縮み
+                {
+                    DX.DrawString(100, 30, SousaText[12], black);
+                    DX.DrawString(100, 60, SousaText[13], black);
+                }
+                if (count == 111)
+                {
+                    DX.DrawString(100, 30, SousaText[15], black);
+                    DX.DrawString(100, 60, SousaText[16], black);
                 }
             }
 
-            DX.DrawString(200, 300, "" + count, DX.GetColor(0, 0, 0));//カウント表示
-            DX.DrawString(200, 350, "" + SousaCount, DX.GetColor(0, 0, 0));//操作進行表示
-            DX.DrawString(200, 400, "" + player.Y, DX.GetColor(0, 0, 0));//プレイヤーの縦座標表示
-            DX.DrawString(200, 450, "" + CommentTime, DX.GetColor(0, 0, 0));//コメント表示時間の表示
+            DX.DrawString(200, 300, "" + count, black);//カウント表示
+            DX.DrawString(200, 350, "" + SousaCount, black);//操作進行表示
+            DX.DrawString(200, 400, "" + player.Y, black);//プレイヤーの縦座標表示
+            DX.DrawString(200, 450, "" + CommentTime, black);//コメント表示時間の表示
         }
 
         public override void OnExit()
@@ -229,6 +269,10 @@ namespace Giraffe
             else if (y == 0 && Input.UP.IsPush())
             {
                 if (count <= 2)
+                {
+                    count += 0;
+                }
+                else if (count >= 99)
                 {
                     count += 0;
                 }
