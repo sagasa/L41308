@@ -8,19 +8,29 @@ using System.Threading.Tasks;
 
 namespace Giraffe
 {
-    public class Tutolal : Scene
+    public class Tutolal : ScenePlay
     {
+
         public override Vec2f GetScreenPos(Vec2f mapPos)
         {
-            return (mapPos - MapPos) * tutomap.CellSize;
+            return (mapPos - MapPos) * PlayMap.CellSize;
         }
-        public tutomap Map { get; private set; }
-        public Vec2f MapPos;
-        public List<GameObject> gameObjects = new List<GameObject>();
+        public new bool IsInScreen(Vec2f pos)
+        {
+            return pos.IsInBetween(MapPos, MapPos + PlayMap.ScreenSize);
+        }
+        public new PlayMap Map { get; private set; }
+        public new Vec2f MapPos;
+        public List<GameObject> GameObjects = new List<GameObject>();
 
 
         private Player player;
         int count = 0;
+        int SousaCount = 0;
+        int CommentTime = 20;
+        int CommentChange;
+
+
         private int head = ResourceLoader.GetGraph("player/player_head.png");
         private int horn = ResourceLoader.GetGraph("player/horn.png");
         private int eye = ResourceLoader.GetGraph("player/player_eye.png");
@@ -35,31 +45,49 @@ namespace Giraffe
 
         private int waku = ResourceLoader.GetGraph("81917.png");
         int y = 502;
-        string[] text = new string[]
+        string[] GamenText = new string[]
         {
           "画面説明です",
           "この生き物はキリン、このゲームの主人公。 ","プレーヤーはこのキャラを操作します",
-          "これは木の枝ですプレイヤーは、","つかまって上に登っていくことができます",
+          "これは木の枝です。プレイヤーは、","つかまって上に登っていくことができます",
           "スコアです。木の枝に噛みつく、ゴールまでに","かかった時間の速さ,などでスコアが増加します",
           "ミニマップです、ミニマップ上のキリンのアイコンは","マップ上のキリンの位置を表します",
           "タイマーです。スタートからゴールまでに","かかった時間がここに表示されます",
           "チュートリアル画面トップへ戻りますか？","戻る場合は決定ボタンを押してください"
         };
 
-        string[] namae = new string[] { "～画面説明～","・キリン","・木の枝",
+        string[] Gamennamae = new string[] { "～画面説明～","・キリン","・木の枝",
             "・スコア", "・ミニマップ", "・タイマー", "・画面説明を終了" };
+
+        string[] SousaText = new string[]
+        {
+            "画面説明です",
+            "十字キーの⇒を押すと、","プレイヤーは右の方向に移動します",
+            "十字キーの⇐を押すと、","プレイヤーは左の方向に移動します",
+            "地面に足がついている状態でスペース","キーを押すと、ジャンプをすることができます",
+            "スペースキーを押している状態で木の枝に触れ","ると、噛んでつかまることができます",
+            "木の枝に噛みついているとき、","キリンは自動でぐるぐる回り始めます",
+            "回転の向きは、十字キーの左右で変えることができます",
+            "十字キーの上下を押すとキリンの首","が長くなったり縮んだりします",
+            "うまく首の長さを調節して、","うまく木の枝を飛び移りましょう",
+            "※これにて操作説明のチュートリアルは終了です",
+            "チュートリアル画面トップへ戻ります",
+        };
+
 
         public Tutolal(Game game) : base(game)
         {
-            Map = new tutomap(this, "map1_leaf");
-            MapPos = new Vec2f(0, Map.MapSize.Y - tutomap.ScreenSize.Y);
+            Map = new PlayMap(this, "map1_leaf");
+            MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y);
 
-
+            player = new Player(this);
+            player.pos = MapPos + new Vec2f(2, 2);
         }
 
 
         public override void Draw()
         {
+
             if (count == 0)
             {
                 DX.DrawGraph(0, 0, titlebg);
@@ -80,7 +108,7 @@ namespace Giraffe
                 }
             }
 
-            if (count >= 1 && count < 100)
+            if (count >= 1 && count < 99)
             {
                 DX.SetFontSize(25);
                 DX.SetFontThickness(100);
@@ -89,64 +117,73 @@ namespace Giraffe
                 DX.DrawGraph(-20, 30, setumei);
                 DX.DrawGraph(-10, 610, window);
                 DX.DrawGraph(390, 30, waku);
-                DX.DrawString(420, 70, namae[0], DX.GetColor(255, 255, 255));
-                DX.DrawString(400, 140, namae[1], DX.GetColor(255, 255, 255));
-                DX.DrawString(400, 200, namae[2], DX.GetColor(255, 255, 255));
-                DX.DrawString(400, 260, namae[3], DX.GetColor(255, 255, 255));
-                DX.DrawString(400, 320, namae[4], DX.GetColor(255, 255, 255));
-                DX.DrawString(400, 380, namae[5], DX.GetColor(255, 255, 255));
-                DX.DrawString(400, 440, namae[6], DX.GetColor(255, 255, 255));
+                DX.DrawString(420, 70, Gamennamae[0], DX.GetColor(255, 255, 255));
+                DX.DrawString(400, 140, Gamennamae[1], DX.GetColor(255, 255, 255));
+                DX.DrawString(400, 200, Gamennamae[2], DX.GetColor(255, 255, 255));
+                DX.DrawString(400, 260, Gamennamae[3], DX.GetColor(255, 255, 255));
+                DX.DrawString(400, 320, Gamennamae[4], DX.GetColor(255, 255, 255));
+                DX.DrawString(400, 380, Gamennamae[5], DX.GetColor(255, 255, 255));
+                DX.DrawString(400, 440, Gamennamae[6], DX.GetColor(255, 255, 255));
             }
             if (count == 1)
             {
-                DX.DrawString(20, 640, text[0], DX.GetColor(255, 255, 255));
+                DX.DrawString(20, 640, GamenText[0], DX.GetColor(255, 255, 255));
 
             }
             if (count == 2)
             {
-                DX.DrawString(10, 640, text[1], DX.GetColor(255, 255, 255));
-                DX.DrawString(10, 690, text[2], DX.GetColor(255, 255, 255));
+                DX.DrawString(10, 640, GamenText[1], DX.GetColor(255, 255, 255));
+                DX.DrawString(10, 690, GamenText[2], DX.GetColor(255, 255, 255));
                 DX.DrawLine(410, 170, 520, 170, DX.GetColor(0, 0, 0));
                 DX.DrawBox(180, 460, 250, 560, DX.GetColor(0, 0, 0), DX.FALSE);
             }
             if (count == 3)
             {
-                DX.DrawString(10, 640, text[3], DX.GetColor(255, 255, 255));
-                DX.DrawString(10, 690, text[4], DX.GetColor(255, 255, 255));
+                DX.DrawString(10, 640, GamenText[3], DX.GetColor(255, 255, 255));
+                DX.DrawString(10, 690, GamenText[4], DX.GetColor(255, 255, 255));
                 DX.DrawLine(410, 230, 520, 230, DX.GetColor(0, 0, 0), DX.FALSE);
             }
             if (count == 4)
             {
-                DX.DrawString(10, 640, text[5], DX.GetColor(255, 255, 255));
-                DX.DrawString(10, 690, text[6], DX.GetColor(255, 255, 255));
+                DX.DrawString(10, 640, GamenText[5], DX.GetColor(255, 255, 255));
+                DX.DrawString(10, 690, GamenText[6], DX.GetColor(255, 255, 255));
                 DX.DrawLine(410, 290, 520, 290, DX.GetColor(0, 0, 0), DX.FALSE);
             }
             if (count == 5)
             {
-                DX.DrawString(10, 640, text[7], DX.GetColor(255, 255, 255));
-                DX.DrawString(10, 690, text[8], DX.GetColor(255, 255, 255));
+                DX.DrawString(10, 640, GamenText[7], DX.GetColor(255, 255, 255));
+                DX.DrawString(10, 690, GamenText[8], DX.GetColor(255, 255, 255));
                 DX.DrawLine(410, 350, 570, 350, DX.GetColor(0, 0, 0), DX.FALSE);
             }
             if (count == 6)
             {
-                DX.DrawString(10, 640, text[9], DX.GetColor(255, 255, 255));
-                DX.DrawString(10, 690, text[10], DX.GetColor(255, 255, 255));
+                DX.DrawString(10, 640, GamenText[9], DX.GetColor(255, 255, 255));
+                DX.DrawString(10, 690, GamenText[10], DX.GetColor(255, 255, 255));
                 DX.DrawLine(410, 410, 540, 410, DX.GetColor(0, 0, 0), DX.FALSE);
             }
             if (count == 7)
             {
-                DX.DrawString(10, 640, text[11], DX.GetColor(255, 255, 255));
-                DX.DrawString(10, 690, text[12], DX.GetColor(255, 255, 255));
+                DX.DrawString(10, 640, GamenText[11], DX.GetColor(255, 255, 255));
+                DX.DrawString(10, 690, GamenText[12], DX.GetColor(255, 255, 255));
                 DX.DrawLine(410, 470, 620, 470, DX.GetColor(0, 0, 0), DX.FALSE);
             }
-            if (count >= 100)
+            if (count >= 99)
             {
                 DX.DrawGraph(0, 0, playbg);
                 Vec2f pos = GetScreenPos(Vec2f.ZERO);
                 DX.DrawGraph((int)pos.X, (int)pos.Y, playbg);
                 gameObjects.ForEach(obj => obj.Draw());
+                player.Draw();
+
+                if (count == 99)
+                {
+
+                }
             }
 
+            DX.DrawString(200, 300, "" + count, DX.GetColor(0, 0, 0));
+            DX.DrawString(200, 350, "" + SousaCount, DX.GetColor(0, 0, 0));
+            DX.DrawString(200, 400, "" + player.Y, DX.GetColor(0, 0, 0));
         }
 
         public override void OnExit()
@@ -161,6 +198,7 @@ namespace Giraffe
 
         public override void Update()
         {
+
             if (count == 0 && Input.BACK.IsPush())
             {
                 Game.SetScene(new Title(Game));
@@ -172,12 +210,20 @@ namespace Giraffe
             }
             else if (y == 502 && Input.ACTION.IsPush())
             {
-                count += 100;
+                count += 99;
                 y = 0;
             }
             if (y == 0 && Input.DOWN.IsPush())
             {
-                count += 1;
+                if (count == 110)
+                {
+
+                }
+                else
+                {
+                    count += 1;
+                }
+
             }
             else if (y == 0 && Input.UP.IsPush())
             {
@@ -204,13 +250,103 @@ namespace Giraffe
                 count = 0;
                 y = 502;
             }
-            if (count >= 100)
-            {
 
+            if (count >= 99)
+            {
+                gameObjects.ForEach(obj => player.CalcInteract(obj));
+                player.Update();
                 gameObjects.ForEach(obj => obj.Update());
                 gameObjects.RemoveAll(obj => obj.IsDead());
+
+
+                if (Input.BACK.IsPush())
+                {
+                    count = 0;
+                    y = 502;
+                }
+                if (SousaCount == 100)
+                {
+                    count += 1;
+                    SousaCount = 0;
+                }
+                if (count == 99)
+                {
+                    CommentChange--;
+                    if (CommentChange <= 0)
+                    {
+                        count++;
+                    }
+                }
+                if (count == 100)
+                {
+                    if (Input.RIGHT.IsHold() && player.IsOnGround())
+                    {
+                        SousaCount += 1;
+                    }
+                }
+                if (count == 101)
+                {
+
+                }
+                if (count == 102)
+                {
+                    if (Input.LEFT.IsHold() && player.IsOnGround())
+                    {
+                        SousaCount += 1;
+                    }
+                }
+                if (count == 103)
+                {
+
+                }
+                if (count == 104)
+                {
+                    if (Input.ACTION.IsPush())
+                    {
+                        SousaCount += 50;
+                    }
+                }
+                if (count == 105)
+                {
+
+                }
+                if (count == 106)
+                {
+                    if (player.Y <= 21 && player.Y >= 18 && Input.ACTION.IsHold())
+                    {
+                        SousaCount += 1;
+                    }
+                }
+                if (count == 107)
+                {
+
+                }
+                if (count == 108)
+                {
+                    if (Input.ACTION.IsHold() && Input.RIGHT.IsPush() || Input.LEFT.IsPush())
+                    {
+                        SousaCount = +100;
+                    }
+                }
+                if (count == 109)
+                {
+
+                }
+                if (count == 110)
+                {
+                    if (Input.UP.IsHold() || Input.DOWN.IsHold())
+                    {
+                        SousaCount += 1;
+                    }
+                    if (count == 111)
+                    {
+                        count = 0;
+                        y = 502;
+                    }
+                }
 
             }
         }
     }
 }
+
