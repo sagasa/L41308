@@ -68,11 +68,11 @@ namespace Giraffe
             "画面説明です",//1
             "十字キーの⇒を押すと、","プレイヤーは右の方向に移動します",//右,2,3
             "十字キーの⇐を押すと、","プレイヤーは左の方向に移動します",//左,4,5
-            "地面に足がついている状態でスペース","キーを押すと、ジャンプをすることができます",//ジャンプ,6,7
-            "スペースキーを押している状態で木の枝に触れ","ると、噛んでつかまることができます",//噛みつき,8,9
+            "地面に足がついている状態でスペースキーを押すと、","ジャンプをすることができます",//ジャンプ,6,7
+            "スペースキーを押している状態で木の枝に触れると、","噛んでつかまることができます",//噛みつき,8,9
             "木の枝に噛みついているとき、","キリンは自動でぐるぐる回り始めます",//方向転換,10
-            "回転の向きは、十字キーの左右で変えることができます",//方向転換,11
-            "十字キーの上下を押すとキリンの首","が長くなったり縮んだりします",//首伸び縮み,12,13
+            "回転の向きは、十字キーの左右で変えることができます!",//方向転換,11
+            "十字キーの上下を押すとキリンの首が","長くなったり縮んだりします",//首伸び縮み,12,13
             "うまく首の長さを調節して、","うまく木の枝を飛び移りましょう",//まとめ,14
             "※これにて操作説明のチュートリアルは終了です",//画面終了,15
             "チュートリアル画面トップへ戻ります",//16
@@ -177,6 +177,8 @@ namespace Giraffe
             }
             if (count >= 99)//操作画面(タイトル)
             {
+                DX.SetFontSize(15);
+                DX.ChangeFontType(DX.DX_FONTTYPE_NORMAL);
                 DX.DrawGraph(0, 0, playbg);
                 Vec2f pos = GetScreenPos(Vec2f.ZERO);
                 DX.DrawGraph((int)pos.X, (int)pos.Y, playbg);
@@ -187,46 +189,70 @@ namespace Giraffe
                 if (count >= 99 && count <= 100)//右
                 {
                     DX.DrawString(100, 30, SousaText[1], black);
-                    DX.DrawString(100, 60, SousaText[2], black);
+                    if (CommentTime <= 60 || CommentTime == 120)
+                    {
+                        DX.DrawString(100, 60, SousaText[2], black);
+                    }
+
                 }
                 if (count >= 101 && count <= 102)//左
                 {
                     DX.DrawString(100, 30, SousaText[3], black);
-                    DX.DrawString(100, 60, SousaText[4], black);
+                    if (CommentTime <= 60 || CommentTime == 120)
+                    {
+                        DX.DrawString(100, 60, SousaText[4], black);
+                    }
                 }
                 if (count >= 103 && count <= 104)//ジャンプ
                 {
                     DX.DrawString(100, 30, SousaText[5], black);
-                    DX.DrawString(100, 60, SousaText[6], black);
+                    if (CommentTime <= 60 || CommentTime == 120)
+                    {
+                        DX.DrawString(100, 60, SousaText[6], black);
+                    }
                 }
                 if (count >= 105 && count <= 106)//噛みつき
                 {
                     DX.DrawString(100, 30, SousaText[7], black);
-                    DX.DrawString(100, 60, SousaText[8], black);
+                    if (CommentTime <= 60 || CommentTime == 120)
+                    {
+                        DX.DrawString(100, 60, SousaText[8], black);
+                    }
                 }
                 if (count >= 107 && count <= 108)//方向転換
                 {
                     DX.DrawString(100, 30, SousaText[9], black);
-                    DX.DrawString(100, 60, SousaText[10], black);
-                    DX.DrawString(100, 90, SousaText[11], black);
-
+                    if (CommentTime <= 80 || CommentTime == 120)
+                    {
+                        DX.DrawString(100, 60, SousaText[10], black);
+                    }
+                    else if (CommentTime <= 40 || CommentTime == 120)
+                    {
+                        DX.DrawString(100, 90, SousaText[11], black);
+                    }
                 }
                 if (count >= 109 && count <= 110)//首伸び縮み
                 {
                     DX.DrawString(100, 30, SousaText[12], black);
-                    DX.DrawString(100, 60, SousaText[13], black);
+                    if (CommentTime <= 60 || CommentTime == 120)
+                    {
+                        DX.DrawString(100, 60, SousaText[13], black);
+                    }
                 }
                 if (count == 111)
                 {
                     DX.DrawString(100, 30, SousaText[15], black);
-                    DX.DrawString(100, 60, SousaText[16], black);
+                    if (CommentTime <= 60 || CommentTime == 120)
+                    {
+                        DX.DrawString(100, 60, SousaText[16], black);
+                    }
                 }
             }
-
-            DX.DrawString(200, 300, "" + count, black);//カウント表示
-            DX.DrawString(200, 350, "" + SousaCount, black);//操作進行表示
-            DX.DrawString(200, 400, "" + player.Y, black);//プレイヤーの縦座標表示
-            DX.DrawString(200, 450, "" + CommentTime, black);//コメント表示時間の表示
+            DX.ChangeFontType(DX.DX_FONTTYPE_NORMAL);
+            DX.DrawString(200, 300, "count:" + count, black);//カウント表示
+            DX.DrawString(200, 350, "SounsaCount:" + SousaCount, black);//操作進行表示
+            DX.DrawString(200, 400, "player.Y:" + player.Y, black);//プレイヤーの縦座標表示
+            DX.DrawString(200, 450, "CommentTime:" + CommentTime, black);//コメント表示時間の表示
         }
 
         public override void OnExit()
@@ -428,5 +454,4 @@ namespace Giraffe
         }
     }
 }
-
 
