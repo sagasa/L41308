@@ -39,22 +39,22 @@ namespace Giraffe
         private int select2 = ResourceLoader.GetGraph("select_4.png");
         private int setumei = ResourceLoader.GetGraph("プレイ画面スクショ.jpg");
         private int bg = ResourceLoader.GetGraph("t.bg.png");
-        private int window = ResourceLoader.GetGraph("ant1.png");
+        private int window = ResourceLoader.GetGraph("mes11_02.png");
         private int playbg = ResourceLoader.GetGraph("play_bg.png");
-        private int waku = ResourceLoader.GetGraph("81917.png");
+        private int waku = ResourceLoader.GetGraph("waku.png");
         private int mes = ResourceLoader.GetGraph("mes11_02_.png");
 
         int y = 502;//キリンの頭の座標
 
         string[] GamenText = new string[]//画面説明用コメント
         {
-          "画面説明です",
-          "この生き物はキリン、このゲームの主人公。 ","プレーヤーはこのキャラを操作します",
-          "これは木の枝です。プレイヤーは、","つかまって上に登っていくことができます",
-          "スコアです。木の枝に噛みつく、ゴールまでに","かかった時間の速さ,などでスコアが増加します",
-          "ミニマップです、ミニマップ上のキリンのアイコンは","マップ上のキリンの位置を表します",
-          "タイマーです。スタートからゴールまでに","かかった時間がここに表示されます",
-          "チュートリアル画面トップへ戻りますか？","戻る場合は決定ボタンを押してください"
+          "画面説明です",//1
+          "この生き物はキリン、このゲームの主人公。 ","プレーヤーはこのキャラを操作します",//2.3
+          "これは木の枝です。プレイヤーは、","つかまって上に登っていくことができます",//4,5
+          "スコアです。木の枝に噛みつく、ゴール","までにかかった時間の速さなどで","スコアが増加します",//6,7,8
+          "ミニマップです、ミニマップ上のキリンの","アイコンは,マップ上のキリンの","位置を表します",//9,10,11
+          "タイマーです。スタートからゴールまでに","かかった時間がここに表示されます",//11,12
+          "チュートリアル画面トップへ戻りますか？","戻る場合は決定ボタンを押してください"//13,14
         };
 
         string[] Gamennamae = new string[] //画面説明項目用コメント
@@ -121,57 +121,59 @@ namespace Giraffe
                 DX.ChangeFontType(DX.DX_FONTTYPE_ANTIALIASING_EDGE);
                 DX.DrawGraph(0, 0, bg);
                 DX.DrawGraph(-20, 30, setumei);
-                DX.DrawGraph(-10, 610, window);
+                DX.DrawGraph(-150, 615, window);
                 DX.DrawGraph(390, 30, waku);
-                DX.DrawString(420, 70, Gamennamae[0], white);
-                DX.DrawString(400, 140, Gamennamae[1], white);
-                DX.DrawString(400, 200, Gamennamae[2], white);
-                DX.DrawString(400, 260, Gamennamae[3], white);
-                DX.DrawString(400, 320, Gamennamae[4], white);
-                DX.DrawString(400, 380, Gamennamae[5], white);
-                DX.DrawString(400, 440, Gamennamae[6], white);
+                DX.DrawString(420, 75, Gamennamae[0], white);
+                DX.DrawString(400, 145, Gamennamae[1], white);
+                DX.DrawString(400, 210, Gamennamae[2], white);
+                DX.DrawString(400, 277, Gamennamae[3], white);
+                DX.DrawString(400, 342, Gamennamae[4], white);
+                DX.DrawString(400, 410, Gamennamae[5], white);
+                DX.DrawString(400, 475, Gamennamae[6], white);
             }
             if (count == 1)//画面説明(タイトル)
             {
-                DX.DrawString(20, 640, GamenText[0], white);
+                DX.DrawString(50, 638, GamenText[0], white);
 
             }
             if (count == 2)//画面説明(キリン)
             {
-                DX.DrawString(20, 640, GamenText[1], white);
-                DX.DrawString(20, 690, GamenText[2], white);
-                DX.DrawLine(410, 170, 520, 170, black);
+                DX.DrawString(50, 638, GamenText[1], white);
+                DX.DrawString(50, 674, GamenText[2], white);
+                DX.DrawLine(410, 172, 520, 172, black);
                 DX.DrawBox(180, 460, 250, 560, black, DX.FALSE);
             }
             if (count == 3)//画面説明(木の枝)
             {
-                DX.DrawString(10, 640, GamenText[3], white);
-                DX.DrawString(10, 690, GamenText[4], white);
-                DX.DrawLine(410, 230, 520, 230, black, DX.FALSE);
+                DX.DrawString(50, 638, GamenText[3], white);
+                DX.DrawString(50, 674, GamenText[4], white);
+                DX.DrawLine(410, 237, 520, 237, black, DX.FALSE);
             }
             if (count == 4)//画面説明(スコア)
             {
-                DX.DrawString(10, 640, GamenText[5], white);
-                DX.DrawString(10, 690, GamenText[6], white);
-                DX.DrawLine(410, 290, 520, 290, black, DX.FALSE);
+                DX.DrawString(50, 638, GamenText[5], white);
+                DX.DrawString(50, 674, GamenText[6], white);
+                DX.DrawString(50, 705, GamenText[7], white);
+                DX.DrawLine(410, 304, 520, 304, black, DX.FALSE);
             }
             if (count == 5)//画面説明(ミニマップ)
             {
-                DX.DrawString(10, 640, GamenText[7], white);
-                DX.DrawString(10, 690, GamenText[8], white);
-                DX.DrawLine(410, 350, 570, 350, black, DX.FALSE);
+                DX.DrawString(50, 638, GamenText[8], white);
+                DX.DrawString(50, 674, GamenText[9], white);
+                DX.DrawString(50, 705, GamenText[10], white);
+                DX.DrawLine(410, 370, 570, 370, black, DX.FALSE);
             }
             if (count == 6)//画面説明(タイマー)
             {
-                DX.DrawString(10, 640, GamenText[9], white);
-                DX.DrawString(10, 690, GamenText[10], white);
-                DX.DrawLine(410, 410, 540, 410, black, DX.FALSE);
+                DX.DrawString(50, 638, GamenText[11], white);
+                DX.DrawString(50, 674, GamenText[12], white);
+                DX.DrawLine(410, 437, 540, 437, black, DX.FALSE);
             }
             if (count == 7)//画面説明(修了)
             {
-                DX.DrawString(10, 640, GamenText[11], white);
-                DX.DrawString(10, 690, GamenText[12], white);
-                DX.DrawLine(410, 470, 620, 470, black, DX.FALSE);
+                DX.DrawString(50, 638, GamenText[13], white);
+                DX.DrawString(50, 674, GamenText[14], white);
+                DX.DrawLine(410, 502, 620, 502, black, DX.FALSE);
             }
             if (count >= 99)//操作画面(タイトル)
             {
@@ -426,4 +428,5 @@ namespace Giraffe
         }
     }
 }
+
 
