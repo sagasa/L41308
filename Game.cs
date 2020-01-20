@@ -101,7 +101,7 @@ namespace Giraffe
             #endif
 
 
-            bgmManager.Debug();
+            //bgmManager.Debug();
         }
     }
 }
