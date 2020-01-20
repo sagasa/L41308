@@ -56,7 +56,8 @@ namespace Giraffe
           "スコアです。木の枝に噛みつく、ゴール","までにかかった時間の速さなどで","スコアが増加します",//8,8,10
           "ミニマップです、ミニマップ上のキリンの","アイコンは,マップ上のキリンの","位置を表します",//11,12,13
           "タイマーです。スタートからゴールまでに","かかった時間がここに表示されます",//14,15
-          "チュートリアル画面トップへ戻りますか？","戻る場合は決定ボタンを押してください"//16,17
+          "チュートリアル画面トップへ戻りますか？","戻る場合は決定ボタンを押してください",//16,17
+          "また、スコアが多くもらえる","色違いのレアな枝がでることがあります"//レア木の枝18,19
         };
 
         string[] Gamennamae = new string[] //画面説明項目用コメント
@@ -117,7 +118,7 @@ namespace Giraffe
                 if (Input.DOWN.IsPush())
                 {
                     y = 617;
-
+                   
                 }
                 if (Input.UP.IsPush())
                 {
@@ -154,12 +155,22 @@ namespace Giraffe
                 DX.DrawString(50, 638, GamenText[1], white);
                 DX.DrawString(50, 674, GamenText[2], white);
                 DX.DrawBox(410, 172, 520, 174, black,DX.TRUE);
+                DX.DrawBox(150, 480, 210, 590, black, DX.FALSE);
+                DX.DrawBox(151, 481, 211, 591, black, DX.FALSE);
+                DX.DrawBox(152, 482, 212, 592, black, DX.FALSE);
             }
             if (count == 3)//画面説明(木の枝)
             {
+                CommentTime--;
                 DX.DrawString(50, 638, GamenText[3], white);
                 DX.DrawString(50, 674, GamenText[4], white);
                 DX.DrawBox(410, 237, 520, 239, black, DX.TRUE);
+                DX.DrawBox(200, 237, 264, 304, black, DX.TRUE);
+                if(CommentTime<=0)
+                {
+                    DX.DrawString(50, 705, GamenText[17], white);
+                    DX.DrawString(50, 741, GamenText[18], white);
+                }
             }
             if (count == 4)//画面説明(ステージ名)
             {
@@ -298,12 +309,8 @@ namespace Giraffe
                     }
                 }
             }
+
             DX.ChangeFontType(DX.DX_FONTTYPE_NORMAL);
-            DX.DrawString(200, 300, "count:" + count, black);//カウント表示
-            DX.DrawString(200, 350, "SounsaCount:" + SousaCount, black);//操作進行表示
-            DX.DrawString(200, 400, "player.Y:" + player.Y, black);//プレイヤーの縦座標表示
-            DX.DrawString(200, 450, "CommentTime:" + CommentTime, black);//コメント表示時間の表示
-            DX.DrawString(200, 500, "velangle" + player.velAngle, black);
         }
 
         public override void OnExit()
@@ -435,7 +442,6 @@ namespace Giraffe
                 if (count == 105)
                 {
                     CommentTime--;
-                 
                 }
                 if (count == 106)//木につかまる
                 {
