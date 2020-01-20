@@ -8,7 +8,7 @@ namespace Giraffe
     public class ScenePlay : Scene
     {
         public static int score = 0;
-        int[] time = new int[] { 0, 0, 0 };
+        int[] time = new int[] { 0, 0, 0 };//分,秒,フレーム
         
         int goalTimer = 300;
         int fadeTime = 180;
@@ -66,7 +66,7 @@ namespace Giraffe
             DX.DrawRotaGraph(100, 23 , 0.6, 0, stageName);
             DX.DrawRotaGraph(Screen.Width / 2 - 22, 23, 0.6, 0, scoreImage);
             DX.DrawRotaGraph(Screen.Width - 155, 25, 0.55, 0, watch);
-            DX.DrawRotaGraph(Screen.Width - 75, 25, 0.8, 0, colon);
+            DX.DrawRotaGraph(Screen.Width - 75, 25, 0.7, 0, colon);
             for (int i = 0; i < 10; i++)
             {
                 //スコア
@@ -94,8 +94,6 @@ namespace Giraffe
 
         public override void OnExit()
         {
-            Game.currentScore = score;
-            Game.currentTime = time;
         }
 
         public override void OnLoad()
@@ -147,7 +145,9 @@ namespace Giraffe
                 goalTimer--;
                 if (goalTimer == 0)
                 {
-                    Game.SetScene(new Title(Game),new Fade(fadeTime,true,true));
+                    Game.currentScore = score;
+                    Game.currentTime = time;
+                    Game.SetScene(new SceneResult(Game),new Fade(fadeTime,true,true));
                 }
             }
         }

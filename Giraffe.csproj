@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Drawable\IDrawable.cs" />
+    <Compile Include="Drawable\PlayerAnimation.cs" />
     <Compile Include="Drawable\PlayerRender.cs" />
     <Compile Include="GameObjects\playerIcon.cs" />
     <Compile Include="Map\tutomap.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="MyLib\Vec2f.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="ParticleManager.cs" />
+    <Compile Include="Scenes\SceneResult.cs" />
     <Compile Include="Scenes\Tutorial.cs" />
     <Compile Include="Sound\Sound.cs" />
     <Compile Include="Sound\BgmManager.cs" />

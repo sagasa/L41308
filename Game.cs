@@ -18,7 +18,7 @@ namespace Giraffe
         public static bool ShowCollision = true;
         
         public static int highScore = 500;//ハイスコア
-        public static int[] fastestTime = new int[] { 5, 0, 0 };//最速タイム
+        public static int[] fastestTime = new int[] { 3, 0, 0 };//最速タイム
         public static int currentScore = 0;//現在のスコア
         public static int[] currentTime = new int[] { 0, 0, 0 };//現在のタイム
 

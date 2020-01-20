@@ -10,11 +10,11 @@ namespace Giraffe
         private static readonly int imageBody = ResourceLoader.GetGraph("player/body.png");
         private static readonly int imageHorn = ResourceLoader.GetGraph("player/horn.png");
         private static readonly int imageNeck = ResourceLoader.GetGraph("player/neck.png");
-        private static readonly int[] imageHead = ResourceLoader.GetGraph("player/player_head.png", 4);
+        private static readonly int[] imageHead = ResourceLoader.GetGraph("player/player_head.png", 3);
         private static readonly int[] imageEye = ResourceLoader.GetGraph("player/player_eye.png", 4);
         private static readonly int[] imageEar = ResourceLoader.GetGraph("player/player_ear.png", 4);
         private static readonly int[] imageLeg = ResourceLoader.GetGraph("player/player_leg.png", 6);
-        private static readonly int[] imageTail = ResourceLoader.GetGraph("player/player_tail.png", 4);
+        private static readonly int[] imageTail = ResourceLoader.GetGraph("player/player_tail.png", 5);
 
         //画像のポジション
         public static readonly Vec2f ImageSize = new Vec2f(128, 128);
