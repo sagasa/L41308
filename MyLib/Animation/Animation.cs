@@ -5,6 +5,14 @@
     {
         private AnimationEntry<T> _entry;
 
-       
+        public void Init(T target)
+        {
+            _entry.Init(target);
+        }
+
+        public void Update(T target)
+        {
+           
+        }
     }
 }
