@@ -66,10 +66,10 @@
     <Compile Include="MyLib\Animation\AnimationEntry.cs" />
     <Compile Include="MyLib\Animation\AnimationManager.cs" />
     <Compile Include="Drawable\IDrawable.cs" />
-    <Compile Include="Drawable\PlayerAnimation.cs" />
     <Compile Include="Drawable\PlayerRender.cs" />
     <Compile Include="GameObjects\playerIcon.cs" />
     <Compile Include="Map\tutomap.cs" />
+    <Compile Include="MyLib\DrawUtil.cs" />
     <Compile Include="MyLib\Math\Quaternion.cs" />
     <Compile Include="MyLib\MultipleRotationCalc.cs" />
     <Compile Include="DxDLLW.cs" />
