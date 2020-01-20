@@ -96,7 +96,10 @@ namespace Giraffe
 
             objList.ForEach(obj=>obj.Draw());
 
+            #if DEBUG
             Debug.Draw();
+            #endif
+
 
             //bgmManager.Debug();
         }
