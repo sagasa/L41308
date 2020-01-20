@@ -31,10 +31,14 @@ namespace SAGASALib
             return from + sub * progress;
         }
 
-        //0-1にクランプ
+        //0-1にクランプ 範囲外は0or1に
         public static float Clamp(float value)
         {
-            return Math.Abs(value)%1f;
+            if (value < 0)
+                return 0f;
+            if (1 < value)
+                return 1f;
+            return value;
         }
 
         public static float Distance(float x0,float y0,float x1,float y1)

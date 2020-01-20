@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DxLibDLL;
 using SAGASALib;
 
@@ -21,6 +22,9 @@ namespace Giraffe
         //接地時の中心の高さ
         private const float StandOffset = 1f;
 
+        //アニメーションリスト
+        private List<PlayerAnimation> _animations = new List<PlayerAnimation>();
+
         // private int image = ResourceLoader.GetGraph("player.png");
         public enum PlayerState
         {
@@ -29,14 +33,24 @@ namespace Giraffe
 
         private PlayerState _state = PlayerState.Stand;
         
-        private readonly PlayerRender render;
+        private readonly PlayerRender _render;
 
         public Player(ScenePlay scene) : base(scene)
         {
             size = 0.6f;
-            render = new PlayerRender(this);
+            _render = new PlayerRender(this);
             angle = MyMath.Deg2Rad * 0;
          //   velAngle = RotateSpeed/3;
+        }
+
+        //アニメーションの追加 重複しない場合は再生する
+        public void AddAnimation(PlayerAnimation animation)
+        {
+            if (!_animations.Contains(animation))
+            {
+                animation.Init(_render);
+                _animations.Add(animation);
+            }
         }
 
         private PlayMap GetMap()
@@ -47,6 +61,7 @@ namespace Giraffe
         private void Jamp()
         {
             vel = vel.SetY(-0.2f);
+            AddAnimation(PlayerAnimation.MouthOpen);
         } 
         //Mapの1番下(地上)にいるか
         public bool IsOnGround() => GetMap().MapSize.Y <= pos.Y+StandOffset;
@@ -85,7 +100,7 @@ namespace Giraffe
                 _state = PlayerState.Stand;
             else if (_state == PlayerState.Stand && Input.ACTION.IsPush())
                 _state = PlayerState.Dongle;
-            render.State = _state;
+            _render.State = _state;
             base.Update();
             return;
             //*/
@@ -113,8 +128,8 @@ namespace Giraffe
 
                     //姿勢変更時に中心の移動分補完
                     _state = PlayerState.Fly;
-                    render.State = _state;
-                    pos -= render.GetMouthOffset();
+                    _render.State = _state;
+                    pos -= _render.GetMouthOffset();
                     Sound.Play("jump_SE.mp3");
                 }
             }
@@ -157,7 +172,7 @@ namespace Giraffe
                     angle = 0;
                     velAngle = 0;
                     _state = PlayerState.Stand;
-                    render.State = _state;
+                    _render.State = _state;
                 }
                 
             }
@@ -184,12 +199,12 @@ namespace Giraffe
                     }
                     Sound.Play("leaf_bite_SE.mp3");
                     //姿勢変更時に中心の移動分補完
-                    pos += render.GetMouthOffset();
+                    pos += _render.GetMouthOffset();
                     //立っていた状態からの場合初速を与える
                     if (_state == PlayerState.Stand)
                         velAngle = 0 <= vel.X ? RotateSpeed * -0.3f : RotateSpeed * 0.3f;
                     _state = PlayerState.Dongle;
-                    render.State = _state;
+                    _render.State = _state;
                     
                     vel = Vec2f.ZERO;
                 }
@@ -216,14 +231,18 @@ namespace Giraffe
             if (60 < count)
                 count = -60;
 
-            render.HeadRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30);
-            render.NeckRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30) * -1;
-            render.NeckExt = (Math.Abs(count)/20f)+1;
+            _render.HeadRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30);
+            _render.NeckRotate = MyMath.Deg2Rad * (Math.Abs(count) - 30) * -1;
+            _render.NeckExt = (Math.Abs(count)/20f)+1;
             //*/
            
             //Debug.DrawVec2(scene.GetScreenPos(pos),(new Vec2f(-1,0)*velAngle).Normal().Rotate(angle)*50);
-            render.Draw();
+            _render.Draw();
             base.Draw();
+
+            //アニメーションアップデート ほんとにここでいいか不明
+            _animations.ForEach(animation=>animation.Update());
+            _animations.RemoveAll(animation => animation.IsEnd());
         }
 
         public override bool IsDead()
@@ -234,7 +253,7 @@ namespace Giraffe
         private CircleCollision[] collision = new CircleCollision[]{ new CircleCollision(Vec2f.ZERO, 0.1f) };
         public override CircleCollision[] GetCollisions()
         {
-            collision[0] = new CircleCollision(render.GetMouthOffset(),0.1f);
+            collision[0] = new CircleCollision(_render.GetMouthOffset(),0.1f);
             return collision;
         }
 
