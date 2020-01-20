@@ -36,6 +36,8 @@ namespace Giraffe
         public int alpha = 255;       //フェードインもフェードアウトのしてないときの基本のアルファ値
         public float fadeInTime = 0f; //フェードインにかける時間（0～１で指定）
         public float fadeOutTime = 0f;//フェードアウトにかける時間（0～1で指定）
+        public Action<Particle> OnUpdate;  //Update時に実行したい処理
+        public Action<Particle> OnDeath;   //死ぬときに実行したい処理
         private int age = 0;          //生まれてからの経過時間（フレーム）
 
         public void Update()
@@ -54,8 +56,11 @@ namespace Giraffe
             //寿命を超えたら、死亡、消える
             if (age > lifeSpan)
             {
-                //isDead = true;
                 state = State.Dead;
+
+                if (OnDeath != null)
+                    OnDeath(this);
+
                 return;
             }
 
