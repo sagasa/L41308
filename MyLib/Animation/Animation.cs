@@ -3,16 +3,41 @@
     //アニメーションの再生時のインスタンス
     public class Animation<T>
     {
-        private AnimationEntry<T> _entry;
+        //=== 変数 ===
+        public readonly AnimationEntry<T> Entry;
+        //0-1の範囲の進捗
+        public float Progress { get =>_time / Entry.Life; set => _time = Entry.Life*Progress;}
+        //アップデート毎の経過量 
+        public float Delta { get; private set;}
+        private float _time = 0;
+
+        //=== 関数 ===
+        public Animation(AnimationEntry<T> entry) => Entry = entry;
+        
 
         public void Init(T target)
         {
-            _entry.Init(target);
+            Delta = 1f / Entry.Life;
+            Entry?.Init(target, this);
         }
 
         public void Update(T target)
         {
-           
+            Entry.Update(target, this);
+            _time++;
+            //ループ
+            if (IsEnd() && Entry.Loop)
+                _time = 0;
+        }
+
+        public bool IsEnd() => 1f<=Progress;
+
+        //処理を1アップデートで終わらせる
+        public void Finish(T target)
+        {
+            Delta = 1f - Progress;
+            Entry.Update(target, this);
+            Progress = 1f;
         }
     }
 }

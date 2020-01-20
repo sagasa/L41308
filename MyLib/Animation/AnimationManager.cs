@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SAGASALib
 {
@@ -17,10 +18,12 @@ namespace SAGASALib
         }
 
         //アニメーションを再生する
-        public void Start(Animation<T> animation)
+        public void Start(AnimationEntry<T> entry)
         {
-            if (!_list.Contains(animation))
+            //同じEntryから再生していなければ
+            if (_list.All(animation => animation.Entry!= entry))
             {
+                Animation<T> animation = new Animation<T>(entry);
                 animation.Init(_target);
                 _list.Add(animation);
             }
@@ -29,15 +32,26 @@ namespace SAGASALib
         }
 
         //再生中のアニメーションを停止する
-        public void Stop(Animation<T> animation,bool finish)
+        public void Stop(AnimationEntry<T> entry, bool finish)
         {
-
+            //要素を検索
+            Animation<T> animation = _list.First(anim => anim.Entry == entry);
+            if (animation != null)
+            {
+                if (finish)
+                    animation.Finish(_target);
+                _list.Remove(animation);
+            }
         }
+
+        //アニメーションを再生中か?
+        public bool IsPlaying(AnimationEntry<T> entry)=> _list.Any(animation => animation.Entry==entry);
 
         //アニメーションを適応
         public void Update()
         {
-
+            _list.ForEach(animation => animation.Update(_target));
+            _list.RemoveAll(animation => animation.IsEnd());
         }
     }
 }

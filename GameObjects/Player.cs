@@ -22,8 +22,11 @@ namespace Giraffe
         //接地時の中心の高さ
         private const float StandOffset = 1f;
 
+        //描画
+        private readonly PlayerRender _render;
+
         //アニメーションリスト
-        private List<PlayerAnimation> _animations = new List<PlayerAnimation>();
+        private AnimationManager<PlayerRender> _animation;
 
         // private int image = ResourceLoader.GetGraph("player.png");
         public enum PlayerState
@@ -31,27 +34,19 @@ namespace Giraffe
             Fly,Stand,Dongle
         }
 
-        private PlayerState _state = PlayerState.Stand;
+        private PlayerState _state = PlayerState.Fly;
         
-        private readonly PlayerRender _render;
+        
 
         public Player(ScenePlay scene) : base(scene)
         {
             size = 0.6f;
             _render = new PlayerRender(this);
+            _animation = new AnimationManager<PlayerRender>(_render);
             angle = MyMath.Deg2Rad * 0;
          //   velAngle = RotateSpeed/3;
         }
 
-        //アニメーションの追加 重複しない場合は再生する
-        public void AddAnimation(PlayerAnimation animation)
-        {
-            if (!_animations.Contains(animation))
-            {
-                animation.Init(_render);
-                _animations.Add(animation);
-            }
-        }
 
         private PlayMap GetMap()
         {
@@ -61,7 +56,6 @@ namespace Giraffe
         private void Jamp()
         {
             vel = vel.SetY(-0.2f);
-            AddAnimation(PlayerAnimation.MouthOpen);
         } 
         //Mapの1番下(地上)にいるか
         public bool IsOnGround() => GetMap().MapSize.Y <= pos.Y+StandOffset;
@@ -104,6 +98,16 @@ namespace Giraffe
             base.Update();
             return;
             //*/
+
+            if (Input.UP.IsHold()&&_render.NeckExt<3f)
+            {
+                _render.NeckExt += 0.1f;
+            }
+            if (Input.DOWN.IsHold() && 0.85f<_render.NeckExt)
+            {
+                _render.NeckExt -= 0.1f;
+            }
+
             //操作系+状態変更
             if (_state==PlayerState.Dongle)
             {
@@ -142,6 +146,8 @@ namespace Giraffe
                 {
                     Jamp();
                     Sound.Play("jump_SE.mp3");
+                    //ジャンプ時の姿勢変更
+                    _animation.Start(Animations.MouthOpen);
                 }
 
                 //左右操作
@@ -173,6 +179,10 @@ namespace Giraffe
                     velAngle = 0;
                     _state = PlayerState.Stand;
                     _render.State = _state;
+                    //地上歩行アニメーション
+                    _animation.Start(Animations.WalkGround);
+
+                    _animation.Start(Animations.MouthClose);
                 }
                 
             }
@@ -187,6 +197,10 @@ namespace Giraffe
                     //下向きの速度を0に
                     if(vel.Y>0)
                         vel = vel.SetY(0);
+
+                    //口が開いているなら閉める
+                    if (0 < _render.MouthProgress)
+                        _animation.Start(Animations.MouthClose);
                 }
 
                 //葉の接触
@@ -207,6 +221,9 @@ namespace Giraffe
                     _render.State = _state;
                     
                     vel = Vec2f.ZERO;
+                    //ぶら下がり時の姿勢変更
+                    _animation.Start(Animations.MouthClose);
+
                 }
             }
 
@@ -241,8 +258,7 @@ namespace Giraffe
             base.Draw();
 
             //アニメーションアップデート ほんとにここでいいか不明
-            _animations.ForEach(animation=>animation.Update());
-            _animations.RemoveAll(animation => animation.IsEnd());
+            _animation.Update();
         }
 
         public override bool IsDead()

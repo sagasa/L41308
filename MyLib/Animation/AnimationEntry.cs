@@ -1,34 +1,33 @@
-﻿namespace SAGASALib
+﻿using System;
+using Giraffe;
+
+namespace SAGASALib
 {
     //アニメーションの登録
     public class AnimationEntry<T>
     {
         //=== デリゲート ===
-        //アップデート処理
-        public delegate void AnimationUpdate(T render, float progress, float delta);
-        //アップデート処理
-        public delegate void AnimationInit(T render);
+        public delegate void AnimationAction(T render, Animation<T> animation);
 
         //=== 変数 ===
         //注入した処理
-        public readonly AnimationUpdate Update;
-        public readonly AnimationInit Init;
+        public readonly AnimationAction Update;
+        public readonly AnimationAction Init;
 
         //実行時間 フレーム数
         public readonly int Life;
 
-        //アップデート毎の経過量 
-        public readonly float Delta;
-
         //ループするか
+        public readonly bool Loop;
 
         //=== 関数 ===
 
-        public AnimationEntry(int time, AnimationUpdate update)
+        public AnimationEntry(int time, AnimationAction update, AnimationAction init,bool loop = false)
         {
             Update = update;
+            Init = init;
+            Loop = loop;
             Life = time;
-            Delta = 1f / time;
         }
     }
 }
