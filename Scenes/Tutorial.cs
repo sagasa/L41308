@@ -39,28 +39,29 @@ namespace Giraffe
         private int select1 = ResourceLoader.GetGraph("select_3.png");
         private int select2 = ResourceLoader.GetGraph("select_4.png");
         private int setumei = ResourceLoader.GetGraph("プレイ画面スクショ.jpg");
-        private int bg = ResourceLoader.GetGraph("t.bg.png");
         private int window = ResourceLoader.GetGraph("mes11_02.png");
         private int playbg = ResourceLoader.GetGraph("play_bg.png");
         private int waku = ResourceLoader.GetGraph("waku.png");
         private int mes = ResourceLoader.GetGraph("mes11_02_.png");
+        private int stagename2 = ResourceLoader.GetGraph("image_play/stagename_0.png");
 
         int y = 502;//キリンの頭の座標
 
         string[] GamenText = new string[]//画面説明用コメント
         {
-          "画面説明です",//1
-          "この生き物はキリン、このゲームの主人公。 ","プレーヤーはこのキャラを操作します",//2.3
-          "これは木の枝です。プレイヤーは、","つかまって上に登っていくことができます",//4,5
-          "スコアです。木の枝に噛みつく、ゴール","までにかかった時間の速さなどで","スコアが増加します",//6,7,8
-          "ミニマップです、ミニマップ上のキリンの","アイコンは,マップ上のキリンの","位置を表します",//9,10,11
-          "タイマーです。スタートからゴールまでに","かかった時間がここに表示されます",//11,12
-          "チュートリアル画面トップへ戻りますか？","戻る場合は決定ボタンを押してください"//13,14
+          "画面説明です",//画面説明,1
+          "この生き物はキリン、このゲームの主人公。 ","プレーヤーはこのキャラを操作します",//キリン,2.3
+          "これは木の枝です。プレイヤーは、","つかまって上に登っていくことができます",//木の枝,4,5
+          "ステージ名です。ここに今遊んでいる","ステージの名前が表示されます",//ステージ名,6,7
+          "スコアです。木の枝に噛みつく、ゴール","までにかかった時間の速さなどで","スコアが増加します",//8,8,10
+          "ミニマップです、ミニマップ上のキリンの","アイコンは,マップ上のキリンの","位置を表します",//11,12,13
+          "タイマーです。スタートからゴールまでに","かかった時間がここに表示されます",//14,15
+          "チュートリアル画面トップへ戻りますか？","戻る場合は決定ボタンを押してください"//16,17
         };
 
         string[] Gamennamae = new string[] //画面説明項目用コメント
         {
-            "～画面説明～","・キリン","・木の枝",
+            "～画面説明～","・キリン","・木の枝","・ステージ名",
             "・スコア", "・ミニマップ", "・タイマー", "・画面説明を終了"
         };
 
@@ -79,7 +80,12 @@ namespace Giraffe
             "チュートリアル画面トップへ戻ります",//戻る,16
             "それではやってみましょう",//宣告,17
             "OK!",//OK!,18
-            "操作ゲージ"//やってみよう,19
+            "操作ゲージ",//やってみよう,19
+            "それでは右に移動してみましょう",//20
+            "それでは左に移動してみましょう",//21
+            "それでは2回ジャンプしてみましょう",//22
+            "それでは木に噛みついてみましょう",//23
+            "では首を伸ばしてリ縮めたりしてみましょう",//24
         };
 
 
@@ -124,8 +130,8 @@ namespace Giraffe
                 DX.SetFontSize(25);
                 DX.SetFontThickness(100);
                 DX.ChangeFontType(DX.DX_FONTTYPE_ANTIALIASING_EDGE);
-                DX.DrawGraph(0, 0, bg);
-                DX.DrawGraph(-20, 30, setumei);
+               
+                DX.DrawGraph(0, 30, setumei);
                 DX.DrawGraph(-150, 615, window);
                 DX.DrawGraph(390, 30, waku);
                 DX.DrawString(420, 75, Gamennamae[0], white);
@@ -135,6 +141,8 @@ namespace Giraffe
                 DX.DrawString(400, 342, Gamennamae[4], white);
                 DX.DrawString(400, 410, Gamennamae[5], white);
                 DX.DrawString(400, 475, Gamennamae[6], white);
+                DX.DrawString(400, 540, Gamennamae[7], white);
+                DX.DrawGraph(0, -20, stagename2);
             }
             if (count == 1)//画面説明(タイトル)
             {
@@ -145,40 +153,45 @@ namespace Giraffe
             {
                 DX.DrawString(50, 638, GamenText[1], white);
                 DX.DrawString(50, 674, GamenText[2], white);
-                DX.DrawLine(410, 172, 520, 172, black);
-                DX.DrawBox(180, 460, 250, 560, black, DX.FALSE);
+                DX.DrawBox(410, 172, 520, 174, black,DX.TRUE);
             }
             if (count == 3)//画面説明(木の枝)
             {
                 DX.DrawString(50, 638, GamenText[3], white);
                 DX.DrawString(50, 674, GamenText[4], white);
-                DX.DrawLine(410, 237, 520, 237, black, DX.FALSE);
+                DX.DrawBox(410, 237, 520, 239, black, DX.TRUE);
             }
-            if (count == 4)//画面説明(スコア)
+            if (count == 4)//画面説明(ステージ名)
             {
                 DX.DrawString(50, 638, GamenText[5], white);
                 DX.DrawString(50, 674, GamenText[6], white);
-                DX.DrawString(50, 705, GamenText[7], white);
-                DX.DrawLine(410, 304, 520, 304, black, DX.FALSE);
+                DX.DrawBox(410, 304, 570, 306, black, DX.TRUE);
             }
-            if (count == 5)//画面説明(ミニマップ)
+            if (count == 5)//画面説明(スコア)
             {
-                DX.DrawString(50, 638, GamenText[8], white);
-                DX.DrawString(50, 674, GamenText[9], white);
-                DX.DrawString(50, 705, GamenText[10], white);
-                DX.DrawLine(410, 370, 570, 370, black, DX.FALSE);
+                DX.DrawString(50, 638, GamenText[7], white);
+                DX.DrawString(50, 674, GamenText[8], white);
+                DX.DrawString(50, 705, GamenText[9], white);
+                DX.DrawBox(410, 370, 520, 372, black, DX.TRUE);
             }
-            if (count == 6)//画面説明(タイマー)
+            if (count == 6)//画面説明(ミニマップ)
             {
-                DX.DrawString(50, 638, GamenText[11], white);
-                DX.DrawString(50, 674, GamenText[12], white);
-                DX.DrawLine(410, 437, 540, 437, black, DX.FALSE);
+                DX.DrawString(50, 638, GamenText[10], white);
+                DX.DrawString(50, 674, GamenText[11], white);
+                DX.DrawString(50, 705, GamenText[12], white);
+                DX.DrawBox(410, 437, 570, 439, black, DX.TRUE);
             }
-            if (count == 7)//画面説明(修了)
+            if (count == 7)//画面説明(タイマー)
             {
                 DX.DrawString(50, 638, GamenText[13], white);
                 DX.DrawString(50, 674, GamenText[14], white);
-                DX.DrawLine(410, 502, 620, 502, black, DX.FALSE);
+                DX.DrawBox(410, 502, 540, 504, black, DX.TRUE);
+            }
+            if(count==8)//画面説明(修了)
+            {
+                DX.DrawString(50, 638, GamenText[15], white);
+                DX.DrawString(50, 674, GamenText[16], white);
+                DX.DrawBox(410, 568, 620, 570, black, DX.TRUE);
             }
             if (count >= 99)//操作画面(タイトル)
             {
@@ -194,6 +207,7 @@ namespace Giraffe
                 DX.DrawString(580, 120, SousaText[19], black);//OK!
                 DX.DrawBox(98, 133, 602, 162, black, DX.FALSE);//進行ゲージ外枠
                 DX.DrawString(110, 115, SousaText[20], black);
+                DX.DrawGraph(0, 160, stagename2);
 
                 if (count >= 99 && count <= 100)//右
                 {
@@ -204,7 +218,7 @@ namespace Giraffe
                     }
                     if (CommentTime == 120)
                     {
-                        DX.DrawString(100, 90, SousaText[18], black);
+                        DX.DrawString(100, 90, SousaText[21], black);
                     }
 
                 }
@@ -217,7 +231,7 @@ namespace Giraffe
                     }
                     if ( CommentTime == 120)
                     {
-                        DX.DrawString(100, 90, SousaText[18], black);
+                        DX.DrawString(100, 90, SousaText[22], black);
                     }
                 }
                 if (count >= 103 && count <= 104)//ジャンプ
@@ -229,7 +243,7 @@ namespace Giraffe
                     }
                     if ( CommentTime == 120)
                     {
-                        DX.DrawString(100, 90, SousaText[18], black);
+                        DX.DrawString(100, 90, SousaText[23], black);
                     }
                 }
                 if (count >= 105 && count <= 106)//噛みつき
@@ -241,7 +255,7 @@ namespace Giraffe
                     }
                     if (CommentTime == 120)
                     {
-                        DX.DrawString(100, 90, SousaText[18], black);
+                        DX.DrawString(100, 90, SousaText[24], black);
                     }
                 }
                 if (count >= 107 && count <= 108)//方向転換
@@ -266,7 +280,7 @@ namespace Giraffe
                     }
                     if (CommentTime == 120)
                     {
-                        DX.DrawString(100, 90, SousaText[18], black);
+                        DX.DrawString(100, 90, SousaText[25], black);
                     }
                 }
                 if (count == 111)
@@ -346,16 +360,16 @@ namespace Giraffe
                     count -= 1;
                 }
             }
-            if (count >= 7 && count <= 10)
+            if (count >= 8 && count <= 10)
             {
-                count = 7;
+                count = 8;
             }
             else if (count <= 98 && count >= 11)
             {
                 count = 99;
             }
 
-            if (count == 7 && Input.ACTION.IsPush())
+            if (count == 8 && Input.ACTION.IsPush())
             {
                 count = 0;
                 y = 502;
