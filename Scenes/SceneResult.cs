@@ -11,13 +11,26 @@ namespace Giraffe
         int bestScore = 0;
         int[] bestTime = new int[] { 0, 0, 0 };
 
-        int interval = 43;
-        int interval2 = 28;
+        int aRankTime = 60;
+        int bRankTime = 180;
+        int cRankTime = 300;
 
-        bool wait=true;
+        int aRankBonus = 500;
+        int bRankBonus = 300;
+        int cRankBonus = 100;
+
+
+        private int interval = 43;
+        private float fontScale = 0.2f;
+
+        bool wait = true;
         int waitCounter = 0;
 
-        private int bg = ResourceLoader.GetGraph("image_result/result_bg.png");
+        private int bg = ResourceLoader.GetGraph("play_bg.png");
+        private int result_bg = ResourceLoader.GetGraph("image_result/result_bg.png");
+        private int back= ResourceLoader.GetGraph("image_result/r_back.png");
+        private int coron = ResourceLoader.GetGraph("image_result/rcolon.png");
+        private int newImage = ResourceLoader.GetGraph("image_result/new.png");
 
         public SceneResult(Game game) : base(game)
         {
@@ -27,10 +40,32 @@ namespace Giraffe
         {
             wait = true;
             waitCounter = 0;
-            currentScore = Game.currentScore;
-            currentTime = Game.currentTime;
             bestScore = Game.bestScore;
             bestTime = Game.bestTime;
+            currentScore = Game.currentScore;
+            currentTime = Game.currentTime;
+
+            if (currentTime[0] * 60 + currentTime[1] <= aRankTime)
+            {
+                Game.currentScore += aRankBonus;
+            }
+            else if (currentTime[0] * 60 + currentTime[1] <= bRankTime)
+            {
+                Game.currentScore += bRankBonus;
+            }
+            else if (currentTime[0] * 60 + currentTime[1] <= cRankTime)
+            {
+                Game.currentScore += cRankBonus;
+            }
+            
+            if (Game.currentScore > Game.bestScore)
+            {
+                Game.bestScore = Game.currentScore;
+            }
+            if (Game.currentTime[0] * 60 + Game.currentTime[1] < Game.bestTime[0] * 60 + Game.bestTime[1])
+            {
+                Game.bestTime = Game.currentTime;
+            }
         }
         
         public override void Update()
@@ -44,15 +79,6 @@ namespace Giraffe
                 wait = false;
             }
 
-            if (Game.currentScore > Game.bestScore)
-            {
-                Game.bestScore = Game.currentScore;
-            }
-            if (Game.currentTime[0] * 60 + Game.currentTime[1] < Game.bestTime[0] * 60 + Game.bestTime[1])
-            {
-                Game.bestTime = Game.currentTime;
-            }
-
             if (Input.ACTION.IsPush() && !wait)
             {
                 wait = true;
@@ -63,22 +89,21 @@ namespace Giraffe
         public override void Draw()
         {
             DX.DrawGraph(0, 0, bg);
+            DX.DrawGraph(0, 0, result_bg);
 
-            currentScore = 88888;// 検証
-            currentTime[0] = 5;
-            currentTime[1] = 34;
-            
+            DX.DrawGraph(0, 0, coron);
             //スコア
             int digit = 10000;
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    if (currentScore / digit % 10 == j && currentScore / digit != 0)
-                    {
-                        DX.DrawRotaGraph(240 + interval * i, 110, 0.3, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    if (j == currentScore / digit % 10 && currentScore / digit != 0)//現在のスコア
+                        DX.DrawRotaGraph(240 + interval * i, 100, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    if (j == bestScore / digit % 10 && bestScore / digit != 0)//ハイスコア
+                        DX.DrawRotaGraph(240 + interval * i, 150, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    if (j >= currentScore / digit % 10 && j >= bestScore / digit % 10)
                         break;
-                    }
                 }
                 digit /= 10;
             }
@@ -86,66 +111,31 @@ namespace Giraffe
             digit = 10;
             for (int i = 0; i < 2; i++)
             {
-                for (int j = 0; j < 10; j++)//分
+                for (int j = 0; j < 10; j++)
                 {
-                    if (currentTime[0] / digit % 10 == j && (currentTime[0] / digit != 0 || digit == 1))
-                    {
-                        DX.DrawRotaGraph(250 + interval * i, 180, 0.3, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    if (j == currentTime[0] / digit % 10 && (currentTime[0] / digit != 0 || digit == 1))//現在のタイム,分
+                        DX.DrawRotaGraph(240 + interval * i, 200, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    if (j == currentTime[1] / digit % 10)//現在のタイム,秒
+                        DX.DrawRotaGraph(290 + interval * i, 200, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    if (j == bestTime[0] / digit % 10 && (bestTime[0] / digit != 0 || digit == 1))//ベストタイム,分
+                        DX.DrawRotaGraph(240 + interval * i, 250, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    if (j == bestTime[1] / digit % 10)//ベストタイム,秒
+                        DX.DrawRotaGraph(290 + interval * i, 250, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    if (j >= currentTime[0] / digit % 10 && j >= currentTime[1] / digit % 10 && j >= bestTime[0] / digit % 10 && j >= bestTime[1] / digit % 10)
                         break;
-                    }
-                }
-                for (int j = 0; j < 10; j++)//秒
-                {
-                    if (currentTime[1] / digit % 10 == j)
-                    {
-                        DX.DrawRotaGraph(300 + interval * i, 180, 0.3, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
-                        break;
-                    }
                 }
                 digit /= 10;
             }
 
-            //if (currentScore >= bestScore)
-            //{
-            //    //「new」とか「new record」とかの文字
-            //    //点滅させる
-            //}
-            //else
-            if (true)
+            if (currentScore >= bestScore)
             {
-                //「ハイスコア」とか「ベストタイム」の文字
-
-                int digit2 = 10000;
-                for (int i = 0; i < 5; i++)
-                {
-                    for (int j = 0; j < 10; j++)
-                    {
-                        if (bestScore / digit2 % 10 == j && bestScore / digit2 != 0)
-                        {
-                            DX.DrawRotaGraph(460 + interval2 * i, 120, 0.2, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
-                            break;
-                        }
-                    }
-                    digit2 /= 10;
-                }
+                DX.DrawRotaGraph(0, 0, 1, 0, newImage);
             }
 
             if (currentTime[0] * 60 + currentTime[1] <= bestTime[0] * 60 + bestTime[1])
             {
-                //「new」とか「new record」とかの文字
-                //点滅させる
+                DX.DrawRotaGraph(0, 0, 1, 0, newImage);
             }
-            else
-            {
-                //「ベストタイム」とかの文字
-
-                for (int i = 0; i < 10; i++)
-                {
-                    //if()
-                }
-            }
-            //DX.DrawString(300, 150, "最速タイム: " + fastestTime[0] + ":" + fastestTime[1], DX.GetColor(0, 0, 0));
-            //DX.DrawString(300, 165, "今のタイム: " + currentTime[0] + ":" + currentTime[1], DX.GetColor(0, 0, 0));
         }
 
         public override void OnExit()
