@@ -89,6 +89,7 @@
     <Compile Include="MyLib\Vec2f.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="ParticleManager.cs" />
+    <Compile Include="Scenes\SceneResult.cs" />
     <Compile Include="Scenes\Tutorial.cs" />
     <Compile Include="Sound\Sound.cs" />
     <Compile Include="Sound\BgmManager.cs" />
