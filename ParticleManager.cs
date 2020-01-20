@@ -13,6 +13,7 @@ namespace Giraffe
 
         private int particleGlitter = ResourceLoader.GetGraph("effectitem.png");
         private int particleJump = ResourceLoader.GetGraph("effectjump.png");
+        private int particleSwaying = ResourceLoader.GetGraph("effectleaf_1.png");
 
         //全パーティクルを更新する
         public void Update()
@@ -67,6 +68,47 @@ namespace Giraffe
                 endScale = 1.2f,
                 fadeOutTime = 1f,
                 //angle = angle,
+            });
+        }
+
+        //葉
+        public void Swaying(float x, float y)
+        {
+            particles.Add(new Particle()
+            {
+
+                x = x,
+                y = y,
+                lifeSpan = 1,
+                imageHndle = particleSwaying,
+                vy = -5.5f,
+                forceY = 0.08f,
+                fadeInTime = 50,
+                blendMode = DX.DX_BLENDMODE_ADD,
+                OnDeath = (p) =>
+                {
+                    for (int i = 0; i < 25; i++)
+                    {
+                        float angle = MyRandom.PlusMinus(MyMath.PI);
+                        float speed = MyRandom.Range(2f, 8f);
+
+                        particles.Add(new Particle()
+                        {
+                            x = p.x,
+                            y = p.y,
+                            lifeSpan = MyRandom.Range(40, 70),
+                            imageHndle = particleSwaying,
+                            vx = (float)Math.Cos(angle) * speed,
+                            vy = (float)Math.Sin(angle) * speed,
+                            forceY = 0.55f,
+                            damp = 0.92f,
+                            endScale = 0.5f,
+                            fadeOutTime = 0.8f,
+                            blendMode = DX.DX_BLENDMODE_ADD,
+
+                        });
+                    }
+                }
             });
         }
     }
