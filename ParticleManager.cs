@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DxLibDLL;
 using SAGASALib;
 
-namespace Test
+namespace Giraffe
 {
    
     public class ParticleManager

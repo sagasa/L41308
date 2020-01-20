@@ -2,7 +2,7 @@
 using DxLibDLL;
 using SAGASALib;
 
-namespace Test
+namespace Giraffe
 {
     public enum State
     {
@@ -11,7 +11,7 @@ namespace Test
         Dead,
     }
 
-    class Particle
+    public class Particle
     {
         public float x;               //中心位置x座標
         public float y;               //中心位置ｙ座標
