@@ -71,14 +71,15 @@ namespace Giraffe
             "十字キーの⇐を押すと、","プレイヤーは左の方向に移動します",//左,4,5
             "地面に足がついている状態でスペースキーを押すと、","ジャンプをすることができます",//ジャンプ,6,7
             "スペースキーを押している状態で木の枝に触れると、","噛んでつかまることができます",//噛みつき,8,9
-            "木の枝に噛みついているとき、","キリンは自動でぐるぐる回り始めます",//方向転換,10
+            "木の枝に","噛みついているとき、キリンは自動でぐるぐる回り始めます",//方向転換,10
             "回転の向きは、十字キーの左右で変えることができます!",//方向転換,11
             "十字キーの上下を押すとキリンの首が","長くなったり縮んだりします",//首伸び縮み,12,13
             "うまく首の長さを調節して、","うまく木の枝を飛び移りましょう",//まとめ,14
             "※これにて操作説明のチュートリアルは終了です",//画面終了,15
-            "チュートリアル画面トップへ戻ります",//16
-            "それではやってみましょう",//17
-            "OK!",//18
+            "チュートリアル画面トップへ戻ります",//戻る,16
+            "それではやってみましょう",//宣告,17
+            "OK!",//OK!,18
+            "操作ゲージ"//やってみよう,19
         };
 
 
@@ -189,11 +190,13 @@ namespace Giraffe
                 gameObjects.ForEach(obj => obj.Draw());
                 player.Draw();
                 DX.DrawGraph(-90, 0, mes);
+                DX.DrawBox(100, 135, 100 + Sounsa * 5 / 2, 160, green, DX.TRUE);//進行ゲージのゲージ
+                DX.DrawString(580, 120, SousaText[19], black);//OK!
+                DX.DrawBox(98, 133, 602, 162, black, DX.FALSE);//進行ゲージ外枠
+                DX.DrawString(110, 115, SousaText[20], black);
 
                 if (count >= 99 && count <= 100)//右
                 {
-                    DX.DrawBox(100, 135, 100 + Sounsa*5/2, 160, green,DX.TRUE);
-                    DX.DrawString(580, 120, SousaText[19], black);
                     DX.DrawString(100, 30, SousaText[1], black);
                     if (CommentTime <= 60 || CommentTime == 120)
                     {
@@ -207,8 +210,6 @@ namespace Giraffe
                 }
                 if (count >= 101 && count <= 102)//左
                 {
-                    DX.DrawBox(100, 135, 100 + Sounsa * 5 / 2, 160, green, DX.TRUE);
-                    DX.DrawString(580, 120, SousaText[19], black);
                     DX.DrawString(100, 30, SousaText[3], black);
                     if (CommentTime <= 60 || CommentTime == 120)
                     {
@@ -221,8 +222,6 @@ namespace Giraffe
                 }
                 if (count >= 103 && count <= 104)//ジャンプ
                 {
-                    DX.DrawBox(100, 135, 100 + Sounsa * 5 / 2, 160, green, DX.TRUE);
-                    DX.DrawString(580, 120, SousaText[19], black);
                     DX.DrawString(100, 30, SousaText[5], black);
                     if (CommentTime <= 60 || CommentTime == 120)
                     {
@@ -235,8 +234,6 @@ namespace Giraffe
                 }
                 if (count >= 105 && count <= 106)//噛みつき
                 {
-                    DX.DrawBox(100, 135, 100 + Sounsa * 5 / 2, 160, green, DX.TRUE);
-                    DX.DrawString(580, 120, SousaText[19], black);
                     DX.DrawString(100, 30, SousaText[7], black);
                     if (CommentTime <= 60 || CommentTime == 120)
                     {
@@ -249,17 +246,12 @@ namespace Giraffe
                 }
                 if (count >= 107 && count <= 108)//方向転換
                 {
-                    DX.DrawBox(100, 135, 100 + Sounsa * 5 / 2, 160, green, DX.TRUE);
-                    DX.DrawString(580, 120, SousaText[19], black);
-                    DX.DrawString(100, 30, SousaText[9], black);
+                     DX.DrawString(100, 30, SousaText[10], black);
                     if (CommentTime <= 80 || CommentTime == 120)
                     {
-                        DX.DrawString(100, 60, SousaText[10], black);
+                        DX.DrawString(100, 60, SousaText[11], black);
                     }
-                    else if (CommentTime <= 40 || CommentTime == 120)
-                    {
-                        DX.DrawString(100, 90, SousaText[11], black);
-                    }
+                   
                     if (CommentTime == 120)
                     {
                         DX.DrawString(100, 90, SousaText[18], black);
@@ -267,8 +259,6 @@ namespace Giraffe
                 }
                 if (count >= 109 && count <= 110)//首伸び縮み
                 {
-                    DX.DrawBox(100, 135, 100 + Sounsa * 5 / 2, 160, green, DX.TRUE);
-                    DX.DrawString(580, 120, SousaText[19], black);
                     DX.DrawString(100, 30, SousaText[12], black);
                     if (CommentTime <= 60 || CommentTime == 120)
                     {
@@ -299,6 +289,7 @@ namespace Giraffe
             DX.DrawString(200, 350, "SounsaCount:" + SousaCount, black);//操作進行表示
             DX.DrawString(200, 400, "player.Y:" + player.Y, black);//プレイヤーの縦座標表示
             DX.DrawString(200, 450, "CommentTime:" + CommentTime, black);//コメント表示時間の表示
+            DX.DrawString(200, 500, "velangle" + player.velAngle, black);
         }
 
         public override void OnExit()
@@ -434,7 +425,7 @@ namespace Giraffe
                 }
                 if (count == 106)//木につかまる
                 {
-                    if (player.Y <= 21 && player.Y >= 18 && Input.ACTION.IsHold())
+                    if (player.velAngle>0||player.velAngle<0&& Input.ACTION.IsHold())
                     {
                         SousaCount += 2;
                     }
@@ -446,7 +437,11 @@ namespace Giraffe
                 }
                 if (count == 108)//回転方向変更
                 {
-                    if (Input.ACTION.IsHold() && Input.RIGHT.IsPush() || Input.LEFT.IsPush())
+                    if (player.velAngle<0&& Input.LEFT.IsPush()&&Input.ACTION.IsHold())
+                    {
+                        SousaCount = +200;
+                    }
+                    else if(player.velAngle>0&&Input.RIGHT.IsPush()&&Input.ACTION.IsHold())
                     {
                         SousaCount = +200;
                     }
