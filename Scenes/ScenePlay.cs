@@ -39,6 +39,8 @@ namespace Giraffe
         //表示中の領域の左上のMap座標
         public Vec2f MapPos;
 
+        ParticleManager ParticleManager;
+
         public List<GameObject> gameObjects=new List<GameObject>();
 
         public ScenePlay(Game game) : base(game)
@@ -49,6 +51,8 @@ namespace Giraffe
             player = new Player(this);
             player.pos = MapPos+new Vec2f(2,2);
             playerIcon = new playerIcon(this);
+
+            ParticleManager = new ParticleManager();
         }
 
 
@@ -90,6 +94,8 @@ namespace Giraffe
                 if (time[1] % 10 == i)//1秒
                     DX.DrawRotaGraph(Screen.Width - 30, 25 , 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
             }
+
+            ParticleManager.Draw();
         }
 
         public override void OnExit()
@@ -129,6 +135,8 @@ namespace Giraffe
             playerIcon.Update();
             gameObjects.ForEach(obj => obj.Update());
             gameObjects.RemoveAll(obj => obj.IsDead());
+
+            ParticleManager.Update();
 
             if (Game.isGoal)//ゴールにプレイヤーが触れたら
             {
