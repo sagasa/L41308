@@ -10,8 +10,8 @@ namespace Giraffe
 {
     public class Title : Scene
     {
-        private bool wait = false;
-
+        private bool wait = true;
+        private int waitCounter = 0;
         private int fadeTime = 180;
 
         private int head = ResourceLoader.GetGraph("player/player_head.png");
@@ -54,12 +54,18 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-            wait = false;
+            wait = true;
+            waitCounter = 0;
         }
 
         public override void Update()
         {
-            if(!wait)
+            waitCounter++;
+            if (waitCounter == 60)
+            {
+                wait = false;
+            }
+            if (waitCounter <= fadeTime + 10)
             {
                 Game.bgmManager.FadeIn("title", fadeTime);
             }
@@ -69,25 +75,19 @@ namespace Giraffe
                 Sound.Play("cursor_SE.mp3");
             }
 
-            if (y == 617 && Input.ACTION.IsPush())
+            if (y == 617 && Input.ACTION.IsPush() && !wait)
             {
-                if(!wait)
-                {
-                    Sound.Play("decision_SE.mp3");
-                    Game.SetScene(new Tutolal(Game), new Fade(60, true, true));
-                    wait = true;
-                }
+                Sound.Play("decision_SE.mp3");
+                Game.SetScene(new Tutolal(Game), new Fade(60, true, true));
                 Game.bgmManager.CrossFade("title", "tutorial", fadeTime);
+                wait = true;
             }
-            else if (y == 502 && Input.ACTION.IsPush())
+            else if (y == 502 && Input.ACTION.IsPush() && !wait)
             {
-                if (!wait)
-                {
-                    Sound.Play("decision_SE.mp3");
-                    Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
-                    wait = true;
-                }
+                Sound.Play("decision_SE.mp3");
+                Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
                 Game.bgmManager.CrossFade("title", "play", fadeTime);
+                wait = true;
             }
         }
     }

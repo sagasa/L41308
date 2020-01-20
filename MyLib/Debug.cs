@@ -28,9 +28,9 @@ namespace SAGASALib
         public static void DrawVec2(Vec2f pos, Vec2f vec, string name = "", uint color = 4294902015)
         {
             draw.Enqueue(() => {
-                DrawThickBox(pos,vec,color);
-                DrawThickBox(pos + vec, vec.Rotate(MyMath.Deg2Rad * 140).Normal() * 15, color);
-                DrawThickBox(pos + vec, vec.Rotate(MyMath.Deg2Rad * -140).Normal() * 15, color);
+                DrawUtil.DrawThickBox(pos,vec,color);
+                DrawUtil.DrawThickBox(pos + vec, vec.Rotate(MyMath.Deg2Rad * 140).Normal() * 15, color);
+                DrawUtil.DrawThickBox(pos + vec, vec.Rotate(MyMath.Deg2Rad * -140).Normal() * 15, color);
                 DX.DrawStringToHandle((int)(vec+pos).X, (int)(vec + pos).Y + 2, name + "(" + vec.X + "," + vec.Y + ")", black, Handle, white);
             });
         }
@@ -45,26 +45,12 @@ namespace SAGASALib
         public static void DrawAngle(Vec2f pos, float rad, string name = "", uint color = 4294902015)
         {
             draw.Enqueue(() => {
-                DrawThickBox(pos,UP.Rotate(rad) , color,2);
+                DrawUtil.DrawThickBox(pos,UP.Rotate(rad) , color,2);
                 DX.DrawStringToHandle((int)(pos).X, (int)(pos).Y + 2, name + "(" + rad*MyMath.Rad2Deg + "° )", black, Handle, white);
             });
         }
 
-        private static void DrawThickBox(Vec2f pos,Vec2f vec, uint color, float thick=1)
-        {
-            Vec2f right = vec.Right().Normal()*(thick/2);
-            Vec2f left = vec.Left().Normal() * (thick / 2);
-            Vec2f pos0 = pos + right;
-            Vec2f pos1 = pos + left;
-            Vec2f pos2 = pos + vec + left;
-            Vec2f pos3 = pos + vec + right;
-            DrawTriangle(pos0, pos1, pos2, color);
-            DrawTriangle(pos2, pos3, pos0, color);
-        }
-        private static void DrawTriangle(Vec2f pos0, Vec2f pos1, Vec2f pos2,uint color)
-        {
-              DX.DrawTriangleAA(pos0.X,pos0.Y,pos1.X,pos1.Y,pos2.X,pos2.Y,color,DX.TRUE);
-        }
+        
 
         public static void Draw()
         {
