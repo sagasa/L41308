@@ -35,7 +35,7 @@ namespace SAGASALib
         public void Stop(AnimationEntry<T> entry, bool finish)
         {
             //要素を検索
-            Animation<T> animation = _list.First(anim => anim.Entry == entry);
+            Animation<T> animation = _list.FirstOrDefault(anim => anim.Entry == entry);
             if (animation != null)
             {
                 if (finish)

@@ -223,7 +223,7 @@ namespace Giraffe
                     vel = Vec2f.ZERO;
                     //ぶら下がり時の姿勢変更
                     _animation.Start(Animations.MouthClose);
-
+                    _animation.Stop(Animations.WalkGround,true);
                 }
             }
 
