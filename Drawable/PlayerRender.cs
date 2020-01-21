@@ -35,6 +35,9 @@ namespace Giraffe
         //回転
         public float NeckRotate = 0;
         public float HeadRotate = 0;
+
+        private float NeckRotateFix => CheckAndInvert(NeckRotate);
+        private float HeadRotateFix => CheckAndInvert(HeadRotate);
         public Player.PlayerState State = Player.PlayerState.Stand;
         //アニメーション
         public float MouthProgress = 0;
@@ -63,7 +66,7 @@ namespace Giraffe
                     
                     Vec2f res = (body+neck).Rotate(GetAngle());
                     Vec2f head = CheckAndInvert(DangleCenterPos) - HeadNeckJoint;
-                    head = head.Rotate(GetAngle() + HeadRotate);
+                    head = head.Rotate(GetAngle() + HeadRotateFix);
                     res += head;
                     //変換して返す
                     return res * ImageSize * Scale / PlayMap.CellSize;
@@ -74,9 +77,9 @@ namespace Giraffe
                     Vec2f body = (BodyNeckJoint - CheckAndInvert(StandCenterPos)).Rotate(GetAngle());
                     Vec2f neck = HeadNeckJoint - BodyNeckJoint;
                     neck *= NeckExt;
-                    neck = neck.Rotate(GetAngle() + NeckRotate);
+                    neck = neck.Rotate(GetAngle() + NeckRotateFix);
                     Vec2f head = CheckAndInvert(DangleCenterPos) - HeadNeckJoint;
-                    head = head.Rotate(GetAngle() + NeckRotate + HeadRotate);
+                    head = head.Rotate(GetAngle() + NeckRotateFix + HeadRotateFix);
                     Vec2f res = body + neck + head;
                     //変換して返す
                     return res * ImageSize * Scale / PlayMap.CellSize;
@@ -105,6 +108,13 @@ namespace Giraffe
             if (IsInversion())
                 vec = new Vec2f(1f - vec.X, vec.Y);
             return vec;
+        }
+
+        private float CheckAndInvert(float value)
+        {
+            if (IsInversion())
+                value = -value;
+            return value;
         }
 
         private float GetAngle()
@@ -150,24 +160,24 @@ namespace Giraffe
             switch (State)
             {
                 case Player.PlayerState.Dongle:
-                    _neckCalc.Rotate(HeadNeckJoint, HeadRotate);
-                    _bodyCalc.Rotate(HeadNeckJoint, HeadRotate);
-                    _bodyCalc.Rotate(BodyNeckJoint, NeckRotate);
-                    _neck = _neck *= -1;
-                    _bodyCalc.Move(_neck.Rotate(GetAngle()+HeadRotate));
+                    _neckCalc.Rotate(HeadNeckJoint, -HeadRotateFix);
+                    _bodyCalc.Rotate(HeadNeckJoint, -HeadRotateFix);
+                    _bodyCalc.Rotate(BodyNeckJoint, -NeckRotateFix);
+                    _neck = _neck * -1;
+                    _bodyCalc.Move(_neck.Rotate(GetAngle()+ -HeadRotateFix));
                     break;
                 case Player.PlayerState.Fly:
-                    _headCalc.Rotate(HeadNeckJoint, HeadRotate);
+                    _headCalc.Rotate(HeadNeckJoint, HeadRotateFix);
                     _headCalc.Move(_neck.Rotate(GetAngle()) * 0.5f);
                     _neck = _neck * -1;
-                    _bodyCalc.Rotate(BodyNeckJoint, -NeckRotate);
+                    _bodyCalc.Rotate(BodyNeckJoint, -NeckRotateFix);
                     _bodyCalc.Move(_neck.Rotate(GetAngle()) * 0.5f);
                     break;
                 case Player.PlayerState.Stand:
-                    _neckCalc.Rotate(BodyNeckJoint, NeckRotate);
-                    _headCalc.Rotate(BodyNeckJoint, NeckRotate);
-                    _headCalc.Rotate(HeadNeckJoint + _neck, HeadRotate);
-                    _headCalc.Move(_neck.Rotate(GetAngle()));
+                    _neckCalc.Rotate(BodyNeckJoint, NeckRotateFix);
+                    _headCalc.Rotate(BodyNeckJoint, NeckRotateFix);
+                    _headCalc.Rotate(HeadNeckJoint, HeadRotateFix);
+                    _headCalc.Move(_neck.Rotate(GetAngle()+ NeckRotateFix));
                     break;
             }
             //表示サイズに

@@ -15,14 +15,25 @@ namespace SAGASALib
             (render, animation) => { render.MouthProgress -= animation.Delta; },
             (render, animation) => { animation.Progress = 1f - render.MouthProgress; });
         //ループ前提 x軸速度に応じて足をうごかす
-        public static readonly AnimationEntry<PlayerRender> WalkGround = new AnimationEntry<PlayerRender>(5,
+        public static readonly AnimationEntry<PlayerRender> WalkGround = new AnimationEntry<PlayerRender>(60,
             (render, animation) =>
             {
                 //歩く速度定数
-                const int speed = 10;
-                render.LegProgress += Math.Abs(animation.Delta * render.Target.vel.X * speed);
+                const int speed = 2;
+                render.LegProgress += Math.Abs(render.Target.vel.X * speed);
+                render.TailProgress += Math.Abs(animation.Delta);
 
-                render.TailProgress += Math.Abs(animation.Delta * render.Target.vel.X * 0.2f);
+                if (animation.Progress < 0.5f)
+                {
+                    render.HeadRotate += MyMath.Deg2Rad * 3;
+                    render.NeckRotate -= MyMath.Deg2Rad * 3;
+                }
+                else
+                {
+                    render.HeadRotate -= MyMath.Deg2Rad * 3;
+                    render.NeckRotate += MyMath.Deg2Rad * 3;
+                }
+
                 // Console.WriteLine(render.TailProgress);
                 if (1f < render.LegProgress)
                     render.LegProgress = 0;
