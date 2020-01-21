@@ -18,7 +18,7 @@
         public void Init(T target)
         {
             Delta = 1f / Entry.Life;
-            Entry?.Init(target, this);
+            Entry.Init?.Invoke(target, this);
         }
 
         public void Update(T target)
