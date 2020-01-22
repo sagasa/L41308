@@ -31,8 +31,20 @@ namespace SAGASALib
                 Console.Error.WriteLine("再生中のアニメーションが追加されました");
         }
 
+        public void StartNext(AnimationEntry<T> before, AnimationEntry<T> next)
+        {
+            //要素を検索
+            Animation<T> beforeAnimation = _list.FirstOrDefault(anim => anim.Entry == before);
+            if (beforeAnimation != null)
+            {
+                beforeAnimation.NextAnimation = next;
+            }
+            else
+                Console.Error.WriteLine("接続対象のアニメーションが見つかりません");
+        }
+
         //再生中のアニメーションを停止する
-        public void Stop(AnimationEntry<T> entry, bool finish)
+        public void Stop(AnimationEntry<T> entry, bool finish=false)
         {
             //要素を検索
             Animation<T> animation = _list.FirstOrDefault(anim => anim.Entry == entry);
@@ -51,7 +63,15 @@ namespace SAGASALib
         public void Update()
         {
             _list.ForEach(animation => animation.Update(_target));
-            _list.RemoveAll(animation => animation.IsEnd());
+            for (var i = _list.Count - 1; i >= 0; i--)
+            {
+                if (_list[i].IsEnd())
+                {
+                    if (_list[i].NextAnimation != null)
+                        Start(_list[i].NextAnimation);
+                    _list.RemoveAt(i);
+                }
+            }
         }
     }
 }
