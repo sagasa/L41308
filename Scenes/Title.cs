@@ -118,7 +118,7 @@ namespace Giraffe
                     {
 
                     }
-                    else if(idouCounter%1==0&&treebgX>=-1000)
+                    else if(idouCounter%1==0&&treebgX<=-1000)
                     {
                         treebgX -= 3;
                         UIX -= 3;
@@ -210,7 +210,7 @@ namespace Giraffe
                         Game.bgmManager.CrossFade("title", "play", fadeTime);
                         wait = true;
                     }
-                    if(treebgX==-1281)
+                    if(treebgX==-1284)
                     {
                         //stage3
                     }
