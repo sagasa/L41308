@@ -17,6 +17,8 @@ namespace Giraffe
         private int treebgX = 0;
         private int UIX =0;
         private int idouCounter;
+        private int stagewaittime = 60;
+        
 
         private int head = ResourceLoader.GetGraph("player/player_head.png");
         private int horn = ResourceLoader.GetGraph("player/horn.png");
@@ -168,55 +170,82 @@ namespace Giraffe
                 else if (y == 502 && Input.ACTION.IsPush() && !wait)
                 {
                     Sound.Play("decision_SE.mp3");
-                   //Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
+                    //Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
                     //Game.bgmManager.CrossFade("title", "play", fadeTime);
                     //wait = true;
-                    StageCount += 1;
+                   
+                        StageCount += 1;
+                   
+                   
                 }
             }
-          
-            if(StageCount==1)
+
+            if (StageCount == 1)
             {
-                if(Input.RIGHT.IsHold())
+                
+                if (Input.RIGHT.IsHold())
                 {
                     treebgX -= 3;
                     UIX -= 3;
                 }
-                if(Input.LEFT.IsHold())
+                if (Input.LEFT.IsHold())
                 {
                     treebgX += 3;
                     UIX += 3;
                 }
-                if(treebgX<=-1281)
+                if (treebgX <= -1281)
                 {
                     treebgX = -1281;
                     UIX = -1281;
                 }
-                if(treebgX>0)
+                if (treebgX > 0)
                 {
                     treebgX = 0;
                     UIX = 0;
                 }
-                if(Input.ACTION.IsPush())
+                if(Input.BACK.IsPush())
                 {
-                    if (treebgX ==0)//stage2
+                    StageCount = 0;
+                    Sound.Play("cancel_SE.mp3");
+                    stagewaittime = 60;
+
+                }
+                stagewaittime--;
+                if (Input.ACTION.IsPush()&&stagewaittime<=0)
+                {
+                    waitCounter++;
+                    if (waitCounter == 60)
                     {
-                       
+                        wait = false;
                     }
-                    if (treebgX == -633)//今だけステージ１
+                    if (waitCounter <= fadeTime + 10)
+                    {
+                        Game.bgmManager.FadeIn("title", fadeTime);
+                    }
+                    if(wait==true)
+                    {
+
+                    }
+                    if (treebgX == 0)//stage1
                     {
                         Sound.Play("decision_SE.mp3");
                         Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
                         Game.bgmManager.CrossFade("title", "play", fadeTime);
                         wait = true;
+                        
                     }
-                    if(treebgX==-1284)
+                    if (treebgX == -633)//stage2
+                    {
+                       
+                    }
+                    if (treebgX == -1284)
                     {
                         //stage3
                     }
-
-                   
                 }
+             
+
+
 
             }
         }
