@@ -133,6 +133,7 @@ namespace Giraffe
             gameObjects.ForEach(obj=> player.CalcInteract(obj));
             player.Update();
             playerIcon.Update();
+            playerIcon.IconPos = (29 - player.Y) * 10.25f;
             gameObjects.ForEach(obj => obj.Update());
             gameObjects.RemoveAll(obj => obj.IsDead());
 
@@ -140,7 +141,9 @@ namespace Giraffe
 
             if (Game.isGoal)//ゴールにプレイヤーが触れたら
             {
-                player.pos = player.oldPos;
+                player.pos = new Vec2f(4.6f, 2.4f);
+                player.velAngle = 0;
+                player.angle = 0;
                 if (goalTimer > 240)
                 {
                     Game.bgmManager.FadeOut("play", 30);
