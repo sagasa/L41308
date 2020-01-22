@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DxLibDLL;
 using SAGASALib;
 
@@ -14,7 +15,12 @@ namespace Giraffe
         
         float bgmDis = 100.0f;//聞こえる範囲
         float interval = 150.0f;//bgmDisとintervalでクロスフェードの重なりを調整する
-        
+
+        float r = 0;
+        float degree = 0;
+        float fadeDegre = 0;
+        float radian;
+
         public void Load()
         {
             ListenerPos = DX.VGet(0.0f, 1.0f, bgmDis);//リスナーの位置
@@ -31,7 +37,7 @@ namespace Giraffe
             bgmPos["play"] = DX.VGet(0.0f, 0.0f, 0.0f);
             bgmPos["result"] = DX.VGet(0.0f, 0.0f, 0.0f);
             bgmPos["tutorial"] = DX.VGet(0.0f, 0.0f, 0.0f);
-            bgmPos["play_fast"] = bgmPos["play"];
+            //bgmPos["play_fast"] = bgmPos["play"];
         }
         
         public void FadeIn(string name, int time)
@@ -92,18 +98,20 @@ namespace Giraffe
             if (bgmPos[name2].x != bgmPos[name1].x + interval)
             {
                 bgmPos[name2] = DX.VGet(bgmPos[name1].x + interval, 0.0f, 0.0f);
+                r = ListenerPos.z - bgmPos[name1].z;
+                fadeDegre = 90 / (time / interval * r);
             }
 
             if (ListenerPos.z != 0)
             {
                 if (ListenerPos.z > 0)
                 {
-                    ListenerPos.z -= 0.7f;
+                    degree += fadeDegre;
+                    radian = (90 + degree) * (float)Math.PI / 180;
+                    ListenerPos.z = r * (float)Math.Sin(radian) + bgmPos[name1].z;
                 }
                 if (ListenerPos.z < 0)
-                {
                     ListenerPos.z = 0;
-                }
             }
 
             if (ListenerPos.x < bgmPos[name2].x)
@@ -168,20 +176,16 @@ namespace Giraffe
                                  "　プレイ:" + DX.CheckSoundMem(bgmMap["play"]) +
                                  "　リザルト:" + DX.CheckSoundMem(bgmMap["result"]) +
                                  "　リスナー x:" + ListenerPos.x + "　z:" + ListenerPos.z,
-                                 DX.GetColor(0, 0, 0));
+                                 DX.GetColor(255, 0, 0));
             // BGMの再生位置を描画
-            DX.DrawCircle(//タイトル,青
-                (int)bgmPos["title"].x, 150 + (int)bgmPos["title"].z,
-                (int)bgmDis, DX.GetColor(0, 0, 255), DX.FALSE);
+            DX.DrawCircle(//タイトル,赤
+                100 + (int)bgmPos["title"].x, 150 + (int)bgmPos["title"].z, (int)bgmDis, DX.GetColor(255, 0, 0), DX.FALSE);
             DX.DrawCircle(//プレイ,黄
-                (int)bgmPos["play"].x, 150 + (int)bgmPos["play"].z,
-                (int)bgmDis, DX.GetColor(255, 255, 0), DX.FALSE);
-            //DX.DrawCircle(//リザルト,紫
-            //    (int)bgmPos["result"].x, 150 + (int)bgmPos["result"].z,
-            //    (int)bgmDis, DX.GetColor(255, 0, 255), DX.FALSE);
-            DX.DrawCircle(//リスナー,赤
-                (int)ListenerPos.x, 150 + (int)ListenerPos.z,
-                2, DX.GetColor(255, 0, 0));
+                100 + (int)bgmPos["play"].x, 150 + (int)bgmPos["play"].z, (int)bgmDis, DX.GetColor(255, 255, 0), DX.FALSE);
+            DX.DrawCircle(//リザルト,紫
+                100 + (int)bgmPos["result"].x, 150 + (int)bgmPos["result"].z, (int)bgmDis, DX.GetColor(255, 0, 255), DX.FALSE);
+            DX.DrawCircle(//リスナー,青
+                100 + (int)ListenerPos.x, 150 + (int)ListenerPos.z, 2, DX.GetColor(0, 0, 255));
         }
     }
 }
