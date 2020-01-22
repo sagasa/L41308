@@ -20,8 +20,8 @@ namespace Giraffe
         public static readonly Vec2f ImageSize = new Vec2f(128, 128);
         private static readonly Vec2f StandCenterPos = new Vec2f(64, 64) / ImageSize;
         private static readonly Vec2f DangleCenterPos = new Vec2f(114, 50) / ImageSize;
-        private static readonly Vec2f HeadNeckJointPos = new Vec2f(77, 57) / ImageSize;
-        private static readonly Vec2f BodyNeckJointPos = new Vec2f(77, 74) / ImageSize;
+        private static readonly Vec2f HeadNeckJointPos = new Vec2f(78, 47) / ImageSize;
+        private static readonly Vec2f BodyNeckJointPos = new Vec2f(78, 90) / ImageSize;
         private static readonly Vec2f NeckCenterPos = (HeadNeckJointPos - BodyNeckJointPos) * 0.5f + BodyNeckJointPos;
 
         private Vec2f Center { get => CheckAndInvert(State==Player.PlayerState.Dongle ? DangleCenterPos : StandCenterPos); }
@@ -29,7 +29,7 @@ namespace Giraffe
         private Vec2f BodyNeckJoint { get => CheckAndInvert(BodyNeckJointPos); }
         private Vec2f NeckCenter {get => CheckAndInvert(NeckCenterPos); }
         //スケール
-        public Vec2f Scale = new Vec2f(1,1);
+        public Vec2f Scale = new Vec2f(0.8f,0.8f);
         //首スケール
         public float NeckExt = 1;
         //回転
