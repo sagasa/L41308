@@ -69,7 +69,7 @@ namespace Giraffe
                 {
                    
                 }
-                else
+                else if(treebgX==0||treebgX==-633||treebgX==-1281)
                 {
                     DX.DrawGraph(UIX, 0, stagename);
                 }
@@ -228,19 +228,18 @@ namespace Giraffe
                     }
                     if (treebgX == 0)//stage1
                     {
-                        Sound.Play("decision_SE.mp3");
+                         Sound.Play("decision_SE.mp3");
                         Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
                         Game.bgmManager.CrossFade("title", "play", fadeTime);
                         wait = true;
-                        
                     }
                     if (treebgX == -633)//stage2
                     {
                        
                     }
-                    if (treebgX == -1284)
+                    if (treebgX == -1281)
                     {
-                        //stage3
+                       
                     }
                 }
              
