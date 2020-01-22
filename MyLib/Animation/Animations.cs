@@ -25,13 +25,13 @@ namespace SAGASALib
 
                 if (animation.Progress < 0.5f)
                 {
-                    render.HeadRotate += MyMath.Deg2Rad * 3;
-                    render.NeckRotate -= MyMath.Deg2Rad * 3;
+                    render.HeadRotate += MyMath.Deg2Rad * 3 * animation.DeltaScale;
+                    render.NeckRotate -= MyMath.Deg2Rad * 3 * animation.DeltaScale;
                 }
                 else
                 {
-                    render.HeadRotate -= MyMath.Deg2Rad * 3;
-                    render.NeckRotate += MyMath.Deg2Rad * 3;
+                    render.HeadRotate -= MyMath.Deg2Rad * 3 * animation.DeltaScale;
+                    render.NeckRotate += MyMath.Deg2Rad * 3 * animation.DeltaScale;
                 }
 
                 // Console.WriteLine(render.TailProgress);
