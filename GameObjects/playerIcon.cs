@@ -10,6 +10,7 @@ namespace Giraffe
 {
     public class playerIcon:GameObject
     {
+        public float IconPos;
         int iconpos;
         private int image = ResourceLoader.GetGraph("キリンアイコン.png");
         
@@ -28,26 +29,14 @@ namespace Giraffe
         {
             iconpos = 460;
 
-            if (Input.RIGHT.IsHold())
+            pos = new Vec2f(0, -IconPos);
+            if (IconPos >= 460)
             {
-                pos = pos + new Vec2f(0, -0.5f);
+                IconPos = 460;
             }
-            else if (Input.LEFT.IsHold())
+            else if (IconPos >= 160)
             {
-                pos = pos + new Vec2f(0, -0.5f);
-            }
-
-            if (pos.Y <= -300)
-            {
-                if (Input.RIGHT.IsHold())
-                {
-                    pos = new Vec2f(0, -300);
-                }
-                else if (Input.LEFT.IsHold())
-                {
-                    pos = new Vec2f(0, -300);
-                }
-
+                IconPos = 160;
             }
         }
        
