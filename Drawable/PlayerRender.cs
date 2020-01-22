@@ -29,7 +29,7 @@ namespace Giraffe
         private Vec2f BodyNeckJoint { get => CheckAndInvert(BodyNeckJointPos); }
         private Vec2f NeckCenter {get => CheckAndInvert(NeckCenterPos); }
         //スケール
-        public Vec2f Scale = new Vec2f(1,1);
+        public Vec2f Scale = new Vec2f(0.8f,0.8f);
         //首スケール
         public float NeckExt = 1;
         //回転
