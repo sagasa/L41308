@@ -155,9 +155,7 @@ namespace Giraffe
 
             }
             if (count == 2)//画面説明(キリン)
-            {
-                a = new Vec2f(150, 100);
-                b = new Vec2f(100, 100);
+            { 
                 DX.DrawString(50, 638, GamenText[1], white);
                 DX.DrawString(50, 674, GamenText[2], white);
                 DX.DrawBox(410, 172, 520, 174, black, DX.TRUE);
