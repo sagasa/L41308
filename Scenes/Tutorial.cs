@@ -122,11 +122,13 @@ namespace Giraffe
                 if (Input.DOWN.IsPush())
                 {
                     y = 617;
+                    Sound.Play("cursor_SE.mp3");
 
                 }
                 if (Input.UP.IsPush())
                 {
                     y = 502;
+                    Sound.Play("cursor_SE.mp3");
                 }
             }
 
@@ -352,16 +354,19 @@ namespace Giraffe
             if (count == 0 && Input.BACK.IsPush())
             {
                 Game.SetScene(new Title(Game));
+                Sound.Play("cancel_SE.mp3");
             }
             if (y == 617 && Input.ACTION.IsPush())
             {
                 count += 1;
                 y = 0;
+                Sound.Play("decision_SE.mp3");
             }
             else if (y == 502 && Input.ACTION.IsPush())
             {
                 count += 99;
                 y = 0;
+                Sound.Play("decision_SE.mp3");
             }
             if (y == 0 && Input.DOWN.IsPush())
             {
@@ -372,6 +377,7 @@ namespace Giraffe
                 else
                 {
                     count += 1;
+                    Sound.Play("cursor_SE.mp3");
                 }
 
             }
@@ -380,6 +386,7 @@ namespace Giraffe
                 if (count <= 2)
                 {
                     count += 0;
+                    Sound.Play("cancel_SE.mp3");
                 }
                 else if (count >= 99)
                 {
@@ -388,6 +395,7 @@ namespace Giraffe
                 else
                 {
                     count -= 1;
+                    Sound.Play("cursor_SE.mp3");
                 }
             }
             if (count >= 8 && count <= 10)
@@ -403,6 +411,7 @@ namespace Giraffe
             {
                 count = 0;
                 y = 502;
+                Sound.Play("decision_SE.mp3");
             }
             if (count == 4 || count == 2)
             {
@@ -428,6 +437,7 @@ namespace Giraffe
                 {
                     count = 0;
                     y = 502;
+                    Sound.Play("cancel_SE.mp3");
                 }
                 if (SousaCount == 200)
                 {
