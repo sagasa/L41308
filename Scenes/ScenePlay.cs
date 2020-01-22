@@ -45,7 +45,7 @@ namespace Giraffe
 
         public ScenePlay(Game game) : base(game)
         {
-            Map = new PlayMap(this, "map_2");
+            Map = new PlayMap(this, "map_1");
             MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y);
 
             player = new Player(this);
@@ -63,8 +63,8 @@ namespace Giraffe
             gameObjects.ForEach(obj => obj.Draw());
             player.Draw();
             
-            DX.DrawGraph(520, 200, bar);
-            DX.DrawGraph(525, 150, Flag);
+            DX.DrawGraph(550, 200, bar);
+            DX.DrawGraph(555, 150, Flag);
             playerIcon.Draw();
 
             DX.DrawRotaGraph(100, 23 , 0.6, 0, stageName);
@@ -75,24 +75,24 @@ namespace Giraffe
             {
                 //スコア
                 if (score / 10000 == i)//10000
-                    DX.DrawRotaGraph(Screen.Width / 2 - 10, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                    DX.DrawRotaGraph(Screen.Width / 2 - 10, 25, 1, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
                 if (score / 1000 % 10 == i)//1000
-                    DX.DrawRotaGraph(Screen.Width / 2 + 15, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                    DX.DrawRotaGraph(Screen.Width / 2 + 15, 25, 1, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
                 if (score / 100 % 10 == i)//100
-                    DX.DrawRotaGraph(Screen.Width / 2 + 40, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                    DX.DrawRotaGraph(Screen.Width / 2 + 40, 25, 1, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
                 if (score / 10 % 10 == i)//10
-                    DX.DrawRotaGraph(Screen.Width / 2 + 65, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                    DX.DrawRotaGraph(Screen.Width / 2 + 65, 25, 1, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
                 if (score % 10 == i)//1
-                    DX.DrawRotaGraph(Screen.Width / 2 + 90, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                    DX.DrawRotaGraph(Screen.Width / 2 + 90, 25, 1, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
                 //タイム
                 if (time[0] / 10 == i)//10分
-                    DX.DrawRotaGraph(Screen.Width - 120, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                    DX.DrawRotaGraph(Screen.Width - 120, 25, 1, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
                 if (time[0] % 10 == i)//1分
-                    DX.DrawRotaGraph(Screen.Width - 95, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                    DX.DrawRotaGraph(Screen.Width - 95, 25, 1, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
                 if (time[1] / 10 == i)//10秒
-                    DX.DrawRotaGraph(Screen.Width - 55, 25, 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                    DX.DrawRotaGraph(Screen.Width - 55, 25, 1, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
                 if (time[1] % 10 == i)//1秒
-                    DX.DrawRotaGraph(Screen.Width - 30, 25 , 0.45, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
+                    DX.DrawRotaGraph(Screen.Width - 30, 25 , 1, 0, ResourceLoader.GetGraph("image_effect/time_" + i + ".png"));
             }
 
             ParticleManager.Draw();
