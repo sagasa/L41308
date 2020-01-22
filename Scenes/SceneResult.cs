@@ -35,6 +35,7 @@ namespace Giraffe
         private int bg = ResourceLoader.GetGraph("play_bg.png");
         private int result_bg = ResourceLoader.GetGraph("image_result/result_bg.png");
         private int back = ResourceLoader.GetGraph("image_result/r_back.png");
+        private int restart = ResourceLoader.GetGraph("image/restart.png");
         private int coron = ResourceLoader.GetGraph("image_result/rcolon.png");
         private int newImage = ResourceLoader.GetGraph("image_result/new.png");
 
@@ -47,7 +48,7 @@ namespace Giraffe
             //検証
             Game.currentScore = 10000;
             Game.bestScore = 10300;
-            Game.currentTime = new int[] { 0, 30, 0 };
+            Game.currentTime = new int[] { 3, 0, 50 };
             Game.bestTime = new int[] { 1, 0, 30 };
             //
 
@@ -154,7 +155,21 @@ namespace Giraffe
 
             if (timeRank == "a")
             {
+                // (+○○○)　の()と+を表示
 
+                digit = 100;
+                for (int i = 0; i < 3; i++)
+                {
+                    for (int j = 0; j < 10; j++)
+                    {
+                        if (j == aRankBonus / digit % 10 && aRankBonus / digit != 0)
+                        {
+                            DX.DrawRotaGraph(420 + 20 * i, 110, 0.1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                            break;
+                        }
+                    }
+                    digit /= 10;
+                }
             }
             else if (timeRank == "b")
             {
@@ -165,12 +180,12 @@ namespace Giraffe
 
             }
 
-            if (blinkMessage && bonusScore >= bestScore)
+            if (blinkMessage && bonusScore > bestScore)
             {
-                DX.DrawGraph(420, 72, newImage);
+                DX.DrawGraph(470, 72, newImage);
             }
 
-            if (blinkMessage && currentTime[0] * 60 + currentTime[1] <= bestTime[0] * 60 + bestTime[1])
+            if (blinkMessage && currentTime[0] * 60 + currentTime[1] < bestTime[0] * 60 + bestTime[1])
             {
                 DX.DrawGraph(420, 169, newImage);
             }
