@@ -46,6 +46,12 @@ namespace Giraffe
 
         public override void OnLoad()
         {
+            //検証用
+            //Game.currentScore = 12345;
+            //Game.bestScore = 1234;
+            //Game.currentTime = new int[] { 1, 23, 0 };
+            //Game.bestTime = new int[] { 12, 34, 0 };
+
             wait = true;
             blinkMessage = true;
             Counter = 0;
@@ -112,6 +118,15 @@ namespace Giraffe
             DX.DrawGraph(0, 0, bg);
             DX.DrawGraph(0, 0, result_bg);
 
+            if(false)
+            {
+
+            }
+
+            DX.DrawGraph(120, Screen.Height - 200, restart);
+            DX.DrawGraph(Screen.Width - 300, Screen.Height - 200, back);
+
+
             //スコア
             int digit = 10000;
             int leftCounter1 = 0;
@@ -143,26 +158,26 @@ namespace Giraffe
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    
                     if (j == currentTime[0] / digit % 10 && (currentTime[0] / digit != 0 || digit == 1))//現在のタイム,分
                     {
                         DX.DrawRotaGraph(240 + fontInterval * leftCounter1, 200, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
                         leftCounter1++;
-                    }
-                    if (j == currentTime[1] / digit % 10)//現在のタイム,秒
-                    {
-                        DX.DrawRotaGraph(240 + fontInterval * i + fontInterval * (leftCounter2 + 2), 200, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
                     }
                     if (j == bestTime[0] / digit % 10 && (bestTime[0] / digit != 0 || digit == 1))//ベストタイム,分
                     {
                         DX.DrawRotaGraph(240 + fontInterval * leftCounter2, 246, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
                         leftCounter2++;
                     }
+                    if (j >= currentTime[0] / digit % 10 && j >= bestTime[0] / digit % 10)
+                        break;
+                }
+                for (int j = 0; j < 10; j++)
+                {
+                    if (j == currentTime[1] / digit % 10)//現在のタイム,秒
+                        DX.DrawRotaGraph(240 + fontInterval * (2 + leftCounter1), 200, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
                     if (j == bestTime[1] / digit % 10)//ベストタイム,秒
-                    {
-                        DX.DrawRotaGraph(240 + fontInterval * i + fontInterval * (leftCounter2 + 2), 246, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
-                    }
-                    if (j >= currentTime[0] / digit % 10 && j >= currentTime[1] / digit % 10 && j >= bestTime[0] / digit % 10 && j >= bestTime[1] / digit % 10)
+                        DX.DrawRotaGraph(240 + fontInterval * (2 + leftCounter2), 246, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    if (j >= currentTime[1] / digit % 10 && j >= bestTime[1] / digit % 10)
                         break;
                 }
                 digit /= 10;
