@@ -59,6 +59,7 @@ namespace Giraffe
 
         public override void Draw()
         {
+            base.Draw();
             Vec2f pos = GetScreenPos(Vec2f.ZERO);
             DX.DrawGraph((int)pos.X, (int)pos.Y, playbg);
             gameObjects.ForEach(obj => obj.Draw());
@@ -102,8 +103,6 @@ namespace Giraffe
                 }
                 digit /= 10;
             }
-
-            base.Draw();
         }
 
         public override void OnExit()
