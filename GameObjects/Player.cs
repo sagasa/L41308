@@ -53,7 +53,7 @@ namespace Giraffe
             return ((ScenePlay) scene).Map;
         }
 
-        private void Jamp()
+        private void Jump()
         {
             vel = vel.SetY(-0.2f);
         } 
@@ -143,7 +143,7 @@ namespace Giraffe
                 vel += Gravity;
                 if (Input.ACTION.IsHold()&&IsOnGround())
                 {
-                    Jamp();
+                    Jump();
                     Sound.Play("jump_SE.mp3");
                     //ジャンプ時の姿勢変更
                     _animation.Start(Animations.MouthOpen);
