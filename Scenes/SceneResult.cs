@@ -15,13 +15,13 @@ namespace Giraffe
         string timeRank = "d";
 
         public int aRankTime = 60;
-        public int bRankTime = 180;
-        public int cRankTime = 300;
+        public int bRankTime = 120;
+        public int cRankTime = 180;
 
-        public int aRankBonus = 500;
-        public int bRankBonus = 300;
-        public int cRankBonus = 100;
-
+        public int aRankBonus = 1000;
+        public int bRankBonus = 500;
+        public int cRankBonus = 200;
+        
         private bool wait = true;//操作ミス防止用+2重フェード対策
         private bool blinkMessage = true;//点滅表示用
         private int Counter = 0;//wait,fade,blinkのカウンター
@@ -116,14 +116,22 @@ namespace Giraffe
             DX.DrawRotaGraph(240 + fontInterval * 2, 246, 0.2, 0, coron);
             //スコア
             int digit = 10000;
+            int leftCounter1 = 0;
+            int leftCounter2 = 0;
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
                     if (j == bonusScore / digit % 10 && bonusScore / digit != 0)//現在のスコア
-                        DX.DrawRotaGraph(240 + fontInterval * i, 104, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    {
+                        DX.DrawRotaGraph(240 + fontInterval * leftCounter1, 104, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                        leftCounter1++;
+                    }
                     if (j == bestScore / digit % 10 && bestScore / digit != 0)//ハイスコア
-                        DX.DrawRotaGraph(240 + fontInterval * i, 148, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    {
+                        DX.DrawRotaGraph(240 + fontInterval * leftCounter2, 148, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                        leftCounter2++;
+                    }
                     if (j >= bonusScore / digit % 10 && j >= bestScore / digit % 10)
                         break;
                 }
