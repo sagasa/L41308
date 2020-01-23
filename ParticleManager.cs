@@ -11,9 +11,9 @@ namespace Giraffe
         //パーティクルを入れておくためのリスト
         List<Particle> particles = new List<Particle>();
 
-        private int particleGlitter = ResourceLoader.GetGraph("effectitem.png");
-        private int particleJump = ResourceLoader.GetGraph("effectjump.png");
-        private int particleSwaying = ResourceLoader.GetGraph("effectleaf_1.png");
+        private int particleGlitter = ResourceLoader.GetGraph("image_effect/effectitem.png");
+        private int particleJump = ResourceLoader.GetGraph("image_effect/effectjump.png");
+        private int particleSwaying = ResourceLoader.GetGraph("image_effect/effectleaf_1.png");
 
         private Scene scene;
 
