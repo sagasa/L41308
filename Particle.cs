@@ -107,19 +107,19 @@ namespace Giraffe
                 fadeInTime, (1f - progressRate) / fadeOutTime), 1f) * alpha);
 
             //色を指定
-            DX.SetDrawBright(red, green, blue);
+            DxHelper.SetColor(red, green, blue);
 
             //アルファ値を指定
-            DX.SetDrawBlendMode(blendMode, currentAlpha);
+            DxHelper.SetBlendMode(blendMode, currentAlpha);
 
             Vec2f screeenpos = scene.GetScreenPos(pos);
             //描画する
             DX.DrawRotaGraphF(screeenpos.X, screeenpos.Y, scale, angle, imageHndle);
 
             //アルファ値を元に戻す
-            DX.SetDrawBlendMode(DX.DX_BLENDGRAPHTYPE_ALPHA, 255);
+            DxHelper.SetBlendMode(DX.DX_BLENDGRAPHTYPE_ALPHA, 255);
             //色を元に戻す
-            DX.SetDrawBright(255, 255, 255);
+            DxHelper.SetColor(255, 255, 255);
         }
     }
 }
