@@ -42,7 +42,7 @@ namespace Giraffe
         //表示中の領域の左上のMap座標
         public Vec2f MapPos;
 
-        ParticleManager ParticleManager;
+        
 
         public List<GameObject> gameObjects=new List<GameObject>();
 
@@ -54,8 +54,6 @@ namespace Giraffe
             player = new Player(this);
             player.pos = MapPos+new Vec2f(2,2);
             playerIcon = new playerIcon(this);
-
-            ParticleManager = new ParticleManager();
         }
 
 
