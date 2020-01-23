@@ -14,10 +14,12 @@ namespace Giraffe
         private int waitCounter = 0;
         private int fadeTime = 180;
         private int StageCount = 0;
-        private int treebgX = 0;
-        private int UIX =0;
         private int idouCounter;
         private int stagewaittime = 60;
+        private bool isRight = false;
+        private bool isLeft = false;
+        private int treebgPos = 0;
+        private int UIpos = 0;
         
 
         private int head = ResourceLoader.GetGraph("player/player_head.png");
@@ -43,8 +45,6 @@ namespace Giraffe
         {
             if (StageCount == 0)
             {
-
-
                 DX.DrawGraph(0, 0, titlebg);
                 DX.DrawGraph(135, 515, select1);
                 DX.DrawGraph(135, 630, select2);
@@ -64,70 +64,14 @@ namespace Giraffe
             }
             if(StageCount>=1)
             {
-                DX.DrawGraph(treebgX, 0, treebg);
-                if (Input.LEFT.IsHold() || Input.RIGHT.IsHold())
-                {
-                   
-                }
-                else if(treebgX==0||treebgX==-633||treebgX==-1281)
-                {
-                    DX.DrawGraph(UIX, 0, stagename);
-                }
-                if (treebgX <=-632 && treebgX >= -1000)//stage2
-                {
-                    idouCounter++;
-                    if (Input.RIGHT.IsHold()||Input.LEFT.IsHold())
-                    {
+                
+                    DX.DrawGraph(treebgPos - Screen.Width, 0, treebg);
 
-                    }
-                    else if (idouCounter % 1 == 0 )
-                    {
-                        treebgX += 3;
-                        UIX += 3;
-                    }
-                    
-                }
-                if(treebgX<=-400&&treebgX>=-631)//stage2
-                {
-                    idouCounter++;
-                    if(Input.RIGHT.IsHold()||Input.LEFT.IsHold())
-                    {
-
-                    }
-                    else if(idouCounter%1==0&&treebgX<=-400)
-                    {
-                        treebgX -= 3;
-                        UIX -= 3;
-                    }
-                }
-                if(treebgX>=-400&&treebgX<=0)//stage1
-                {
-                    idouCounter++;
-                    if(Input.RIGHT.IsHold()||Input.LEFT.IsHold())
-                    {
-
-                    }
-                    else if(idouCounter%1==0&&treebgX>=-400)
-                    {
-                        treebgX += 3;
-                        UIX += 3;
-                    }
-                }
-                if(treebgX<=-1000)//stage3
-                {
-                    idouCounter++;
-                    if(Input.RIGHT.IsHold()||Input.LEFT.IsHold())
-                    {
-
-                    }
-                    else if(idouCounter%1==0&&treebgX<=-1000)
-                    {
-                        treebgX -= 3;
-                        UIX -= 3;
-                    }
-                }
+                    DX.DrawGraph(UIpos - Screen.Width, 0, stagename);
+                
+               
             }
-            DX.DrawString(100, 50, "" + treebgX, DX.GetColor(0, 0, 0));
+            DX.DrawString(100, 100, "" + treebgPos,DX.GetColor(0, 0,0));
         }
 
         public override void OnExit()
@@ -170,39 +114,86 @@ namespace Giraffe
                 else if (y == 502 && Input.ACTION.IsPush() && !wait)
                 {
                     Sound.Play("decision_SE.mp3");
-                    //Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
-                    //Game.bgmManager.CrossFade("title", "play", fadeTime);
-                    //wait = true;
-                   
-                        StageCount += 1;
-                   
-                   
+                      StageCount += 1;
                 }
             }
 
             if (StageCount == 1)
             {
+                if (Input.RIGHT.IsPush())
+                {
+                    isRight = true;
+                    isLeft = false;
+                }
+                else if (Input.LEFT.IsPush())
+                {
+                    isLeft = true;
+                    isRight = false;
+                }
+
+                if (treebgPos >Screen.Width)
+                {
+
+                }
+                else if(treebgPos==0)
+                {
+                    if(Input.RIGHT.IsPush())
+                    {
+                        treebgPos -= Screen.Width / 80;
+                        UIpos -= Screen.Width / 80;
+                    }
+                    else if(Input.LEFT.IsPush())
+                    {
+                        treebgPos += Screen.Width / 80;
+                        UIpos += Screen.Width / 80;
+                    }
+                }
+                else if(treebgPos==-Screen.Width)
+                {
+                    if (Input.RIGHT.IsPush())
+                    {
+                        treebgPos -= Screen.Width / 80;
+                        UIpos -= Screen.Width / 80;
+                    }
+                    else if (Input.LEFT.IsPush())
+                    {
+                        treebgPos += Screen.Width / 80;
+                        UIpos += Screen.Width / 80;
+                    }
+                }
+                else if(treebgPos<=-Screen.Width*2)
+                {
+                   if(Input.LEFT.IsPush())
+                    {
+                        treebgPos += Screen.Width / 80;
+                    }
+                }
+                else
+                {
+                    if (isRight == true)
+                    {
+                        idouCounter++;
+                        if (idouCounter % 1==0)
+                        {
+                            treebgPos -= Screen.Width /80;
+                            UIpos -= Screen.Width / 80;
+                        }
+                       
+                    }
+                    if (isLeft == true&&treebgPos<Screen.Width)
+                    {
+                        idouCounter++;
+                        if (idouCounter % 1== 0)
+                        {
+                            treebgPos += Screen.Width / 80;
+                            UIpos += Screen.Width / 80;
+                        }
+                       
+                    }
+                }
                 
-                if (Input.RIGHT.IsHold())
-                {
-                    treebgX -= 3;
-                    UIX -= 3;
-                }
-                if (Input.LEFT.IsHold())
-                {
-                    treebgX += 3;
-                    UIX += 3;
-                }
-                if (treebgX <= -1281)
-                {
-                    treebgX = -1281;
-                    UIX = -1281;
-                }
-                if (treebgX > 0)
-                {
-                    treebgX = 0;
-                    UIX = 0;
-                }
+                
+               
                 if(Input.BACK.IsPush())
                 {
                     StageCount = 0;
@@ -211,7 +202,7 @@ namespace Giraffe
 
                 }
                 stagewaittime--;
-                if (Input.ACTION.IsPush()&&stagewaittime<=0)
+                if (Input.ACTION.IsPush()&&stagewaittime<=0&&Tutolal.Tutorialcount==0)
                 {
                     waitCounter++;
                     if (waitCounter == 60)
@@ -226,21 +217,29 @@ namespace Giraffe
                     {
 
                     }
-                    if (treebgX == 0)//stage1
+                    if (treebgPos == Screen.Width)
                     {
-                         Sound.Play("decision_SE.mp3");
+                        Sound.Play("decision_SE.mp3");
+                        Game.SetScene(new Tutolal(Game), new Fade(fadeTime, true, true));
+                        
+                        Tutolal.Tutorialcount =99;
+                    }
+                    else if (treebgPos == 0)
+                    {
+                        Sound.Play("decision_SE.mp3");
                         Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
                         Game.bgmManager.CrossFade("title", "play", fadeTime);
                         wait = true;
                     }
-                    if (treebgX == -633)//stage2
+                    else if (treebgPos == -Screen.Width )
                     {
-                       
+
                     }
-                    if (treebgX == -1281)
+                    else if (treebgPos == -Screen.Width * 2)
                     {
-                       
+
                     }
+                   
                 }
              
 
