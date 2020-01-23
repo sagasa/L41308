@@ -8,6 +8,9 @@ namespace Giraffe
     public abstract class Scene
     {
         public readonly Game Game;
+
+        public readonly ParticleManager ParticleManager = new ParticleManager();
+
         protected Scene(Game game)
         {
             Game = game;
@@ -19,9 +22,15 @@ namespace Giraffe
         }
         public abstract void OnLoad();
 
-        public abstract void Update();
+        public virtual void Update()
+        {
+            ParticleManager.Update();
+        }
 
-        public abstract void Draw();
+        public virtual void Draw()
+        {
+            ParticleManager.Draw();
+        }
 
         public abstract void OnExit();
     }

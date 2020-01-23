@@ -42,7 +42,7 @@ namespace Giraffe
         //表示中の領域の左上のMap座標
         public Vec2f MapPos;
 
-        ParticleManager ParticleManager;
+        
 
         public List<GameObject> gameObjects=new List<GameObject>();
 
@@ -54,8 +54,6 @@ namespace Giraffe
             player = new Player(this);
             player.pos = MapPos+new Vec2f(2,2);
             playerIcon = new playerIcon(this);
-
-            ParticleManager = new ParticleManager();
         }
 
 
@@ -105,7 +103,7 @@ namespace Giraffe
                 digit /= 10;
             }
 
-            ParticleManager.Draw();
+            base.Draw();
         }
 
         public override void OnExit()
@@ -147,7 +145,7 @@ namespace Giraffe
             gameObjects.ForEach(obj => obj.Update());
             gameObjects.RemoveAll(obj => obj.IsDead());
 
-            ParticleManager.Update();
+            base.Update();
 
             if (Game.isGoal)//ゴールにプレイヤーが触れたら
             {
