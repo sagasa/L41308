@@ -10,6 +10,8 @@ namespace Giraffe
         private static readonly int imageBody = ResourceLoader.GetGraph("player/body.png");
         private static readonly int imageHorn = ResourceLoader.GetGraph("player/horn.png");
         private static readonly int imageNeck = ResourceLoader.GetGraph("player/neck.png");
+        private static readonly int imageNeckHead = ResourceLoader.GetGraph("player/neckcircle_1.png");
+        private static readonly int imageNeckBody = ResourceLoader.GetGraph("player/neckcircle_2.png");
         private static readonly int[] imageHead = ResourceLoader.GetGraph("player/player_head.png", 3);
         private static readonly int[] imageEye = ResourceLoader.GetGraph("player/player_eye.png", 4);
         private static readonly int[] imageEar = ResourceLoader.GetGraph("player/player_ear.png", 4);
@@ -194,8 +196,10 @@ namespace Giraffe
             //首
             Draw(imageNeck, _neckCalc);
             //胴
+            Draw(imageNeckBody, _bodyCalc);
             Draw(imageBody, _bodyCalc);
             //頭
+            Draw(imageNeckHead, _headCalc);
             Draw(imageHorn, _headCalc);
             Draw(AnimationUtils.GetImage(imageHead, MouthProgress), _headCalc);
             Draw(AnimationUtils.GetImageLoop(imageEar, EarProgress), _headCalc);
