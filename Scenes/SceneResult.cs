@@ -13,6 +13,7 @@ namespace Giraffe
         int[] bestTime = new int[] { 0, 0, 0 };
 
         string timeRank = "d";
+        string scoreRank = "d";
 
         public int aRankTime = 60;
         public int bRankTime = 120;
@@ -30,15 +31,21 @@ namespace Giraffe
 
         private const int fontInterval = 30;//文字同士の幅
         private const float fontScale = 0.18f;//文字の大きさ
-        
-        
 
+        private int cursorWidth = 220;
+        private int cursorInterval = 60;
+        private int cursorPos;
+        private int[] fixedPos;
         private int bg = ResourceLoader.GetGraph("play_bg.png");
         private int result_bg = ResourceLoader.GetGraph("image_result/result_bg.png");
         private int back = ResourceLoader.GetGraph("image_result/r_back.png");
-        private int restart = ResourceLoader.GetGraph("image/restart.png");
+        private int restart = ResourceLoader.GetGraph("image_result/restart.png");
+        private int cursor = ResourceLoader.GetGraph("image_result/cursor.png");
         private int coron = ResourceLoader.GetGraph("image_result/rcolon.png");
         private int newImage = ResourceLoader.GetGraph("image_result/new.png");
+        private int aRankImage = ResourceLoader.GetGraph("rank_3.png");
+        private int bRankImage = ResourceLoader.GetGraph("rank_2.png");
+        private int cRankImage = ResourceLoader.GetGraph("rank_1.png");
 
         public SceneResult(Game game) : base(game)
         {
@@ -61,6 +68,9 @@ namespace Giraffe
             bestScore = Game.bestScore;
             bestTime = Game.bestTime;
             bonusScore = currentScore;
+
+            fixedPos = new int[] { cursorInterval, Screen.Width - (cursorWidth + cursorInterval) };
+            cursorPos = fixedPos[1];
 
             if (currentTime[0] * 60 + currentTime[1] <= aRankTime)
             {
@@ -104,9 +114,38 @@ namespace Giraffe
             {
                 blinkMessage = false;
             }
-            
 
-            if (Input.ACTION.IsPush() && !wait)
+            if (cursorPos != fixedPos[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
+            {
+                Sound.Play("cursor_SE.mp3");
+                for (int i = 0; i < fixedPos.Length; i++)
+                {
+                    if (cursorPos == fixedPos[i])
+                    {
+                        cursorPos = fixedPos[i - 1];
+                        break;
+                    }
+                }
+            }
+            else if (cursorPos != fixedPos[fixedPos.Length - 1] && Input.RIGHT.IsPush())//カーソルが一番右以外の時→を押されたら、カーソルを一つ右へ
+            {
+                Sound.Play("cursor_SE.mp3");
+                for (int i = 0; i < fixedPos.Length; i++)
+                {
+                    if (cursorPos == fixedPos[i])
+                    {
+                        cursorPos = fixedPos[i + 1];
+                        break;
+                    }
+                }
+            }
+            
+            if (!wait && cursorPos == fixedPos[0] && Input.ACTION.IsPush())
+            {
+                wait = true;
+                Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
+            }
+            else if (!wait && cursorPos == fixedPos[1] && Input.ACTION.IsPush())
             {
                 wait = true;
                 Game.SetScene(new Title(Game), new Fade(fadeTime, true, true));
@@ -117,16 +156,10 @@ namespace Giraffe
         {
             DX.DrawGraph(0, 0, bg);
             DX.DrawGraph(0, 0, result_bg);
-
-            if(false)
-            {
-
-            }
-
-            DX.DrawGraph(120, Screen.Height - 200, restart);
-            DX.DrawGraph(Screen.Width - 300, Screen.Height - 200, back);
-
-
+            DX.DrawGraph(cursorPos, Screen.Height - 250, cursor);
+            DX.DrawGraph(fixedPos[0], Screen.Height - 250, restart);
+            DX.DrawGraph(fixedPos[1], Screen.Height - 250, back);
+            
             //スコア
             int digit = 10000;
             int leftCounter1 = 0;
@@ -190,7 +223,7 @@ namespace Giraffe
             {
                 //　「タイムボーナス」
                 // (+○○○)　の()と+を表示
-
+                DX.DrawRotaGraph(70, 200, 0.3, 0, aRankImage);
                 digit = 1000;
                 leftCounter1 = 0;
                 for (int i = 0; i < 4; i++)
@@ -214,6 +247,8 @@ namespace Giraffe
             {
 
             }
+
+
 
             if (blinkMessage && bonusScore > bestScore)
             {
