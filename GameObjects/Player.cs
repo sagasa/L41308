@@ -221,10 +221,19 @@ namespace Giraffe
                     {
                         ScenePlay.score += currentLeaf.score;
                         currentLeaf.score = 0;
+                        for (int i = 0; i < 4; i++)
+                        {
+                            //パーティクル
+                            scene.ParticleManager.Glitter(pos);
+                        }
                     }
                     Sound.Play("leaf_bite_SE.mp3");
                     //姿勢変更時に中心の移動分補完
                     pos += _render.GetMouthOffset();
+
+                    //パーティクル
+                    scene.ParticleManager.Swaying(pos);
+
                     //立っていた状態からの場合初速を与える
                     if (_state == PlayerState.Stand)
                         velAngle = 0 <= vel.X ? RotateSpeed * -0.3f : RotateSpeed * 0.3f;

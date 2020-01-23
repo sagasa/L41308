@@ -16,11 +16,13 @@ namespace Giraffe
         {
             pos = vec2f;
             score = scoreValue;
+           
         }
         public Leaf(Tutolal tutolal, Vec2f vec2) : base(tutolal)
         {
             pos = vec2;
             score = 0;
+            
         }
 
         private CircleCollision[] collisions = new CircleCollision[]{new CircleCollision(new Vec2f(1,1.1f), 0.6f) };
@@ -55,7 +57,8 @@ namespace Giraffe
 
         public override void OnInteract(GameObject obj, float extend)
         {
-          
+            // パーティクル
+            //scene.ParticleManager.Swaying(pos);
         }
 
         public override void Update()

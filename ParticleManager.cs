@@ -17,6 +17,8 @@ namespace Giraffe
 
         private Scene scene;
 
+        private static readonly Vec2f scale = new Vec2f(1,1) / PlayMap.CellSize;
+
         public ParticleManager (Scene scene)
         {
             this.scene = scene;
@@ -24,9 +26,10 @@ namespace Giraffe
         //全パーティクルを更新する
         public void Update()
         {
-            foreach (Particle particle in particles)
+            int count = particles.Count;
+            for (int i = 0; i < count; i++)
             {
-                particle.Update();
+                particles[i].Update();
             }
 
             //死んでいる粒子はリストから除去
@@ -47,10 +50,10 @@ namespace Giraffe
         {
             particles.Add(new Particle(scene)
             {
-                pos= pos_+ new Vec2f(MyRandom.PlusMinus(20), MyRandom.PlusMinus(20)),
+                pos= pos_+ new Vec2f(MyRandom.PlusMinus(20), MyRandom.PlusMinus(20f))*scale,
                 lifeSpan = MyRandom.Range(10, 70),
                 imageHndle = particleGlitter,
-                vel = new Vec2f(MyRandom.PlusMinus(0.5f), MyRandom.Range(-1f, -1f)),
+                vel = new Vec2f(MyRandom.PlusMinus(0.5f), MyRandom.Range(-1f, -1f))*scale,
                 startScale = MyRandom.Range(0.4f, 0.8f),
                 endScale = MyRandom.Range(0.2f, 0.4f),
                 fadeInTime = 0.5f,
@@ -83,13 +86,13 @@ namespace Giraffe
                 pos = pos,
                 lifeSpan = 1,
                 imageHndle = particleSwaying,
-                vel = new Vec2f(0, -5.5f),
-                force = new Vec2f(0, 0.08f),
+                vel = new Vec2f(0, -5.5f)*scale,
+                force = new Vec2f(0, 0.08f)*scale,
                 fadeInTime = 50,
                 blendMode = DX.DX_BLENDMODE_ADD,
                 OnDeath = (p) =>
                 {
-                    for (int i = 0; i < 25; i++)
+                    for (int i = 0; i < 15; i++)
                     {
                         float angle = MyRandom.PlusMinus(MyMath.PI);
                         float speed = MyRandom.Range(2f, 8f);
@@ -97,12 +100,12 @@ namespace Giraffe
                         particles.Add(new Particle(scene)
                         {
                             pos = p.pos,
-                            lifeSpan = MyRandom.Range(40, 70),
+                            lifeSpan = MyRandom.Range(40, 60),
                             imageHndle = particleSwaying,
-                            vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed),
-                            force=new Vec2f(0, 0.55f) ,
+                            vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed)*scale,
+                            force=new Vec2f(0, 0.55f)*scale ,
                             damp = 0.92f,
-                            endScale = 0.5f,
+                            endScale = 0.2f,
                             fadeOutTime = 0.8f,
                             blendMode = DX.DX_BLENDMODE_ADD,
 

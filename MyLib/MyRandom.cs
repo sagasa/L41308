@@ -5,7 +5,7 @@ namespace SAGASALib
     public static class MyRandom
     {
         // ゲーム中で唯一のインスタンス
-        static Random random;
+        static Random random = new Random();
 
         // 初期化（シード指定無し）
         public static void Init()
