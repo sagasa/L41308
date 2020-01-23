@@ -194,12 +194,12 @@ namespace Giraffe
             _bodyCalc.Scale(scale, Vec2f.ZERO);
 
             //首
+            Draw(imageNeckBody, _bodyCalc);
+            Draw(imageNeckHead, _headCalc);
             Draw(imageNeck, _neckCalc);
             //胴
-            Draw(imageNeckBody, _bodyCalc);
             Draw(imageBody, _bodyCalc);
             //頭
-            Draw(imageNeckHead, _headCalc);
             Draw(imageHorn, _headCalc);
             Draw(AnimationUtils.GetImage(imageHead, MouthProgress), _headCalc);
             Draw(AnimationUtils.GetImageLoop(imageEar, EarProgress), _headCalc);
