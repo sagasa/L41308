@@ -80,7 +80,8 @@ namespace Giraffe
             }
             if (Screen.Height * 0.8f < scene.GetScreenPos(pos).Y)
             {
-                float f = scene.GetScreenPos(pos).Y * 1f/(Screen.Height * 0.8f*1.5f);
+                float f = scene.GetScreenPos(pos).Y / (Screen.Height * 0.8f)*2;
+                Console.WriteLine(f);
                 ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y + 0.1f* f);
             }
 
