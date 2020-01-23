@@ -103,7 +103,7 @@ namespace Giraffe
                 digit /= 10;
             }
 
-            ParticleManager.Draw();
+            base.Draw();
         }
 
         public override void OnExit()
@@ -145,7 +145,7 @@ namespace Giraffe
             gameObjects.ForEach(obj => obj.Update());
             gameObjects.RemoveAll(obj => obj.IsDead());
 
-            ParticleManager.Update();
+            base.Update();
 
             if (Game.isGoal)//ゴールにプレイヤーが触れたら
             {
