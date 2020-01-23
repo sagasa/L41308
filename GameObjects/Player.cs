@@ -75,15 +75,13 @@ namespace Giraffe
             }
             if (scene.GetScreenPos(pos).Y < Screen.Height * 0.4f)
             {
-                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y - 0.03f);
+                float f = (Screen.Height * 0.4f) / scene.GetScreenPos(pos).Y;
+                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y - 0.03f* f);
             }
-            if (Screen.Height * 0.9f < scene.GetScreenPos(pos).Y)
+            if (Screen.Height * 0.8f < scene.GetScreenPos(pos).Y)
             {
-                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y + 0.1f);
-            }
-            if (scene.GetScreenPos(pos).Y < Screen.Height * 0.2f)
-            {
-                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y - 0.3f);
+                float f = scene.GetScreenPos(pos).Y * 1f/(Screen.Height * 0.8f*1.5f);
+                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y + 0.1f* f);
             }
 
 
@@ -180,7 +178,8 @@ namespace Giraffe
                     _state = PlayerState.Stand;
                     _render.State = _state;
                     //地上歩行アニメーション
-                    _animation.Start(Animations.WalkGround);
+                    _animation.Start(Animations.StandAngle);
+                    _animation.StartNext(Animations.StandAngle,Animations.WalkGround);
 
                     _animation.Start(Animations.MouthClose);
                 }
@@ -224,7 +223,7 @@ namespace Giraffe
                     //ぶら下がり時の姿勢変更
                     _animation.Start(Animations.MouthClose);
                     _animation.Stop(Animations.WalkGround);
-                    _animation.Start(Animations.SetRotate(MyMath.Deg2Rad*50, MyMath.Deg2Rad * -50,30));
+                    _animation.Start(Animations.DongleAngle);
                 }
             }
 

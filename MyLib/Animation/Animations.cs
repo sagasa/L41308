@@ -25,13 +25,13 @@ namespace SAGASALib
 
                 if (animation.Progress < 0.5f )
                 {
-                    render.HeadRotate += MyMath.Deg2Rad * 3;
-                    render.NeckRotate -= MyMath.Deg2Rad * 3;
+                    render.HeadRotate += MyMath.Deg2Rad * 2;
+                    render.NeckRotate -= MyMath.Deg2Rad * 2;
                 }
                 else
                 {
-                    render.HeadRotate -= MyMath.Deg2Rad * 3;
-                    render.NeckRotate += MyMath.Deg2Rad * 3;
+                    render.HeadRotate -= MyMath.Deg2Rad * 2;
+                    render.NeckRotate += MyMath.Deg2Rad * 2;
                 }
 
                 // Console.WriteLine(render.TailProgress);
@@ -45,7 +45,11 @@ namespace SAGASALib
         //首と頭の角度を0に
         public static readonly AnimationEntry<PlayerRender> DefaultAngle = SetRotate(0,0,30);
 
-        public static AnimationEntry<PlayerRender> SetRotate(float neck, float head, int time)=> new AnimationEntry<PlayerRender>(time,
+        public static readonly AnimationEntry<PlayerRender> DongleAngle = SetRotate(MyMath.Deg2Rad * 50, MyMath.Deg2Rad * -50, 30);
+
+        public static readonly AnimationEntry<PlayerRender> StandAngle = SetRotate(MyMath.Deg2Rad * 30, MyMath.Deg2Rad * -30, 15);
+
+        private static AnimationEntry<PlayerRender> SetRotate(float neck, float head, int time)=> new AnimationEntry<PlayerRender>(time,
         (render, animation) =>
         {
             render.HeadRotate += (head - render.HeadRotate) / (animation.Entry.Life - animation.Time);
