@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameObjects\DummyPlayer.cs" />
     <Compile Include="MyLib\Animation\Animation.cs" />
     <Compile Include="MyLib\Animation\AnimationEntry.cs" />
     <Compile Include="MyLib\Animation\AnimationManager.cs" />
