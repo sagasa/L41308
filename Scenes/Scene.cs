@@ -29,6 +29,7 @@ namespace Giraffe
 
         public virtual void Draw()
         {
+            ParticleManager.Draw();
         }
 
         public abstract void OnExit();
