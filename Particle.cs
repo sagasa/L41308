@@ -13,14 +13,14 @@ namespace Giraffe
 
     public class Particle
     {
-        public float x;               //中心位置x座標
-        public float y;               //中心位置ｙ座標
+        public Vec2f pos=Vec2f.ZERO;               //中心位置
+       
         public int lifeSpan;          //寿命（フレーム）
         public int imageHndle;        //画像ハンドル
-        public float vx;              //移動速度（ｘ）
-        public float vy;              //移動速度（ｙ）
-        public float forceX;          //横向きの外力（風など）
-        public float forceY;　　　　  //縦方向の外力（重力や浮力）　　　　　　　
+        public Vec2f vel=Vec2f.ZERO;              //移動速度
+       
+        public Vec2f force=Vec2f.ZERO;          //外力
+       　　　
         public float startScale = 1f; //開始時の拡大率
         public float endScale = 1f;   //終了時の拡大率
         public int red = 255;         //赤
@@ -39,6 +39,13 @@ namespace Giraffe
         public Action<Particle> OnUpdate;  //Update時に実行したい処理
         public Action<Particle> OnDeath;   //死ぬときに実行したい処理
         private int age = 0;          //生まれてからの経過時間（フレーム）
+
+        private Scene scene;
+
+        public Particle(Scene scene)
+        {
+            this.scene = scene;
+        }
 
         public void Update()
         {
@@ -65,16 +72,16 @@ namespace Giraffe
             }
 
             //外力を適用
-            vx += forceX;
-            vy += forceY;
+            vel += force;
+           
 
             //空気抵抗による速度の減衰
-            vx *= damp;
-            vy *= damp;
+            vel *= damp;
+            
 
             //速度分だけ移動
-            x += vx;
-            y += vy;
+            pos += vel;
+           
 
             //回転速度の減衰
             angularVelocity *= angularDamp;
@@ -100,18 +107,19 @@ namespace Giraffe
                 fadeInTime, (1f - progressRate) / fadeOutTime), 1f) * alpha);
 
             //色を指定
-            DX.SetDrawBright(red, green, blue);
+            DxHelper.SetColor(red, green, blue);
 
             //アルファ値を指定
-            DX.SetDrawBlendMode(blendMode, currentAlpha);
+            DxHelper.SetBlendMode(blendMode, currentAlpha);
 
+            Vec2f screeenpos = scene.GetScreenPos(pos);
             //描画する
-            DX.DrawRotaGraphF(x, y, scale, angle, imageHndle);
+            DX.DrawRotaGraphF(screeenpos.X, screeenpos.Y, scale, angle, imageHndle);
 
             //アルファ値を元に戻す
-            DX.SetDrawBlendMode(DX.DX_BLENDGRAPHTYPE_ALPHA, 255);
+            DxHelper.SetBlendMode(DX.DX_BLENDMODE_NOBLEND, 255);
             //色を元に戻す
-            DX.SetDrawBright(255, 255, 255);
+            DxHelper.SetColor(255, 255, 255);
         }
     }
 }

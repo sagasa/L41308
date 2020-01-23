@@ -10,6 +10,8 @@ namespace Giraffe
         private static readonly int imageBody = ResourceLoader.GetGraph("player/body.png");
         private static readonly int imageHorn = ResourceLoader.GetGraph("player/horn.png");
         private static readonly int imageNeck = ResourceLoader.GetGraph("player/neck.png");
+        private static readonly int imageNeckHead = ResourceLoader.GetGraph("player/neckcircle_1.png");
+        private static readonly int imageNeckBody = ResourceLoader.GetGraph("player/neckcircle_2.png");
         private static readonly int[] imageHead = ResourceLoader.GetGraph("player/player_head.png", 3);
         private static readonly int[] imageEye = ResourceLoader.GetGraph("player/player_eye.png", 4);
         private static readonly int[] imageEar = ResourceLoader.GetGraph("player/player_ear.png", 4);
@@ -191,7 +193,10 @@ namespace Giraffe
             _neckCalc.Scale(scale, Vec2f.ZERO);
             _bodyCalc.Scale(scale, Vec2f.ZERO);
 
-            
+            //首
+            Draw(imageNeckBody, _bodyCalc);
+            Draw(imageNeckHead, _headCalc);
+            Draw(imageNeck, _neckCalc);
             //胴
             Draw(imageBody, _bodyCalc);
             //頭
@@ -201,8 +206,7 @@ namespace Giraffe
             Draw(AnimationUtils.GetImage(imageLeg, LegProgress), _bodyCalc);
             Draw(AnimationUtils.GetImageLoop(imageEye, EyeProgress), _headCalc);
             Draw(AnimationUtils.GetImageLoop(imageTail, TailProgress), _bodyCalc);
-            //首
-            Draw(imageNeck, _neckCalc);
+            
             //矢印
             if (State == Player.PlayerState.Dongle)
             {

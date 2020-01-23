@@ -56,6 +56,7 @@ namespace Giraffe
         private void Jump()
         {
             vel = vel.SetY(-0.2f);
+            scene.ParticleManager.Jump(pos);
         } 
         //Mapの1番下(地上)にいるか
         public bool IsOnGround() => GetMap().MapSize.Y <= pos.Y+StandOffset;
@@ -81,7 +82,6 @@ namespace Giraffe
             if (Screen.Height * 0.8f < scene.GetScreenPos(pos).Y)
             {
                 float f = scene.GetScreenPos(pos).Y / (Screen.Height * 0.8f)*2;
-                Console.WriteLine(f);
                 ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y + 0.1f* f);
             }
 
@@ -97,8 +97,8 @@ namespace Giraffe
             base.Update();
             return;
             //*/
-
-            if (Input.UP.IsHold()&&_render.NeckExt<3f)
+            //首の伸縮
+            if (Input.UP.IsHold()&&_render.NeckExt<2f)
             {
                 _render.NeckExt += 0.1f;
             }
@@ -169,6 +169,17 @@ namespace Giraffe
                 //飛翔
                 //重力
                 vel += Gravity/3;
+                //左右移動 微妙に動く
+                //左右操作
+                if (Input.LEFT.IsHold())
+                {
+                    vel += new Vec2f(-0.0001f,0);
+                }
+                if (Input.RIGHT.IsHold())
+                {
+                    vel += new Vec2f(0.0001f, 0);
+                }
+
                 //回転の減速
                 velAngle = MyMath.Lerp(velAngle, velAngle < 0 ? -RotateSpeed : RotateSpeed, 0.02f);
                 //接地判定

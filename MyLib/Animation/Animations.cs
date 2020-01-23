@@ -15,7 +15,7 @@ namespace SAGASALib
             (render, animation) => { render.MouthProgress -= animation.Delta; },
             (render, animation) => { animation.Progress = 1f - render.MouthProgress; });
         //ループ前提 x軸速度に応じて足をうごかす
-        public static readonly AnimationEntry<PlayerRender> WalkGround = new AnimationEntry<PlayerRender>(60,
+        public static readonly AnimationEntry<PlayerRender> WalkGround = new AnimationEntry<PlayerRender>(100,
             (render, animation) =>
             {
                 //歩く速度定数
@@ -25,13 +25,13 @@ namespace SAGASALib
 
                 if (animation.Progress < 0.5f )
                 {
-                    render.HeadRotate += MyMath.Deg2Rad * 2;
-                    render.NeckRotate -= MyMath.Deg2Rad * 2;
+                    render.HeadRotate += MyMath.Deg2Rad * 1;
+                    render.NeckRotate -= MyMath.Deg2Rad * 1;
                 }
                 else
                 {
-                    render.HeadRotate -= MyMath.Deg2Rad * 2;
-                    render.NeckRotate += MyMath.Deg2Rad * 2;
+                    render.HeadRotate -= MyMath.Deg2Rad * 1;
+                    render.NeckRotate += MyMath.Deg2Rad * 1;
                 }
 
                 // Console.WriteLine(render.TailProgress);
@@ -47,7 +47,7 @@ namespace SAGASALib
 
         public static readonly AnimationEntry<PlayerRender> DongleAngle = SetRotate(MyMath.Deg2Rad * 50, MyMath.Deg2Rad * -50, 30);
 
-        public static readonly AnimationEntry<PlayerRender> StandAngle = SetRotate(MyMath.Deg2Rad * 30, MyMath.Deg2Rad * -30, 15);
+        public static readonly AnimationEntry<PlayerRender> StandAngle = SetRotate(MyMath.Deg2Rad * 25, MyMath.Deg2Rad * -25, 15);
 
         private static AnimationEntry<PlayerRender> SetRotate(float neck, float head, int time)=> new AnimationEntry<PlayerRender>(time,
         (render, animation) =>
