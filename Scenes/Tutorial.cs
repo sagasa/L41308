@@ -22,9 +22,9 @@ namespace Giraffe
         public new PlayMap Map { get; private set; }
         public new Vec2f MapPos;
         public List<GameObject> GameObjects = new List<GameObject>();
-
         private Player player;
-        int count = 0;
+
+        public static int Tutorialcount = 0;
         int SousaCount = 0;
         int CommentTime = 120;
         int Sounsa;
@@ -110,7 +110,7 @@ namespace Giraffe
         public override void Draw()
         {
             Sounsa = SousaCount;
-            if (count == 0)
+            if (Tutorialcount == 0)
             {
                 DX.DrawGraph(0, 0, titlebg);
                 DX.DrawGraph(105, 515, select1);
@@ -132,7 +132,7 @@ namespace Giraffe
                 }
             }
 
-            if (count >= 1 && count < 99)
+            if (Tutorialcount >= 1 && Tutorialcount < 99)
             {
                 DX.SetFontSize(25);
                 DX.SetFontThickness(100);
@@ -151,12 +151,12 @@ namespace Giraffe
                 DX.DrawString(400, 540, Gamennamae[7], white);
                 DX.DrawGraph(0, -20, stagename2);
             }
-            if (count == 1)//画面説明(タイトル)
+            if (Tutorialcount == 1)//画面説明(タイトル)
             {
                 DX.DrawString(50, 638, GamenText[0], white);
 
             }
-            if (count == 2)//画面説明(キリン)
+            if (Tutorialcount == 2)//画面説明(キリン)
             { 
                 DX.DrawString(50, 638, GamenText[1], white);
                 DX.DrawString(50, 674, GamenText[2], white);
@@ -166,7 +166,7 @@ namespace Giraffe
                 DX.DrawBox(152, 482, 212, 592, black, DX.FALSE);
 
             }
-            if (count == 3)//画面説明(木の枝)
+            if (Tutorialcount == 3)//画面説明(木の枝)
             {
 
                 CommentTime--;
@@ -185,7 +185,7 @@ namespace Giraffe
                     DX.DrawBox(52, 127, 122, 196, red, DX.FALSE);
                 }
             }
-            if (count == 4)//画面説明(ステージ名)
+            if (Tutorialcount == 4)//画面説明(ステージ名)
             {
                 DX.DrawString(50, 638, GamenText[5], white);
                 DX.DrawString(50, 674, GamenText[6], white);
@@ -194,7 +194,7 @@ namespace Giraffe
                 DX.DrawBox(1, 31, 101, 61, black, DX.FALSE);
                 DX.DrawBox(2, 32, 102, 62, black, DX.FALSE);
             }
-            if (count == 5)//画面説明(スコア)
+            if (Tutorialcount == 5)//画面説明(スコア)
             {
                 DX.DrawString(50, 638, GamenText[7], white);
                 DX.DrawString(50, 674, GamenText[8], white);
@@ -204,7 +204,7 @@ namespace Giraffe
                 DX.DrawBox(131, 31, 281, 61, black, DX.FALSE);
                 DX.DrawBox(132, 32, 282, 62, black, DX.FALSE);
             }
-            if (count == 6)//画面説明(ミニマップ)
+            if (Tutorialcount == 6)//画面説明(ミニマップ)
             {
                 DX.DrawString(50, 638, GamenText[10], white);
                 DX.DrawString(50, 674, GamenText[11], white);
@@ -214,7 +214,7 @@ namespace Giraffe
                 DX.DrawBox(331, 141, 391, 411, black, DX.FALSE);
                 DX.DrawBox(332, 142, 392, 412, black, DX.FALSE);
             }
-            if (count == 7)//画面説明(タイマー)
+            if (Tutorialcount == 7)//画面説明(タイマー)
             {
                 DX.DrawString(50, 638, GamenText[13], white);
                 DX.DrawString(50, 674, GamenText[14], white);
@@ -223,13 +223,13 @@ namespace Giraffe
                 DX.DrawBox(301, 33, 391, 63, black, DX.FALSE);
                 DX.DrawBox(302, 34, 392, 64, black, DX.FALSE);
             }
-            if (count == 8)//画面説明(修了)
+            if (Tutorialcount == 8)//画面説明(修了)
             {
                 DX.DrawString(50, 638, GamenText[15], white);
                 DX.DrawString(50, 674, GamenText[16], white);
                 DX.DrawBox(410, 568, 620, 570, black, DX.TRUE);
             }
-            if (count >= 99)//操作画面(タイトル)
+            if (Tutorialcount >= 99)//操作画面(タイトル)
             {
                 DX.SetFontSize(15);
                 DX.ChangeFontType(DX.DX_FONTTYPE_NORMAL);
@@ -245,7 +245,7 @@ namespace Giraffe
                 DX.DrawString(110, 115, SousaText[20], black);
                 DX.DrawGraph(0, 160, stagename2);
 
-                if (count >= 99 && count <= 100)//右
+                if (Tutorialcount >= 99 && Tutorialcount <= 100)//右
                 {
                     DX.DrawString(100, 30, SousaText[1], black);
                     if (CommentTime <= 60 || CommentTime == 120)
@@ -258,7 +258,7 @@ namespace Giraffe
                     }
 
                 }
-                if (count >= 101 && count <= 102)//左
+                if (Tutorialcount >= 101 && Tutorialcount <= 102)//左
                 {
                     DX.DrawString(100, 30, SousaText[3], black);
                     if (CommentTime <= 60 || CommentTime == 120)
@@ -270,7 +270,7 @@ namespace Giraffe
                         DX.DrawString(100, 90, SousaText[22], black);
                     }
                 }
-                if (count >= 103 && count <= 104)//ジャンプ
+                if (Tutorialcount >= 103 && Tutorialcount <= 104)//ジャンプ
                 {
                     DX.DrawString(100, 30, SousaText[5], black);
                     if (CommentTime <= 60 || CommentTime == 120)
@@ -282,7 +282,7 @@ namespace Giraffe
                         DX.DrawString(100, 90, SousaText[23], black);
                     }
                 }
-                if (count >= 105 && count <= 106)//噛みつき
+                if (Tutorialcount >= 105 && Tutorialcount <= 106)//噛みつき
                 {
                     DX.DrawString(100, 30, SousaText[7], black);
                     if (CommentTime <= 60 || CommentTime == 120)
@@ -294,7 +294,7 @@ namespace Giraffe
                         DX.DrawString(100, 90, SousaText[24], black);
                     }
                 }
-                if (count >= 107 && count <= 108)//方向転換
+                if (Tutorialcount >= 107 && Tutorialcount <= 108)//方向転換
                 {
                     DX.DrawString(100, 30, SousaText[10], black);
                     if (CommentTime <= 80 || CommentTime == 120)
@@ -307,7 +307,7 @@ namespace Giraffe
                         DX.DrawString(100, 90, SousaText[18], black);
                     }
                 }
-                if (count >= 109 && count <= 110)//首伸び縮み
+                if (Tutorialcount >= 109 && Tutorialcount <= 110)//首伸び縮み
                 {
                     DX.DrawString(100, 30, SousaText[12], black);
                     if (CommentTime <= 60 || CommentTime == 120)
@@ -319,7 +319,7 @@ namespace Giraffe
                         DX.DrawString(100, 90, SousaText[25], black);
                     }
                 }
-                if (count == 111)
+                if (Tutorialcount == 111)
                 {
                     DX.DrawBox(100, 135, 100 + Sounsa * 5 / 2, 160, green, DX.TRUE);
                     DX.DrawString(580, 120, SousaText[19], black);
@@ -336,6 +336,7 @@ namespace Giraffe
             }
 
             DX.ChangeFontType(DX.DX_FONTTYPE_NORMAL);
+            DX.DrawString(100, 50, "" + Tutorialcount, DX.GetColor(0, 0, 0));
         }
 
         public override void OnExit()
@@ -351,69 +352,69 @@ namespace Giraffe
         public override void Update()
         {
 
-            if (count == 0 && Input.BACK.IsPush())
+            if (Tutorialcount == 0 && Input.BACK.IsPush())
             {
                 Game.SetScene(new Title(Game));
                 Sound.Play("cancel_SE.mp3");
             }
             if (y == 617 && Input.ACTION.IsPush())
             {
-                count += 1;
+                Tutorialcount += 1;
                 y = 0;
                 Sound.Play("decision_SE.mp3");
             }
             else if (y == 502 && Input.ACTION.IsPush())
             {
-                count += 99;
+                Tutorialcount += 99;
                 y = 0;
                 Sound.Play("decision_SE.mp3");
             }
             if (y == 0 && Input.DOWN.IsPush())
             {
-                if (count >= 99)
+                if (Tutorialcount >= 99)
                 {
 
                 }
                 else
                 {
-                    count += 1;
+                    Tutorialcount += 1;
                     Sound.Play("cursor_SE.mp3");
                 }
 
             }
             else if (y == 0 && Input.UP.IsPush())
             {
-                if (count <= 2)
+                if (Tutorialcount <= 2)
                 {
-                    count += 0;
+                    Tutorialcount += 0;
                     Sound.Play("cancel_SE.mp3");
                 }
-                else if (count >= 99)
+                else if (Tutorialcount >= 99)
                 {
-                    count += 0;
+                    Tutorialcount += 0;
                 }
                 else
                 {
-                    count -= 1;
+                    Tutorialcount -= 1;
                     Sound.Play("cursor_SE.mp3");
                 }
             }
-            if (count >= 8 && count <= 10)
+            if (Tutorialcount >= 8 && Tutorialcount <= 10)
             {
-                count = 8;
+                Tutorialcount = 8;
             }
-            else if (count <= 98 && count >= 11)
+            else if (Tutorialcount <= 98 && Tutorialcount >= 11)
             {
-                count = 99;
+                Tutorialcount = 99;
             }
 
-            if (count == 8 && Input.ACTION.IsPush())
+            if (Tutorialcount == 8 && Input.ACTION.IsPush())
             {
-                count = 0;
+                Tutorialcount = 0;
                 y = 502;
                 Sound.Play("decision_SE.mp3");
             }
-            if (count == 4 || count == 2)
+            if (Tutorialcount == 4 || Tutorialcount == 2)
             {
                 if (CommentTime <= 0)
                 {
@@ -421,7 +422,7 @@ namespace Giraffe
                 }
             }
 
-            if (count >= 99)//操作画面トップ
+            if (Tutorialcount >= 99)//操作画面トップ
             {
                 gameObjects.ForEach(obj => player.CalcInteract(obj));
                 player.Update();
@@ -430,72 +431,72 @@ namespace Giraffe
 
                 if (CommentTime <= 0)
                 {
-                    count += 1;
+                    Tutorialcount += 1;
                     CommentTime = 120;
                 }
                 if (Input.BACK.IsPush())//Xボタンで戻ります
                 {
-                    count = 0;
+                    Tutorialcount = 0;
                     y = 502;
                     Sound.Play("cancel_SE.mp3");
                 }
                 if (SousaCount == 200)
                 {
-                    count += 1;
+                    Tutorialcount += 1;
                     SousaCount = 0;
                 }
-                if (count == 99)
+                if (Tutorialcount == 99)
                 {
                     CommentTime--;
                 }
-                if (count == 100)//右移動(地面に足がついてるとき)
+                if (Tutorialcount == 100)//右移動(地面に足がついてるとき)
                 {
                     if (Input.RIGHT.IsHold() && player.IsOnGround())
                     {
                         SousaCount += 20;
                     }
                 }
-                if (count == 101)
+                if (Tutorialcount == 101)
                 {
                     CommentTime--;
 
                 }
-                if (count == 102)//左移動(地面に足がついているとき)
+                if (Tutorialcount == 102)//左移動(地面に足がついているとき)
                 {
                     if (Input.LEFT.IsHold() && player.IsOnGround())
                     {
                         SousaCount += 20;
                     }
                 }
-                if (count == 103)
+                if (Tutorialcount == 103)
                 {
                     CommentTime--;
 
                 }
-                if (count == 104)//ジャンプ
+                if (Tutorialcount == 104)//ジャンプ
                 {
                     if (Input.ACTION.IsPush())
                     {
                         SousaCount += 100;
                     }
                 }
-                if (count == 105)
+                if (Tutorialcount == 105)
                 {
                     CommentTime--;
                 }
-                if (count == 106)//木につかまる
+                if (Tutorialcount == 106)//木につかまる
                 {
                     if (player.velAngle > 0 || player.velAngle < 0 && Input.ACTION.IsHold())
                     {
                         SousaCount += 2;
                     }
                 }
-                if (count == 107)
+                if (Tutorialcount == 107)
                 {
                     CommentTime--;
 
                 }
-                if (count == 108)//回転方向変更
+                if (Tutorialcount == 108)//回転方向変更
                 {
                     if (player.velAngle < 0 && Input.LEFT.IsPush() && Input.ACTION.IsHold())
                     {
@@ -506,12 +507,12 @@ namespace Giraffe
                         SousaCount = +200;
                     }
                 }
-                if (count == 109)
+                if (Tutorialcount == 109)
                 {
                     CommentTime--;
 
                 }
-                if (count == 110)//首伸ばし
+                if (Tutorialcount == 110)//首伸ばし
                 {
                     if (Input.UP.IsHold() || Input.DOWN.IsHold())
                     {
@@ -519,12 +520,12 @@ namespace Giraffe
                     }
 
                 }
-                if (count == 111)//説明終了
+                if (Tutorialcount == 111)//説明終了
                 {
                     CommentTime--;
                     if (CommentTime <= 0)
                     {
-                        count = 0;
+                        Tutorialcount = 0;
                         y = 502;
                     }
                 }
