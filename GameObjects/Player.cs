@@ -56,6 +56,7 @@ namespace Giraffe
         private void Jump()
         {
             vel = vel.SetY(-0.2f);
+            scene.ParticleManager.Jump(pos);
         } 
         //Mapの1番下(地上)にいるか
         public bool IsOnGround() => GetMap().MapSize.Y <= pos.Y+StandOffset;

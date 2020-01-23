@@ -9,11 +9,12 @@ namespace Giraffe
     {
         public readonly Game Game;
 
-        public readonly ParticleManager ParticleManager = new ParticleManager();
+        public readonly ParticleManager ParticleManager;
 
         protected Scene(Game game)
         {
             Game = game;
+            ParticleManager = new ParticleManager(this);
         }
 
         public virtual Vec2f GetScreenPos(Vec2f pos)

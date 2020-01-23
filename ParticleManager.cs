@@ -15,6 +15,12 @@ namespace Giraffe
         private int particleJump = ResourceLoader.GetGraph("effectjump.png");
         private int particleSwaying = ResourceLoader.GetGraph("effectleaf_1.png");
 
+        private Scene scene;
+
+        public ParticleManager (Scene scene)
+        {
+            this.scene = scene;
+        }
         //全パーティクルを更新する
         public void Update()
         {
@@ -37,16 +43,14 @@ namespace Giraffe
         }
 
         //キラキラ
-        public void Glitter(float x, float y)
+        public void Glitter(Vec2f pos_)
         {
-            particles.Add(new Particle()
+            particles.Add(new Particle(scene)
             {
-                x = x + MyRandom.PlusMinus(20),
-                y = y + MyRandom.PlusMinus(20),
+                pos= pos_+ new Vec2f(MyRandom.PlusMinus(20), MyRandom.PlusMinus(20)),
                 lifeSpan = MyRandom.Range(10, 70),
                 imageHndle = particleGlitter,
-                vx = MyRandom.PlusMinus(0.5f),
-                vy = MyRandom.Range(-1f, -1f),
+                vel = new Vec2f(MyRandom.PlusMinus(0.5f), MyRandom.Range(-1f, -1f)),
                 startScale = MyRandom.Range(0.4f, 0.8f),
                 endScale = MyRandom.Range(0.2f, 0.4f),
                 fadeInTime = 0.5f,
@@ -56,33 +60,31 @@ namespace Giraffe
         }
 
         //ジャンプ
-        public void Jump(float x, float y)
+        public void Jump(Vec2f pos)
         {
-            particles.Add(new Particle()
+            particles.Add(new Particle(scene)
             {
-                x = x,
-                y = y,
+                pos= pos,
                 lifeSpan = 10,
                 imageHndle = particleJump,
                 startScale = 0.8f,
                 endScale = 1.2f,
                 fadeOutTime = 1f,
-                //angle = angle,
+                
             });
         }
 
         //葉
-        public void Swaying(float x, float y)
+        public void Swaying(Vec2f pos)
         {
-            particles.Add(new Particle()
+            particles.Add(new Particle(scene)
             {
 
-                x = x,
-                y = y,
+                pos = pos,
                 lifeSpan = 1,
                 imageHndle = particleSwaying,
-                vy = -5.5f,
-                forceY = 0.08f,
+                vel = new Vec2f(0, -5.5f),
+                force = new Vec2f(0, 0.08f),
                 fadeInTime = 50,
                 blendMode = DX.DX_BLENDMODE_ADD,
                 OnDeath = (p) =>
@@ -92,15 +94,13 @@ namespace Giraffe
                         float angle = MyRandom.PlusMinus(MyMath.PI);
                         float speed = MyRandom.Range(2f, 8f);
 
-                        particles.Add(new Particle()
+                        particles.Add(new Particle(scene)
                         {
-                            x = p.x,
-                            y = p.y,
+                            pos = p.pos,
                             lifeSpan = MyRandom.Range(40, 70),
                             imageHndle = particleSwaying,
-                            vx = (float)Math.Cos(angle) * speed,
-                            vy = (float)Math.Sin(angle) * speed,
-                            forceY = 0.55f,
+                            vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed),
+                            force=new Vec2f(0, 0.55f) ,
                             damp = 0.92f,
                             endScale = 0.5f,
                             fadeOutTime = 0.8f,
