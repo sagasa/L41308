@@ -117,7 +117,7 @@ namespace Giraffe
             DX.DrawRotaGraphF(screeenpos.X, screeenpos.Y, scale, angle, imageHndle);
 
             //アルファ値を元に戻す
-            DxHelper.SetBlendMode(DX.DX_BLENDGRAPHTYPE_ALPHA, 255);
+            DxHelper.SetBlendMode(DX.DX_BLENDMODE_NOBLEND, 255);
             //色を元に戻す
             DxHelper.SetColor(255, 255, 255);
         }
