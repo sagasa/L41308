@@ -191,7 +191,8 @@ namespace Giraffe
             _neckCalc.Scale(scale, Vec2f.ZERO);
             _bodyCalc.Scale(scale, Vec2f.ZERO);
 
-            
+            //首
+            Draw(imageNeck, _neckCalc);
             //胴
             Draw(imageBody, _bodyCalc);
             //頭
@@ -201,8 +202,7 @@ namespace Giraffe
             Draw(AnimationUtils.GetImage(imageLeg, LegProgress), _bodyCalc);
             Draw(AnimationUtils.GetImageLoop(imageEye, EyeProgress), _headCalc);
             Draw(AnimationUtils.GetImageLoop(imageTail, TailProgress), _bodyCalc);
-            //首
-            Draw(imageNeck, _neckCalc);
+            
             //矢印
             if (State == Player.PlayerState.Dongle)
             {

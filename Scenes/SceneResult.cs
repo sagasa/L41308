@@ -15,21 +15,21 @@ namespace Giraffe
         string timeRank = "d";
 
         public int aRankTime = 60;
-        public int bRankTime = 180;
-        public int cRankTime = 300;
+        public int bRankTime = 120;
+        public int cRankTime = 180;
 
-        public int aRankBonus = 500;
-        public int bRankBonus = 300;
-        public int cRankBonus = 100;
-
+        public int aRankBonus = 1000;
+        public int bRankBonus = 500;
+        public int cRankBonus = 200;
+        
         private bool wait = true;//操作ミス防止用+2重フェード対策
         private bool blinkMessage = true;//点滅表示用
         private int Counter = 0;//wait,fade,blinkのカウンター
 
         private int fadeTime = 180;
 
-        private int fontInterval = 30;//文字同士の幅
-        private float fontScale = 0.18f;//文字の大きさ
+        private const int fontInterval = 30;//文字同士の幅
+        private const float fontScale = 0.18f;//文字の大きさ
         
         
 
@@ -112,18 +112,24 @@ namespace Giraffe
             DX.DrawGraph(0, 0, bg);
             DX.DrawGraph(0, 0, result_bg);
 
-            DX.DrawRotaGraph(240 + fontInterval * 2, 200, 0.2, 0, coron);
-            DX.DrawRotaGraph(240 + fontInterval * 2, 246, 0.2, 0, coron);
             //スコア
             int digit = 10000;
+            int leftCounter1 = 0;
+            int leftCounter2 = 0;
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
                     if (j == bonusScore / digit % 10 && bonusScore / digit != 0)//現在のスコア
-                        DX.DrawRotaGraph(240 + fontInterval * i, 104, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    {
+                        DX.DrawRotaGraph(240 + fontInterval * leftCounter1, 104, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                        leftCounter1++;
+                    }
                     if (j == bestScore / digit % 10 && bestScore / digit != 0)//ハイスコア
-                        DX.DrawRotaGraph(240 + fontInterval * i, 148, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    {
+                        DX.DrawRotaGraph(240 + fontInterval * leftCounter2, 148, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                        leftCounter2++;
+                    }
                     if (j >= bonusScore / digit % 10 && j >= bestScore / digit % 10)
                         break;
                 }
@@ -131,31 +137,48 @@ namespace Giraffe
             }
             //タイム
             digit = 10;
+            leftCounter1 = 0;
+            leftCounter2 = 0;
             for (int i = 0; i < 2; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
+                    
                     if (j == currentTime[0] / digit % 10 && (currentTime[0] / digit != 0 || digit == 1))//現在のタイム,分
-                        DX.DrawRotaGraph(240 + fontInterval * i, 200, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    {
+                        DX.DrawRotaGraph(240 + fontInterval * leftCounter1, 200, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                        leftCounter1++;
+                    }
                     if (j == currentTime[1] / digit % 10)//現在のタイム,秒
-                        DX.DrawRotaGraph(240 + fontInterval * 3 + fontInterval * i, 200, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    {
+                        DX.DrawRotaGraph(240 + fontInterval * i + fontInterval * (leftCounter2 + 2), 200, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    }
                     if (j == bestTime[0] / digit % 10 && (bestTime[0] / digit != 0 || digit == 1))//ベストタイム,分
-                        DX.DrawRotaGraph(240 + fontInterval * i, 246, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    {
+                        DX.DrawRotaGraph(240 + fontInterval * leftCounter2, 246, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                        leftCounter2++;
+                    }
                     if (j == bestTime[1] / digit % 10)//ベストタイム,秒
-                        DX.DrawRotaGraph(240 + fontInterval * 3 + fontInterval * i, 246, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    {
+                        DX.DrawRotaGraph(240 + fontInterval * i + fontInterval * (leftCounter2 + 2), 246, fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                    }
                     if (j >= currentTime[0] / digit % 10 && j >= currentTime[1] / digit % 10 && j >= bestTime[0] / digit % 10 && j >= bestTime[1] / digit % 10)
                         break;
                 }
                 digit /= 10;
             }
+            DX.DrawRotaGraph(240 + fontInterval * leftCounter1, 200, 0.2, 0, coron);//現在のタイムのコロン
+            DX.DrawRotaGraph(240 + fontInterval * leftCounter2, 246, 0.2, 0, coron);//ベストタイムのコロン
+
 
             if (timeRank == "a")
             {
                 //　「タイムボーナス」
                 // (+○○○)　の()と+を表示
 
-                digit = 100;
-                for (int i = 0; i < 3; i++)
+                digit = 1000;
+                leftCounter1 = 0;
+                for (int i = 0; i < 4; i++)
                 {
                     for (int j = 0; j < 10; j++)
                     {
