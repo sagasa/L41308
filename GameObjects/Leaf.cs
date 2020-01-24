@@ -9,6 +9,8 @@ namespace Giraffe
         private int leafImage = ResourceLoader.GetGraph("leaf4.png");
         private int scoreLeafImage = ResourceLoader.GetGraph("s_leaf4.png");
         //private int branch = ResourceLoader.GetGraph("branch2.png");
+        private readonly int[] leafImages = ResourceLoader.GetGraph("leaf.png", 5);
+
 
         public int score;
 
@@ -32,18 +34,20 @@ namespace Giraffe
             return collisions;
         }
 
+
         public override void Draw()
         {
+            Vec2f screenPos = scene.GetScreenPos(pos);
             if (score == 0)
             {
-                Vec2f screenPos = scene.GetScreenPos(pos);
-                DX.DrawGraphF(screenPos.X, screenPos.Y, leafImage);
+                int index = MyMath.Clamp((int)(screenPos.X / Screen.Width * 5), 0, leafImages.Length-1);
+                DX.DrawGraphF(screenPos.X, screenPos.Y, leafImages[index]);
                 //DX.DrawGraph(screenPos.X, screenPos.Y, branch);
                 base.Draw();
             }
             else if (score != 0)
             {
-                Vec2f screenPos = scene.GetScreenPos(pos);
+                int index = MyMath.Clamp((int)(screenPos.X / Screen.Width * 5), 0, leafImages.Length - 1);
                 DX.DrawGraphF(screenPos.X, screenPos.Y, scoreLeafImage);
                 //DX.DrawGraph(screenPos.X, screenPos.Y, branch);
                 base.Draw();

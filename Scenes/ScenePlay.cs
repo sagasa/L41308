@@ -15,7 +15,16 @@ namespace Giraffe
         //Map座標からScreen座標へ変換する
         public override Vec2f GetScreenPos(Vec2f mapPos)
         {
-            return (mapPos- MapPos) * PlayMap.CellSize;
+            return GetFixedPos(mapPos - MapPos) * PlayMap.CellSize;
+        }
+
+        public Vec2f GetFixedPos(Vec2f pos)
+        {
+            while (pos.X < 0)
+                pos = pos.SetX(pos.X + Map.MapSize.X);
+            while (Map.MapSize.X < pos.X)
+                pos = pos.SetX(pos.X - Map.MapSize.X);
+            return pos;
         }
 
         public bool IsInScreen(Vec2f pos)
@@ -59,8 +68,8 @@ namespace Giraffe
 
         public override void Draw()
         {
-            Vec2f pos = GetScreenPos(Vec2f.ZERO);
-            DX.DrawGraph((int)pos.X, (int)pos.Y, playbg);
+            //Vec2f pos = GetScreenPos(Vec2f.ZERO);
+            DX.DrawGraph(0, 0, playbg);
             base.Draw();
             gameObjects.ForEach(obj => obj.Draw());
             player.Draw();

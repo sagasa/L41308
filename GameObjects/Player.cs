@@ -65,15 +65,25 @@ namespace Giraffe
         public override void Update()
         {
             //TODO 仮で画面外に出ないように
+            /*
             if (pos.X < 0) 
                 pos = pos.SetX(PlayMap.ScreenSize.X);
             if (PlayMap.ScreenSize.X<pos.X)
                 pos = pos.SetX(0);
-            //スクロール
-            if (Screen.Height * 0.8f< scene.GetScreenPos(pos).Y)
+            //*/
+            pos = ((ScenePlay) scene).GetFixedPos(pos);
+
+            if (Screen.Width * 0.8f < scene.GetScreenPos(pos).X)
             {
-                ((ScenePlay) scene).MapPos = ((ScenePlay) scene).MapPos.SetY(((ScenePlay) scene).MapPos.Y+0.03f);
+                float f = scene.GetScreenPos(pos).X / (Screen.Width * 0.8f)*2;
+                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetX(((ScenePlay)scene).MapPos.X + 0.05f * f);
             }
+            if (scene.GetScreenPos(pos).X< Screen.Width * 0.2f)
+            {
+                float f = (Screen.Width * 0.2f) / scene.GetScreenPos(pos).X*2;
+                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetX(((ScenePlay)scene).MapPos.X - 0.05f * f);
+            }
+            //スクロール
             if (scene.GetScreenPos(pos).Y < Screen.Height * 0.4f)
             {
                 float f = (Screen.Height * 0.4f) / scene.GetScreenPos(pos).Y;
