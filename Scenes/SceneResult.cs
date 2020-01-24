@@ -19,8 +19,7 @@ namespace Giraffe
         string timeRank = "d";
         string scoreRank = "d";
 
-        private bool fadeAction = false;
-        private bool wait = true;//操作ミス防止用
+        private bool fadeAction;//フェード対策
         private bool blinkMessage = true;//点滅表示用
         private int Counter = 0;//wait,fade,blinkのカウンター
         private const int fadeTime = 180;
@@ -37,8 +36,9 @@ namespace Giraffe
         private bool rankExpansionAnimation = false;
         private const int cursorWidth = 220;
         private int cursorInterval = 60;
-        private int cursorPos;
-        private int[] fixedPos;
+        private int cursorPosX;
+        private int[] fixedPosX;
+        private const int cursorPosY = Screen.Height - 250;
 
         private int bg = ResourceLoader.GetGraph("play_bg.png");
         private int result_bg = ResourceLoader.GetGraph("image_result/result_bg.png");
@@ -60,16 +60,15 @@ namespace Giraffe
             //Game.currentTime = new int[] { 1, 23, 0 };
             //Game.bestTime = new int[] { 12, 34, 0 };
 
-            fadeAction = false;
-            wait = true;
+            fadeAction = true;
             blinkMessage = true;
             Counter = 0;
             rankAnimationScale = 1;
             rankExpansionAnimation = false;
 
 
-            fixedPos = new int[] { cursorInterval, Screen.Width - (cursorWidth + cursorInterval) };
-            cursorPos = fixedPos[1];
+            fixedPosX = new int[] { cursorInterval, Screen.Width - (cursorWidth + cursorInterval) };
+            cursorPosX = fixedPosX[1];
 
             currentScore = Game.currentScore;
             currentTime = Game.currentTime;
@@ -105,9 +104,8 @@ namespace Giraffe
             Counter++;
             if (Counter == fadeTime)
             {
-                wait = false;
+                fadeAction = false;
             }
-
             if (Counter < fadeTime + 10)
             {
                 Game.bgmManager.FadeIn("result", 120);
@@ -141,37 +139,37 @@ namespace Giraffe
 
             if (!fadeAction)
             {
-                if (cursorPos != fixedPos[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
+                if (cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
                 {
                     Sound.Play("cursor_SE.mp3");
-                    for (int i = 0; i < fixedPos.Length; i++)
+                    for (int i = 0; i < fixedPosX.Length; i++)
                     {
-                        if (cursorPos == fixedPos[i])
+                        if (cursorPosX == fixedPosX[i])
                         {
-                            cursorPos = fixedPos[i - 1];
+                            cursorPosX = fixedPosX[i - 1];
                             break;
                         }
                     }
                 }
-                else if (cursorPos != fixedPos[fixedPos.Length - 1] && Input.RIGHT.IsPush())//カーソルが一番右以外の時→を押されたら、カーソルを一つ右へ
+                else if (cursorPosX != fixedPosX[fixedPosX.Length - 1] && Input.RIGHT.IsPush())//カーソルが一番右以外の時→を押されたら、カーソルを一つ右へ
                 {
                     Sound.Play("cursor_SE.mp3");
-                    for (int i = 0; i < fixedPos.Length; i++)
+                    for (int i = 0; i < fixedPosX.Length; i++)
                     {
-                        if (cursorPos == fixedPos[i])
+                        if (cursorPosX == fixedPosX[i])
                         {
-                            cursorPos = fixedPos[i + 1];
+                            cursorPosX = fixedPosX[i + 1];
                             break;
                         }
                     }
                 }
-                if (!wait && cursorPos == fixedPos[0] && Input.ACTION.IsPush())
+                if (cursorPosX == fixedPosX[0] && Input.ACTION.IsPush())
                 {
                     fadeAction = true;
                     Game.bgmManager.currentScene = "result";
                     Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
                 }
-                else if (!wait && cursorPos == fixedPos[1] && Input.ACTION.IsPush())
+                else if (cursorPosX == fixedPosX[1] && Input.ACTION.IsPush())
                 {
                     fadeAction = true;
                     Game.bgmManager.currentScene = "result";
@@ -184,9 +182,9 @@ namespace Giraffe
         {
             DX.DrawGraph(0, 0, bg);
             DX.DrawGraph(0, 0, result_bg);
-            DX.DrawGraph(cursorPos, Screen.Height - 250, cursor);
-            DX.DrawGraph(fixedPos[0], Screen.Height - 250, restart);
-            DX.DrawGraph(fixedPos[1], Screen.Height - 250, back);
+            DX.DrawGraph(cursorPosX - 15, cursorPosY - 12, cursor);
+            DX.DrawGraph(fixedPosX[0], cursorPosY, restart);
+            DX.DrawGraph(fixedPosX[1], cursorPosY, back);
             //スコア
             int digit = 1000;
             int leftCounter1 = 0;
