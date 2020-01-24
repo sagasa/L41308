@@ -119,8 +119,8 @@ namespace Giraffe
             {
                 blinkMessage = false;
             }
-            
-            if(rankExpansionAnimation)
+            //ランクのアニメーション?に使用
+            if (rankExpansionAnimation)
             {
                 rankAnimationScale += rankAnimationSpeed;
             }
@@ -137,44 +137,43 @@ namespace Giraffe
                 rankExpansionAnimation = true;
             }
 
-            if (!fadeAction)
+            if (cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
             {
-                if (cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
+                Sound.Play("cursor_SE.mp3");
+                for (int i = 0; i < fixedPosX.Length; i++)
                 {
-                    Sound.Play("cursor_SE.mp3");
-                    for (int i = 0; i < fixedPosX.Length; i++)
+                    if (cursorPosX == fixedPosX[i])
                     {
-                        if (cursorPosX == fixedPosX[i])
-                        {
-                            cursorPosX = fixedPosX[i - 1];
-                            break;
-                        }
+                        cursorPosX = fixedPosX[i - 1];
+                        break;
                     }
                 }
-                else if (cursorPosX != fixedPosX[fixedPosX.Length - 1] && Input.RIGHT.IsPush())//カーソルが一番右以外の時→を押されたら、カーソルを一つ右へ
+            }
+            else if (cursorPosX != fixedPosX[fixedPosX.Length - 1] && Input.RIGHT.IsPush())//カーソルが一番右以外の時→を押されたら、カーソルを一つ右へ
+            {
+                Sound.Play("cursor_SE.mp3");
+                for (int i = 0; i < fixedPosX.Length; i++)
                 {
-                    Sound.Play("cursor_SE.mp3");
-                    for (int i = 0; i < fixedPosX.Length; i++)
+                    if (cursorPosX == fixedPosX[i])
                     {
-                        if (cursorPosX == fixedPosX[i])
-                        {
-                            cursorPosX = fixedPosX[i + 1];
-                            break;
-                        }
+                        cursorPosX = fixedPosX[i + 1];
+                        break;
                     }
                 }
-                if (cursorPosX == fixedPosX[0] && Input.ACTION.IsPush())
-                {
-                    fadeAction = true;
-                    Game.bgmManager.currentScene = "result";
-                    Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
-                }
-                else if (cursorPosX == fixedPosX[1] && Input.ACTION.IsPush())
-                {
-                    fadeAction = true;
-                    Game.bgmManager.currentScene = "result";
-                    Game.SetScene(new Title(Game), new Fade(fadeTime, true, true));
-                }
+            }
+            if (!fadeAction && cursorPosX == fixedPosX[0] && Input.ACTION.IsPush())
+            {
+                Sound.Play("decision_SE.mp3");
+                fadeAction = true;
+                Game.bgmManager.currentScene = "result";
+                Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
+            }
+            else if (!fadeAction && cursorPosX == fixedPosX[1] && Input.ACTION.IsPush())
+            {
+                Sound.Play("decision_SE.mp3");
+                fadeAction = true;
+                Game.bgmManager.currentScene = "result";
+                Game.SetScene(new Title(Game), new Fade(fadeTime, true, true));
             }
         }
 

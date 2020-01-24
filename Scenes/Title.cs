@@ -19,8 +19,13 @@ namespace Giraffe
         private bool isRight = false;
         private bool isLeft = false;
         private int treebgPos = 0;
+        private int[] treeFixedPos = new int[] { Screen.Width, 0, -Screen.Width, -Screen.Width * 2 };
+        private const int treebgMoveWidth = Screen.Width / 80;
+        private bool treeMove = false;
         private int UIpos = 0;
-        
+        private int cursorPos = 502;
+        private int[] cursorFixedPos = new int[] { 502, 617 };
+
         private int head = ResourceLoader.GetGraph("player/player_head.png");
         private int horn = ResourceLoader.GetGraph("player/horn.png");
         private int eye = ResourceLoader.GetGraph("player/player_eye.png");
@@ -31,9 +36,6 @@ namespace Giraffe
         private int icon = ResourceLoader.GetGraph("キリンアイコン.png");
         private int treebg = ResourceLoader.GetGraph("image_select/select_bg.png");
         private int stagename=ResourceLoader.GetGraph("image_select/select_UI.png");
-       
-        private int cursorPos = 502;
-        private int[] fixedPos = new int[] { 502, 617 };
         
         public Title(Game game) : base(game)
         {
@@ -52,12 +54,12 @@ namespace Giraffe
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, eye);
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, ear);
             }
-            if (stageCount >= 1)
+            if (stageCount == 1)
             {
                 DX.DrawGraph(treebgPos - Screen.Width, 0, treebg);
                 DX.DrawGraph(UIpos - Screen.Width, 0, stagename);
             }
-            DX.DrawString(100, 100, "" + treebgPos,DX.GetColor(0, 0,0));
+            DX.DrawString(100, 100, "" + treebgPos, DX.GetColor(0, 0, 0));
         }
         
         public override void OnLoad()
@@ -69,10 +71,6 @@ namespace Giraffe
         public override void Update()
         {
             fadeCounter++;
-            if (fadeCounter == fadeTime)
-            {
-                fadeAction = false;
-            }
             if (fadeCounter < fadeTime + 10)//BGMのフェード
             {
                 if (Game.bgmManager.currentScene != "none")
@@ -84,154 +82,157 @@ namespace Giraffe
                     Game.bgmManager.FadeIn("title", fadeTime);
                 }
             }
-            if (!fadeAction)
+            if (fadeCounter == fadeTime)
             {
-                if (stageCount == 0)
+                fadeAction = false;
+            }
+
+            if (stageCount == 0)
+            {
+                if (cursorPos != cursorFixedPos[0] && Input.UP.IsPush())//カーソルが一番上以外の時に↑が押されたら、カーソルを一つ上へ
                 {
-                    if (cursorPos != fixedPos[0] && Input.UP.IsPush())//カーソルが一番上以外の時に↑が押されたら、カーソルを一つ上へ
+                    Sound.Play("cursor_SE.mp3");
+                    for (int i = 0; i < cursorFixedPos.Length; i++)
                     {
-                        Sound.Play("cursor_SE.mp3");
-                        for (int i = 0; i < fixedPos.Length; i++)
+                        if (cursorPos == cursorFixedPos[i])
                         {
-                            if (cursorPos == fixedPos[i])
-                            {
-                                cursorPos = fixedPos[i - 1];
-                                break;
-                            }
+                            cursorPos = cursorFixedPos[i - 1];
+                            break;
                         }
-                    }
-                    else if (cursorPos != fixedPos[fixedPos.Length - 1] && Input.DOWN.IsPush())//カーソルが一番下以外の時下を押されたら、カーソルが一つ下へ
-                    {
-                        Sound.Play("cursor_SE.mp3");
-                        for (int i = 0; i < fixedPos.Length; i++)
-                        {
-                            if (cursorPos == fixedPos[i])
-                            {
-                                cursorPos = fixedPos[i + 1];
-                                break;
-                            }
-                        }
-                    }
-                    if (cursorPos == fixedPos[0] && Input.ACTION.IsPush())
-                    {
-                        Sound.Play("decision_SE.mp3");
-                        stageCount = 1;
-                    }
-                    else if (cursorPos == fixedPos[1] && Input.ACTION.IsPush())
-                    {
-                        fadeAction = true;
-                        Sound.Play("decision_SE.mp3");
-                        Game.bgmManager.currentScene = "title";
-                        Game.SetScene(new Tutolal(Game), new Fade(60, true, true));
                     }
                 }
-                if(stageCount==1)
+                else if (cursorPos != cursorFixedPos[cursorFixedPos.Length - 1] && Input.DOWN.IsPush())//カーソルが一番下以外の時下を押されたら、カーソルが一つ下へ
                 {
-                    if (Input.RIGHT.IsPush())
+                    Sound.Play("cursor_SE.mp3");
+                    for (int i = 0; i < cursorFixedPos.Length; i++)
                     {
-                        isRight = true;
-                        isLeft = false;
-                    }
-                    else if (Input.LEFT.IsPush())
-                    {
-                        isLeft = true;
-                        isRight = false;
-                    }
-                    if (treebgPos > Screen.Width)
-                    {
-                    }
-                    else if (treebgPos == 0)
-                    {
-                        if (Input.RIGHT.IsPush())
+                        if (cursorPos == cursorFixedPos[i])
                         {
-                            treebgPos -= Screen.Width / 80;
-                            UIpos -= Screen.Width / 80;
-                        }
-                        else if (Input.LEFT.IsPush())
-                        {
-                            treebgPos += Screen.Width / 80;
-                            UIpos += Screen.Width / 80;
+                            cursorPos = cursorFixedPos[i + 1];
+                            break;
                         }
                     }
-                    else if (treebgPos == -Screen.Width)
-                    {
-                        if (Input.RIGHT.IsPush())
-                        {
-                            treebgPos -= Screen.Width / 80;
-                            UIpos -= Screen.Width / 80;
-                        }
-                        else if (Input.LEFT.IsPush())
-                        {
-                            treebgPos += Screen.Width / 80;
-                            UIpos += Screen.Width / 80;
-                        }
-                    }
-                    else if (treebgPos <= -Screen.Width * 2)
-                    {
-                        if (Input.LEFT.IsPush())
-                        {
-                            treebgPos += Screen.Width / 80;
-                        }
-                    }
-                    else
-                    {
-                        if (isRight == true)
-                        {
-                            idouCounter++;
-                            if (idouCounter % 1 == 0)
-                            {
-                                treebgPos -= Screen.Width / 80;
-                                UIpos -= Screen.Width / 80;
-                            }
-                        }
-                        if (isLeft == true && treebgPos < Screen.Width)
-                        {
-                            idouCounter++;
-                            if (idouCounter % 1 == 0)
-                            {
-                                treebgPos += Screen.Width / 80;
-                                UIpos += Screen.Width / 80;
-                            }
-                        }
-                    }
-                    if (Input.BACK.IsPush())
-                    {
-                        stageCount = 0;
-                        Sound.Play("cancel_SE.mp3");
-                        stagewaittime = 60;
-                    }
+                }
+                if (cursorPos == cursorFixedPos[0] && Input.ACTION.IsPush() && !fadeAction)
+                {
+                    Sound.Play("decision_SE.mp3");
+                    stageCount = 1;
+                }
+                else if (cursorPos == cursorFixedPos[1] && Input.ACTION.IsPush() && !fadeAction)
+                {
 
-                    stagewaittime--;
-                    if (Input.ACTION.IsPush() && stagewaittime <= 0 && Tutolal.Tutorialcount == 0)
+                    Sound.Play("decision_SE.mp3");
+                    Game.bgmManager.currentScene = "title";
+                    fadeAction = true;
+                    Game.SetScene(new Tutolal(Game), new Fade(60, true, true));
+                }
+            }
+            if (stageCount == 1)
+            {
+                if (Input.RIGHT.IsPush())
+                {
+                    isRight = true;
+                    isLeft = false;
+                }
+                else if (Input.LEFT.IsPush())
+                {
+                    isLeft = true;
+                    isRight = false;
+                }
+
+                for (int i = 0; i < treeFixedPos.Length; i++)
+                {
+                    if (Input.RIGHT.IsPush())//一番右側以外にいるとき、→が押されたら右へ
                     {
-                        if (treebgPos == Screen.Width)
+                        if (treebgPos == treeFixedPos[treeFixedPos.Length - 1])
+                            break;
+                        else if (treebgPos == treeFixedPos[i])
                         {
-                            Sound.Play("decision_SE.mp3");
-                            fadeAction = true;
-                            Game.bgmManager.currentScene = "title";
-                            Game.SetScene(new Tutolal(Game), new Fade(fadeTime, true, true));
-                            Tutolal.Tutorialcount = 99;
+                            treebgPos -= treebgMoveWidth;
+                            UIpos -= treebgMoveWidth;
+                            break;
                         }
-                        else if (treebgPos == 0)
+                    }
+                    else if (Input.LEFT.IsPush())//一番左側以外にいるとき、←が押されたら左へ
+                    {
+                        if (treebgPos == treeFixedPos[0])
+                            break;
+                        else if (treebgPos == treeFixedPos[i])
                         {
-                            Sound.Play("decision_SE.mp3");
-                            fadeAction = true;
-                            Game.bgmManager.currentScene = "title";
-                            Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
+                            treebgPos += treebgMoveWidth;
+                            UIpos += treebgMoveWidth;
+                            break;
                         }
-                        else if (treebgPos == -Screen.Width)
-                        {
+                    }
+                }
+                //画面の位置がステージの間にあるならtreeMoveをtrue
+                for (int i = 0; i < treeFixedPos.Length; i++)
+                {
+                    if (treebgPos == treeFixedPos[i])
+                    {
+                        treeMove = false;
+                        break;
+                    }
+                    else if (i == treeFixedPos.Length - 1)
+                    {
+                        treeMove = true;
+                    }
+                }
+                if (treeMove)
+                {
+                    if (isRight)
+                    {
+                        treebgPos -= treebgMoveWidth;
+                        UIpos -= treebgMoveWidth;
+                        //idouCounter++;
+                        //if (idouCounter % 1 == 0) { }
+                    }
+                    if (!isRight)
+                    {
+                        treebgPos += treebgMoveWidth;
+                        UIpos += treebgMoveWidth;
+                        //idouCounter++;
+                        //if (idouCounter % 1 == 0) { }
+                    }
+                }
+                
+                if (Input.BACK.IsPush())
+                {
+                    stageCount = 0;
+                    Sound.Play("cancel_SE.mp3");
+                    stagewaittime = 60;
+                }
 
-                        }
-                        else if (treebgPos == -Screen.Width * 2)
-                        {
+                stagewaittime--;
+                if (!fadeAction && Input.ACTION.IsPush() && stagewaittime <= 0 && Tutolal.Tutorialcount == 0)
+                {
+                    if (treebgPos == treeFixedPos[0])
+                    {
+                        Sound.Play("decision_SE.mp3");
+                        fadeAction = true;
+                        Game.bgmManager.currentScene = "title";
+                        Game.SetScene(new Tutolal(Game), new Fade(fadeTime, true, true));
+                        Tutolal.Tutorialcount = 99;
+                    }
+                    else if (treebgPos == treeFixedPos[1])
+                    {
+                        Sound.Play("decision_SE.mp3");
+                        fadeAction = true;
+                        Game.bgmManager.currentScene = "title";
+                        Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
+                    }
+                    else if (treebgPos == treeFixedPos[2])
+                    {
 
-                        }
+                    }
+                    else if (treebgPos == treeFixedPos[3])
+                    {
+
                     }
                 }
             }
         }
-
+        
         public override void OnExit()
         {
 
