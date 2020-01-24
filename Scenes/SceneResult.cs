@@ -23,7 +23,7 @@ namespace Giraffe
         private bool wait = true;//操作ミス防止用
         private bool blinkMessage = true;//点滅表示用
         private int Counter = 0;//wait,fade,blinkのカウンター
-        private int fadeTime = 180;
+        private const int fadeTime = 180;
         //描画用定数
         private const int frameX = 240;
         private const int frameY = 100;
