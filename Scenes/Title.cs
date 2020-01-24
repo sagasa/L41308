@@ -230,7 +230,7 @@ namespace Giraffe
                     {
                         Sound.Play("decision_SE.mp3");
                         Game.bgmManager.currentScene = "title";
-                        Game.SetScene(new SceneResult(Game), new Fade(fadeTime, true, true));
+                        Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
                         wait = true;
                     }
                     else if (treebgPos == -Screen.Width )

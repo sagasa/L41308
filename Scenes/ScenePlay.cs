@@ -165,7 +165,7 @@ namespace Giraffe
                     Game.currentScore = score;
                     Game.currentTime = time;
                     Game.bgmManager.currentScene = "play";
-                    Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
+                    Game.SetScene(new SceneResult(Game), new Fade(fadeTime, true, true));
                 }
             }
         }
