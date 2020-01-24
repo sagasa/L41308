@@ -19,8 +19,7 @@ namespace Giraffe
         string timeRank = "d";
         string scoreRank = "d";
 
-        private bool fadeAction = false;
-        private bool wait = true;//操作ミス防止用
+        private bool fadeAction;//フェード対策
         private bool blinkMessage = true;//点滅表示用
         private int Counter = 0;//wait,fade,blinkのカウンター
         private const int fadeTime = 180;
@@ -60,8 +59,7 @@ namespace Giraffe
             //Game.currentTime = new int[] { 1, 23, 0 };
             //Game.bestTime = new int[] { 12, 34, 0 };
 
-            fadeAction = false;
-            wait = true;
+            fadeAction = true;
             blinkMessage = true;
             Counter = 0;
             rankAnimationScale = 1;
@@ -105,9 +103,8 @@ namespace Giraffe
             Counter++;
             if (Counter == fadeTime)
             {
-                wait = false;
+                fadeAction = false;
             }
-
             if (Counter < fadeTime + 10)
             {
                 Game.bgmManager.FadeIn("result", 120);
@@ -165,13 +162,13 @@ namespace Giraffe
                         }
                     }
                 }
-                if (!wait && cursorPos == fixedPos[0] && Input.ACTION.IsPush())
+                if (cursorPos == fixedPos[0] && Input.ACTION.IsPush())
                 {
                     fadeAction = true;
                     Game.bgmManager.currentScene = "result";
                     Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
                 }
-                else if (!wait && cursorPos == fixedPos[1] && Input.ACTION.IsPush())
+                else if (cursorPos == fixedPos[1] && Input.ACTION.IsPush())
                 {
                     fadeAction = true;
                     Game.bgmManager.currentScene = "result";

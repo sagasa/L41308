@@ -11,7 +11,8 @@ namespace Giraffe
     public class Title : Scene
     {
         private bool fadeAction = false;
-        private int fadeTime = 180;
+        private const int fadeTime = 120;
+        private int fadeCounter = 0;
         private int stageCount = 0;
         private int idouCounter;
         private int stagewaittime = 60;
@@ -61,14 +62,19 @@ namespace Giraffe
         
         public override void OnLoad()
         {
-            fadeAction = false;
+            fadeCounter = 0;
+            fadeAction = true;
         }
 
         public override void Update()
         {
-            if (!fadeAction)
+            fadeCounter++;
+            if (fadeCounter == fadeTime)
             {
-                //BGMのフェード
+                fadeAction = false;
+            }
+            if (fadeCounter < fadeTime + 10)//BGMのフェード
+            {
                 if (Game.bgmManager.currentScene != "none")
                 {
                     Game.bgmManager.CrossFade("title", fadeTime);
@@ -77,7 +83,9 @@ namespace Giraffe
                 {
                     Game.bgmManager.FadeIn("title", fadeTime);
                 }
-
+            }
+            if (!fadeAction)
+            {
                 if (stageCount == 0)
                 {
                     if (cursorPos != fixedPos[0] && Input.UP.IsPush())//カーソルが一番上以外の時に↑が押されたら、カーソルを一つ上へ
