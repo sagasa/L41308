@@ -19,7 +19,8 @@ namespace Giraffe
         string timeRank = "d";
         string scoreRank = "d";
 
-        private bool wait = true;//操作ミス防止用+2重フェード対策
+        private bool fadeAction = false;
+        private bool wait = true;//操作ミス防止用
         private bool blinkMessage = true;//点滅表示用
         private int Counter = 0;//wait,fade,blinkのカウンター
         private int fadeTime = 180;
@@ -59,6 +60,7 @@ namespace Giraffe
             //Game.currentTime = new int[] { 1, 23, 0 };
             //Game.bestTime = new int[] { 12, 34, 0 };
 
+            fadeAction = false;
             wait = true;
             blinkMessage = true;
             Counter = 0;
@@ -137,43 +139,44 @@ namespace Giraffe
                 rankExpansionAnimation = true;
             }
 
-
-            if (cursorPos != fixedPos[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
+            if (!fadeAction)
             {
-                Sound.Play("cursor_SE.mp3");
-                for (int i = 0; i < fixedPos.Length; i++)
+                if (cursorPos != fixedPos[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
                 {
-                    if (cursorPos == fixedPos[i])
+                    Sound.Play("cursor_SE.mp3");
+                    for (int i = 0; i < fixedPos.Length; i++)
                     {
-                        cursorPos = fixedPos[i - 1];
-                        break;
+                        if (cursorPos == fixedPos[i])
+                        {
+                            cursorPos = fixedPos[i - 1];
+                            break;
+                        }
                     }
                 }
-            }
-            else if (cursorPos != fixedPos[fixedPos.Length - 1] && Input.RIGHT.IsPush())//カーソルが一番右以外の時→を押されたら、カーソルを一つ右へ
-            {
-                Sound.Play("cursor_SE.mp3");
-                for (int i = 0; i < fixedPos.Length; i++)
+                else if (cursorPos != fixedPos[fixedPos.Length - 1] && Input.RIGHT.IsPush())//カーソルが一番右以外の時→を押されたら、カーソルを一つ右へ
                 {
-                    if (cursorPos == fixedPos[i])
+                    Sound.Play("cursor_SE.mp3");
+                    for (int i = 0; i < fixedPos.Length; i++)
                     {
-                        cursorPos = fixedPos[i + 1];
-                        break;
+                        if (cursorPos == fixedPos[i])
+                        {
+                            cursorPos = fixedPos[i + 1];
+                            break;
+                        }
                     }
                 }
-            }
-            
-            if (!wait && cursorPos == fixedPos[0] && Input.ACTION.IsPush())
-            {
-                wait = true;
-                Game.bgmManager.currentScene = "result";
-                Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
-            }
-            else if (!wait && cursorPos == fixedPos[1] && Input.ACTION.IsPush())
-            {
-                wait = true;
-                Game.bgmManager.currentScene = "result";
-                Game.SetScene(new Title(Game), new Fade(fadeTime, true, true));
+                if (!wait && cursorPos == fixedPos[0] && Input.ACTION.IsPush())
+                {
+                    fadeAction = true;
+                    Game.bgmManager.currentScene = "result";
+                    Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
+                }
+                else if (!wait && cursorPos == fixedPos[1] && Input.ACTION.IsPush())
+                {
+                    fadeAction = true;
+                    Game.bgmManager.currentScene = "result";
+                    Game.SetScene(new Title(Game), new Fade(fadeTime, true, true));
+                }
             }
         }
 
