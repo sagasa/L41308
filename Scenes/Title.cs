@@ -94,9 +94,12 @@ namespace Giraffe
                 {
                     wait = false;
                 }
-                if (waitCounter <= fadeTime + 10)
+                if (waitCounter <= fadeTime + 10)//BGMのフェード
                 {
-                    Game.bgmManager.FadeIn("title", fadeTime);
+                    if (Game.bgmManager.currentScene != "none")
+                        Game.bgmManager.CrossFade("title", fadeTime);
+                    else
+                        Game.bgmManager.FadeIn("title", fadeTime);
                 }
 
                 if (Input.DOWN.IsPush() || Input.UP.IsPush())
@@ -107,8 +110,8 @@ namespace Giraffe
                 if (y == 617 && Input.ACTION.IsPush() && !wait)
                 {
                     Sound.Play("decision_SE.mp3");
+                    Game.bgmManager.currentScene = "title";
                     Game.SetScene(new Tutolal(Game), new Fade(60, true, true));
-                    Game.bgmManager.CrossFade("title", "tutorial", fadeTime);
                     wait = true;
                 }
                 else if (y == 502 && Input.ACTION.IsPush() && !wait)
@@ -192,8 +195,6 @@ namespace Giraffe
                     }
                 }
                 
-                
-               
                 if(Input.BACK.IsPush())
                 {
                     StageCount = 0;
@@ -217,18 +218,19 @@ namespace Giraffe
                     {
 
                     }
-                    if (treebgPos == Screen.Width)
+                    if (!wait && treebgPos == Screen.Width)
                     {
                         Sound.Play("decision_SE.mp3");
+                        Game.bgmManager.currentScene = "title";
                         Game.SetScene(new Tutolal(Game), new Fade(fadeTime, true, true));
-                        
-                        Tutolal.Tutorialcount =99;
+                        wait = true;
+                        Tutolal.Tutorialcount = 99;
                     }
-                    else if (treebgPos == 0)
+                    else if (!wait && treebgPos == 0)
                     {
                         Sound.Play("decision_SE.mp3");
-                        Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
-                        Game.bgmManager.CrossFade("title", "play", fadeTime);
+                        Game.bgmManager.currentScene = "title";
+                        Game.SetScene(new SceneResult(Game), new Fade(fadeTime, true, true));
                         wait = true;
                     }
                     else if (treebgPos == -Screen.Width )
@@ -241,10 +243,6 @@ namespace Giraffe
                     }
                    
                 }
-             
-
-
-
             }
         }
     }

@@ -16,6 +16,8 @@ namespace Giraffe
         float bgmDis = 100.0f;//聞こえる範囲
         float interval = 150.0f;//bgmDisとintervalでクロスフェードの重なりを調整する
 
+        public string currentScene = "none";//クロスフェードで使用
+
         float r = 0;
         float degree = 0;
         float fadeDegre = 0;
@@ -93,12 +95,12 @@ namespace Giraffe
             PlayBgm(name);
         }
 
-        public void CrossFade(string name1, string name2, int time)
+        public void CrossFade(string name, int time)
         {
-            if (bgmPos[name2].x != bgmPos[name1].x + interval)
+            if (bgmPos[name].x != bgmPos[currentScene].x + interval)
             {
-                bgmPos[name2] = DX.VGet(bgmPos[name1].x + interval, 0.0f, 0.0f);
-                r = ListenerPos.z - bgmPos[name1].z;
+                bgmPos[name] = DX.VGet(bgmPos[currentScene].x + interval, 0.0f, 0.0f);
+                r = ListenerPos.z - bgmPos[currentScene].z;
                 fadeDegre = 90 / (time / interval * r);
             }
 
@@ -108,24 +110,24 @@ namespace Giraffe
                 {
                     degree += fadeDegre;
                     radian = (90 + degree) * (float)Math.PI / 180;
-                    ListenerPos.z = r * (float)Math.Sin(radian) + bgmPos[name1].z;
+                    ListenerPos.z = r * (float)Math.Sin(radian) + bgmPos[currentScene].z;
                 }
                 if (ListenerPos.z < 0)
                     ListenerPos.z = 0;
             }
 
-            if (ListenerPos.x < bgmPos[name2].x)
+            if (ListenerPos.x < bgmPos[name].x)
             {
                 ListenerPos.x += interval / time;
                 DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
             }
-            else if (ListenerPos.x > bgmPos[name2].x)
+            else if (ListenerPos.x > bgmPos[name].x)
             {
-                ListenerPos.x = bgmPos[name2].x;
+                ListenerPos.x = bgmPos[name].x;
             }
 
-            PlayBgm(name1);
-            PlayBgm(name2);
+            PlayBgm(currentScene);
+            PlayBgm(name);
         }
 
         //void BgmMove(string name)//検証用

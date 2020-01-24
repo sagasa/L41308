@@ -122,8 +122,7 @@ namespace Giraffe
         {
             if (!Game.isGoal)
             {
-                Game.bgmManager.CrossFade("title", "play",fadeTime);
-
+                Game.bgmManager.CrossFade("play", fadeTime);
                 time[2]++;
                 if (time[2] >= 60)
                 {
@@ -165,7 +164,8 @@ namespace Giraffe
                 {
                     Game.currentScore = score;
                     Game.currentTime = time;
-                    Game.SetScene(new SceneResult(Game),new Fade(fadeTime,true,true));
+                    Game.bgmManager.currentScene = "play";
+                    Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
                 }
             }
         }

@@ -23,15 +23,18 @@ namespace Giraffe
         private bool blinkMessage = true;//点滅表示用
         private int Counter = 0;//wait,fade,blinkのカウンター
         private int fadeTime = 180;
-
-        //描画系
-        private int frameX = 240;
-        private int frameY = 100;
+        //描画用定数
+        private const int frameX = 240;
+        private const int frameY = 100;
         private const int fontInterval = 30;//文字同士の幅
         private const float fontScale1 = 0.18f;//文字の大きさ
         private const float fontScale2 = 0.1f;//タイムボーナス用
         private const float rankImageScale = 0.4f;
-        private int cursorWidth = 220;
+        private const float rankAnimationSpeed = 0.01f;
+
+        private float rankAnimationScale = 1;//アニメーション用
+        private bool rankExpansionAnimation = false;
+        private const int cursorWidth = 220;
         private int cursorInterval = 60;
         private int cursorPos;
         private int[] fixedPos;
@@ -59,6 +62,9 @@ namespace Giraffe
             wait = true;
             blinkMessage = true;
             Counter = 0;
+            rankAnimationScale = 1;
+            rankExpansionAnimation = false;
+
 
             fixedPos = new int[] { cursorInterval, Screen.Width - (cursorWidth + cursorInterval) };
             cursorPos = fixedPos[1];
@@ -113,6 +119,24 @@ namespace Giraffe
             {
                 blinkMessage = false;
             }
+            
+            if(rankExpansionAnimation)
+            {
+                rankAnimationScale += rankAnimationSpeed;
+            }
+            else if (!rankExpansionAnimation)
+            {
+                rankAnimationScale -= rankAnimationSpeed;
+            }
+            if (rankAnimationScale > 1)
+            {
+                rankExpansionAnimation = false;
+            }
+            else if (rankAnimationScale < 0.75)
+            {
+                rankExpansionAnimation = true;
+            }
+
 
             if (cursorPos != fixedPos[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
             {
@@ -142,11 +166,13 @@ namespace Giraffe
             if (!wait && cursorPos == fixedPos[0] && Input.ACTION.IsPush())
             {
                 wait = true;
+                Game.bgmManager.currentScene = "result";
                 Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
             }
             else if (!wait && cursorPos == fixedPos[1] && Input.ACTION.IsPush())
             {
                 wait = true;
+                Game.bgmManager.currentScene = "result";
                 Game.SetScene(new Title(Game), new Fade(fadeTime, true, true));
             }
         }
@@ -187,7 +213,7 @@ namespace Giraffe
             {
                 if (timeRank == ranks[i])
                 {
-                    DX.DrawRotaGraph(70, 190, rankImageScale, 0, ResourceLoader.GetGraph("image_result/rank_" + ranks[i] + ".png"));
+                    DX.DrawRotaGraph(70, 190, rankImageScale * rankAnimationScale, 0, ResourceLoader.GetGraph("image_result/rank_" + ranks[i] + ".png"));
 
                     //「タイムボーナス」
 
@@ -255,7 +281,7 @@ namespace Giraffe
             {
                 if (scoreRank == ranks[i])
                 {
-                    DX.DrawRotaGraph(70, 95, rankImageScale, 0, ResourceLoader.GetGraph("image_result/rank_" + ranks[i] + ".png"));
+                    DX.DrawRotaGraph(70, 95, rankImageScale * rankAnimationScale, 0, ResourceLoader.GetGraph("image_result/rank_" + ranks[i] + ".png"));
                     break;
                 }
             }
