@@ -41,6 +41,24 @@ namespace SAGASALib
             return value;
         }
 
+        public static float Clamp(float value,float max,float min)
+        {
+            if (value < min)
+                return min;
+            if (max < value)
+                return max;
+            return value;
+        }
+
+        public static int Clamp(int value, int max, int min)
+        {
+            if (value < min)
+                return min;
+            if (max < value)
+                return max;
+            return value;
+        }
+
         public static float Distance(float x0,float y0,float x1,float y1)
         {
             return (float) Math.Sqrt((x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1));
