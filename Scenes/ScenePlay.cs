@@ -70,7 +70,7 @@ namespace Giraffe
         {
             //Vec2f pos = GetScreenPos(Vec2f.ZERO);
             DX.DrawGraph(0, 0, playbg);
-            //base.Draw();
+            base.Draw();
             gameObjects.ForEach(obj => obj.Draw());
             player.Draw();
             
