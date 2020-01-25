@@ -11,7 +11,7 @@ namespace Giraffe
     public class Title : Scene
     {
         private bool fadeAction = false;
-        private const int fadeTime = 120;
+        private int fadeTime = 120;
         private int fadeCounter = 0;
         private int stageCount = 0;
         private int idouCounter;
@@ -59,6 +59,7 @@ namespace Giraffe
                 DX.DrawGraph(treebgPos - Screen.Width, 0, treebg);
                 DX.DrawGraph(UIpos - Screen.Width, 0, stagename);
             }
+            
             DX.DrawString(100, 100, "" + treebgPos, DX.GetColor(0, 0, 0));
         }
         

@@ -70,7 +70,7 @@ namespace Giraffe
         {
             //Vec2f pos = GetScreenPos(Vec2f.ZERO);
             DX.DrawGraph(0, 0, playbg);
-            base.Draw();
+            //base.Draw();
             gameObjects.ForEach(obj => obj.Draw());
             player.Draw();
             
@@ -78,7 +78,7 @@ namespace Giraffe
             DX.DrawGraph(555, 150, Flag);
             playerIcon.Draw();
 
-            DX.DrawRotaGraph(100, 23 , 0.6, 0, stageName);
+            DX.DrawRotaGraph(100, 23, 0.6, 0, stageName);
             DX.DrawRotaGraph(Screen.Width / 2 - 22, 23, 0.6, 0, scoreImage);
             DX.DrawRotaGraph(Screen.Width - 155, 25, 0.55, 0, watch);
             DX.DrawRotaGraph(Screen.Width - 75, 25, 0.7, 0, colon);
@@ -143,6 +143,12 @@ namespace Giraffe
                     time[0]++;
                     time[1] = 0;
                 }
+                #if DEBUG
+                if (Input.BACK.IsPush())
+                {
+                    Game.isGoal = true;
+                }
+                #endif
             }
 
             gameObjects.ForEach(obj=> player.CalcInteract(obj));
