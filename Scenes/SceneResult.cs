@@ -15,9 +15,8 @@ namespace Giraffe
         private int[] rankScore = new int[] { 1100, 700, 400 };//スコア評価用,数値は仮
         private int[] rankTime = new int[] { 60, 120, 180 };//タイム評価用
         private int[] rankBonus = new int[] { 1000, 500, 200 };//タイムボーナス用
-
-        string timeRank = "d";
-        string scoreRank = "d";
+        private string timeRank = "d";
+        private string scoreRank = "d";
 
         private bool fadeAction;//フェード対策
         private bool blinkMessage = true;//点滅表示用
@@ -48,8 +47,11 @@ namespace Giraffe
         private int coron = ResourceLoader.GetGraph("image_result/rcolon.png");
         private int newImage = ResourceLoader.GetGraph("image_result/new.png");
 
+        private DummyPlayer player;
+
         public SceneResult(Game game) : base(game)
         {
+            player = new DummyPlayer(this);
         }
 
         public override void OnLoad()
@@ -65,8 +67,7 @@ namespace Giraffe
             Counter = 0;
             rankAnimationScale = 1;
             rankExpansionAnimation = false;
-
-
+            
             fixedPosX = new int[] { cursorInterval, Screen.Width - (cursorWidth + cursorInterval) };
             cursorPosX = fixedPosX[1];
 
@@ -75,7 +76,7 @@ namespace Giraffe
             bestScore = Game.bestScore;
             bestTime = Game.bestTime;
             
-            for (int i = 0; i < rankTime.Length; i++)
+            for (int i = 0; i < rankTime.Length; i++)//タイムの評価
             {
                 if (rankTime[i] >= currentTime[0] * 60 + currentTime[1])
                 {
@@ -84,7 +85,7 @@ namespace Giraffe
                     break;
                 }
             }
-            for (int i = 0; i < rankScore.Length; i++)
+            for (int i = 0; i < rankScore.Length; i++)//スコアの評価
             {
                 if (rankScore[i] <= currentScore)
                 {
@@ -92,7 +93,6 @@ namespace Giraffe
                     break;
                 }
             }
-
             if (currentScore > bestScore)
                 Game.bestScore = currentScore;
             if (currentTime[0] * 60 + currentTime[1] < bestTime[0] * 60 + bestTime[1])
@@ -101,6 +101,11 @@ namespace Giraffe
 
         public override void Update()
         {
+            player.pos = new Vec2f(cursorPosX + cursorWidth / 2, cursorPosY - 40);
+            player.Update();
+            //player.velAngle = 0;
+            //player.angle = 0;
+
             Counter++;
             if (Counter == fadeTime)
             {
@@ -136,7 +141,7 @@ namespace Giraffe
             {
                 rankExpansionAnimation = true;
             }
-
+            
             if (cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
             {
                 Sound.Play("cursor_SE.mp3");
@@ -181,6 +186,7 @@ namespace Giraffe
         {
             DX.DrawGraph(0, 0, bg);
             DX.DrawGraph(0, 0, result_bg);
+            player.Draw();
             DX.DrawGraph(cursorPosX - 15, cursorPosY - 12, cursor);
             DX.DrawGraph(fixedPosX[0], cursorPosY, restart);
             DX.DrawGraph(fixedPosX[1], cursorPosY, back);
