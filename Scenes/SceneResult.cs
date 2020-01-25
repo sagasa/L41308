@@ -101,6 +101,7 @@ namespace Giraffe
 
         public override void Update()
         {
+            //if(cursor)
             player.pos = new Vec2f(cursorPosX + cursorWidth / 2, cursorPosY - 40);
             player.Update();
             //player.velAngle = 0;

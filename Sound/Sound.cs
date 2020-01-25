@@ -5,14 +5,22 @@ namespace Giraffe
 {
     public static class Sound
     {
+        public static bool playOn = true;
+
         public static void Play(string handle)
         {
-            DX.PlaySoundMem(ResourceLoader.GetSound(handle), DX.DX_PLAYTYPE_BACK);
+            if (playOn)
+            {
+                DX.PlaySoundMem(ResourceLoader.GetSound(handle), DX.DX_PLAYTYPE_BACK);
+            }
         }
 
         public static void Loop(string handle)
         {
-            DX.PlaySoundMem(ResourceLoader.GetSound(handle), DX.DX_PLAYTYPE_LOOP);
+            if(playOn)
+            {
+                DX.PlaySoundMem(ResourceLoader.GetSound(handle), DX.DX_PLAYTYPE_LOOP);
+            }
         }
         
         public static void Stop(string handle)

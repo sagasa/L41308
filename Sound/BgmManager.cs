@@ -7,6 +7,8 @@ namespace Giraffe
 {
     public class BgmManager
     {
+        public static bool playOn = true;
+
         DX.VECTOR ListenerPos;
         DX.VECTOR ListenerDir;
 
@@ -44,90 +46,96 @@ namespace Giraffe
         
         public void FadeIn(string name, int time)
         {
-            if (!CheckPlayBgm(name))
+            if (playOn)
             {
-                ListenerPos.x = bgmPos[name].x;
-                ListenerPos.z = bgmPos[name].z + bgmDis;
-                DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
-            }
+                if (!CheckPlayBgm(name))
+                {
+                    ListenerPos.x = bgmPos[name].x;
+                    ListenerPos.z = bgmPos[name].z + bgmDis;
+                    DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+                }
 
-            if (ListenerPos.z > bgmPos[name].z)
-            {
-                ListenerPos.z -= bgmDis / time;
-                DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+                if (ListenerPos.z > bgmPos[name].z)
+                {
+                    ListenerPos.z -= bgmDis / time;
+                    DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+                }
+                else if (ListenerPos.z < bgmPos[name].z)
+                {
+                    ListenerPos.z = bgmPos[name].z;
+                    DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+                }
+                PlayBgm(name);
             }
-            else if (ListenerPos.z < bgmPos[name].z)
-            {
-                ListenerPos.z = bgmPos[name].z;
-                DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
-            }
-            PlayBgm(name);
         }
 
         public void FadeOut(string name, int time)
         {
-            if (ListenerPos.x != bgmPos[name].x)
+            if (playOn)
             {
-                if (ListenerPos.x > bgmPos[name].x + 1)
+                if (ListenerPos.x != bgmPos[name].x)
                 {
-                    ListenerPos.x -= 0.7f;
+                    if (ListenerPos.x > bgmPos[name].x + 1)
+                    {
+                        ListenerPos.x -= 0.7f;
+                    }
+                    else if (ListenerPos.x < bgmPos[name].x - 1)
+                    {
+                        ListenerPos.x += 0.7f;
+                    }
+                    else if (ListenerPos.x != bgmPos[name].x)
+                    {
+                        ListenerPos.x = bgmPos[name].x;
+                    }
                 }
-                else if (ListenerPos.x < bgmPos[name].x - 1)
-                {
-                    ListenerPos.x += 0.7f;
-                }
-                else if (ListenerPos.x != bgmPos[name].x)
-                {
-                    ListenerPos.x = bgmPos[name].x;
-                }
-            }
 
-            if (ListenerPos.z < bgmPos[name].z + bgmDis + 10)
-            {
-                ListenerPos.z += bgmDis / time;
-                DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+                if (ListenerPos.z < bgmPos[name].z + bgmDis + 10)
+                {
+                    ListenerPos.z += bgmDis / time;
+                    DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+                }
+                else if (ListenerPos.z > bgmPos[name].z + bgmDis + 10)
+                {
+                    ListenerPos.z = bgmPos[name].z + bgmDis + 10;
+                    DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+                }
+                PlayBgm(name);
             }
-            else if (ListenerPos.z > bgmPos[name].z + bgmDis + 10)
-            {
-                ListenerPos.z = bgmPos[name].z + bgmDis + 10;
-                DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
-            }
-            PlayBgm(name);
         }
 
         public void CrossFade(string name, int time)
         {
-            if (bgmPos[name].x != bgmPos[currentScene].x + interval)
+            if (playOn)
             {
-                bgmPos[name] = DX.VGet(bgmPos[currentScene].x + interval, 0.0f, 0.0f);
-                r = ListenerPos.z - bgmPos[currentScene].z;
-                fadeDegre = 90 / (time / interval * r);
-            }
-
-            if (ListenerPos.z != 0)
-            {
-                if (ListenerPos.z > 0)
+                if (bgmPos[name].x != bgmPos[currentScene].x + interval)
                 {
-                    degree += fadeDegre;
-                    radian = (90 + degree) * (float)Math.PI / 180;
-                    ListenerPos.z = r * (float)Math.Sin(radian) + bgmPos[currentScene].z;
+                    bgmPos[name] = DX.VGet(bgmPos[currentScene].x + interval, 0.0f, 0.0f);
+                    r = ListenerPos.z - bgmPos[currentScene].z;
+                    fadeDegre = 90 / (time / interval * r);
                 }
-                if (ListenerPos.z < 0)
-                    ListenerPos.z = 0;
+                if (ListenerPos.z != 0)
+                {
+                    if (ListenerPos.z > 0)
+                    {
+                        degree += fadeDegre;
+                        radian = (90 + degree) * (float)Math.PI / 180;
+                        ListenerPos.z = r * (float)Math.Sin(radian) + bgmPos[currentScene].z;
+                    }
+                    if (ListenerPos.z < 0)
+                        ListenerPos.z = 0;
+                }
+                if (ListenerPos.x < bgmPos[name].x)
+                {
+                    ListenerPos.x += interval / time;
+                    DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+                }
+                else if (ListenerPos.x > bgmPos[name].x)
+                {
+                    ListenerPos.x = bgmPos[name].x;
+                }
+                PlayBgm(currentScene);
+                PlayBgm(name);
             }
-
-            if (ListenerPos.x < bgmPos[name].x)
-            {
-                ListenerPos.x += interval / time;
-                DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
-            }
-            else if (ListenerPos.x > bgmPos[name].x)
-            {
-                ListenerPos.x = bgmPos[name].x;
-            }
-
-            PlayBgm(currentScene);
-            PlayBgm(name);
         }
 
         //void BgmMove(string name)//検証用
@@ -175,19 +183,18 @@ namespace Giraffe
         public void Debug()
         {//フェードの可視化、1で再生中,0で停止中,-1でメモリにない(エラー)
             DX.DrawString(0, 15, "　タイトル:" + DX.CheckSoundMem(bgmMap["title"]) +
-                                 "　プレイ:" + DX.CheckSoundMem(bgmMap["play"]) +
+                                 "　プレイ:"   + DX.CheckSoundMem(bgmMap["play"]) +
                                  "　リザルト:" + DX.CheckSoundMem(bgmMap["result"]) +
-                                 "　リスナー x:" + ListenerPos.x + "　z:" + ListenerPos.z,
-                                 DX.GetColor(255, 0, 0));
+                                 "　リスナー x:" + ListenerPos.x + "　z:" + ListenerPos.z, DX.GetColor(255, 0, 0));
             // BGMの再生位置を描画
-            DX.DrawCircle(//タイトル,赤
-                100 + (int)bgmPos["title"].x, 150 + (int)bgmPos["title"].z, (int)bgmDis, DX.GetColor(255, 0, 0), DX.FALSE);
-            DX.DrawCircle(//プレイ,黄
-                100 + (int)bgmPos["play"].x, 150 + (int)bgmPos["play"].z, (int)bgmDis, DX.GetColor(255, 255, 0), DX.FALSE);
-            DX.DrawCircle(//リザルト,紫
-                100 + (int)bgmPos["result"].x, 150 + (int)bgmPos["result"].z, (int)bgmDis, DX.GetColor(255, 0, 255), DX.FALSE);
-            DX.DrawCircle(//リスナー,青
-                100 + (int)ListenerPos.x, 150 + (int)ListenerPos.z, 2, DX.GetColor(0, 0, 255));
+            //タイトル,赤
+            DX.DrawCircle(100 + (int)bgmPos["title"].x, 150 + (int)bgmPos["title"].z, (int)bgmDis, DX.GetColor(255, 0, 0), DX.FALSE);
+            //プレイ,黄
+            DX.DrawCircle(100 + (int)bgmPos["play"].x, 150 + (int)bgmPos["play"].z, (int)bgmDis, DX.GetColor(255, 255, 0), DX.FALSE);
+            //リザルト,紫
+            DX.DrawCircle(100 + (int)bgmPos["result"].x, 150 + (int)bgmPos["result"].z, (int)bgmDis, DX.GetColor(255, 0, 255), DX.FALSE);
+            //リスナー,青
+            DX.DrawCircle(100 + (int)ListenerPos.x, 150 + (int)ListenerPos.z, 2, DX.GetColor(0, 0, 255));
         }
     }
 }
