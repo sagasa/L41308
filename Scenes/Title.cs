@@ -10,6 +10,12 @@ namespace Giraffe
 {
     public class Title : Scene
     {
+        private const int frameX = 200;
+        private const int frameY = 100;
+        private const int fontInterval = 30;//文字同士の幅
+        private const float fontScale1 = 0.18f;//文字の大きさ
+        private const float fontScale2 = 0.1f;//タイムボーナス用
+
         private DummyPlayer Dummy;
         public List<GameObject> gameObjects = new List<GameObject>();
         private bool fadeAction = false;
@@ -26,6 +32,8 @@ namespace Giraffe
         private int UIpos = 0;
         private int cursorPos = 502;
         private int[] cursorFixedPos = new int[] { 502, 617 };
+        int[]  bestTime1 =new int[] {0,0,0};
+        int bestscore1 = 0;
         
 
         private int head = ResourceLoader.GetGraph("player/player_head.png");
@@ -38,11 +46,12 @@ namespace Giraffe
         private int icon = ResourceLoader.GetGraph("キリンアイコン.png");
         private int treebg = ResourceLoader.GetGraph("image_select/select_bg.png");
         private int stagename=ResourceLoader.GetGraph("image_select/select_UI.png");
-        
+        private int coron = ResourceLoader.GetGraph("image_result/rcolon.png");
+
+
         public Title(Game game) : base(game)
         {
             Dummy = new DummyPlayer(this);
-            Dummy.pos = new Vec2f(Screen.Width / 2, Screen.Height-64);
         }
 
         public override void Draw()
@@ -57,12 +66,53 @@ namespace Giraffe
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, eye);
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, ear);
             }
-            if (stageCount == 1)
+            if (stageCount >= 1)
             {
+                
                 DX.DrawGraph(treebgPos - Screen.Width, 0, treebg);
                 DX.DrawGraph(UIpos - Screen.Width, 0, stagename);
-                gameObjects.ForEach(obj => obj.Draw());
+               
                 Dummy.Draw();
+                if (stageCount == 2)
+                {
+                    int digit = 1000;
+                    int leftCounter1 = 0;
+                    int leftCounter2 = 0;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        for (int j = 0; j < 10; j++)
+                        {
+                            if (j == bestscore1 / digit % 10 && bestscore1 / digit != 0)
+                            {
+                                DX.DrawRotaGraph(frameX + fontInterval * leftCounter2+120, 470 , fontScale1, 0, ResourceLoader.GetGraph("image_select/mozi_" + j + ".png"));
+                                leftCounter2++;
+                            }
+                            
+                        }
+                        digit /= 10;
+                    }
+                    digit = 10;
+                    for (int i = 0; i < 2; i++)
+                    {
+                        for (int j = 0; j < 10; j++)
+                        {
+                            if (j == bestTime1[0] / digit % 10 && (bestTime1[0] / digit != 0 || digit == 1))//ベストタイム,分
+                            {
+                                DX.DrawRotaGraph(frameX + fontInterval * leftCounter2, 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                                leftCounter2++;
+                            }
+                        }
+                        for (int j = 0; j < 10; j++)
+                        {
+                            if (j == bestTime1[1] / digit % 10)
+                            {
+                                DX.DrawRotaGraph(frameX + fontInterval * (2 + leftCounter2), 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                            }
+                        }
+                        digit /= 10;
+                    }
+                    DX.DrawRotaGraph(200 + fontInterval * leftCounter2, 534, 0.2, 0, coron);
+                }
             }
         }
         
@@ -70,6 +120,8 @@ namespace Giraffe
         {
             fadeCounter = 0;
             fadeAction = true;
+            bestTime1 = Game.bestTime;
+            bestscore1 = Game.bestScore;
         }
 
         public override void Update()
@@ -120,7 +172,7 @@ namespace Giraffe
                 if (cursorPos == cursorFixedPos[0] && Input.ACTION.IsPush() && !fadeAction)
                 {
                     Sound.Play("decision_SE.mp3");
-                    stageCount = 1;
+                    stageCount +=2;
                 }
                 else if (cursorPos == cursorFixedPos[1] && Input.ACTION.IsPush() && !fadeAction)
                 {
@@ -131,23 +183,39 @@ namespace Giraffe
                     Game.SetScene(new Tutolal(Game), new Fade(60, true, true));
                 }
             }
-            if (stageCount == 1)
+            if (stageCount >=1)
             {
                 Dummy.Update();
-                
-                gameObjects.ForEach(obj => obj.Draw());
-                gameObjects.ForEach(obj => obj.Update());
+                Dummy.pos = new Vec2f(Screen.Width / 2, Screen.Height - 64);
+               
                 if (Input.RIGHT.IsPush())
                 {
                     isRight = true;
                     isLeft = false;
+                   
+                    if(stageCount>6)
+                    {
+                        stageCount += 0;
+                    }
+                    else
+                    {
+                        stageCount +=1;
+                    }
                 }
                 else if (Input.LEFT.IsPush())
                 {
                     isLeft = true;
                     isRight = false;
+                    if (stageCount < 2)
+                    {
+                        stageCount -= 0;
+                    }
+                    else
+                    {
+                        stageCount -= 1;
+                    }
                 }
-
+               
                 for (int i = 0; i < treeFixedPos.Length; i++)
                 {
                     if (Input.RIGHT.IsPush())//一番右側以外にいるとき、→が押されたら右へ
@@ -239,6 +307,7 @@ namespace Giraffe
                     }
                 }
             }
+            
         }
         
         public override void OnExit()
