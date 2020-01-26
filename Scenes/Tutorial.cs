@@ -28,8 +28,7 @@ namespace Giraffe
         int SousaCount = 0;
         int CommentTime = 120;
         int Sounsa;
-       
-
+        
         private AnimationManager<PlayerRender> _animation;
 
 
@@ -59,7 +58,7 @@ namespace Giraffe
           "スコアです。木の枝に噛みつく、ゴール","までにかかった時間の速さなどで","スコアが増加します",//8,8,10
           "ミニマップです、ミニマップ上のキリンの","アイコンは,マップ上のキリンの","位置を表しています",//11,12,13
           "タイマーです。スタートからゴールまでに","かかった時間がここに表示されます",//14,15
-          "チュートリアル画面トップへ戻りますか？","戻る場合は決定ボタンを押してください",//16,17
+          "タイトル画面へ戻りますか？","戻る場合は決定ボタンを押してください",//16,17
           "また、スコアが多くもらえる","色違いのレアな枝がでることがあります"//レア木の枝18,19
         };
 
@@ -410,6 +409,7 @@ namespace Giraffe
                 Tutorialcount = 0;
                 y = 502;
                 Sound.Play("decision_SE.mp3");
+                
             }
             if (Tutorialcount == 4 || Tutorialcount == 2)
             {
@@ -425,7 +425,10 @@ namespace Giraffe
                 player.Update();
                 gameObjects.ForEach(obj => obj.Update());
                 gameObjects.RemoveAll(obj => obj.IsDead());
-
+                if(Tutorialcount>=112)
+                {
+                    Tutorialcount = 99;
+                }
                 if (CommentTime <= 0)
                 {
                     Tutorialcount += 1;

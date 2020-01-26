@@ -294,7 +294,7 @@ namespace Giraffe
                         fadeAction = true;
                         Game.bgmManager.currentScene = "title";
                         Game.SetScene(new Tutolal(Game), new Fade(fadeTime, true, true));
-                        Tutolal.Tutorialcount = 99;
+                         Tutolal.Tutorialcount = 99;
                     }
                     else if (treebgPos == treeFixedPos[1])
                     {
