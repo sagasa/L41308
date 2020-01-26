@@ -95,7 +95,7 @@ namespace Giraffe
         public Tutolal(Game game) : base(game)
         {
             Map = new PlayMap(this, "map1_leaf");
-            MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y);
+            MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y+4.8f);
 
             player = new Player(this);
             player.pos = MapPos + new Vec2f(2, 2);
