@@ -75,44 +75,50 @@ namespace Giraffe
                 Dummy.Draw();
                 if (stageCount == 2)
                 {
-                    int digit = 1000;
-                    int leftCounter1 = 0;
-                    int leftCounter2 = 0;
-                    for (int i = 0; i < 4; i++)
+                    if (treebgPos == 0)
                     {
-                        for (int j = 0; j < 10; j++)
+
+
+                        int digit = 1000;
+                        int leftCounter1 = 0;
+                        int leftCounter2 = 0;
+                        for (int i = 0; i < 4; i++)
                         {
-                            if (j == bestscore1 / digit % 10 && bestscore1 / digit != 0)
+                            for (int j = 0; j < 10; j++)
                             {
-                                DX.DrawRotaGraph(frameX + fontInterval * leftCounter2+120, 470 , fontScale1, 0, ResourceLoader.GetGraph("image_select/mozi_" + j + ".png"));
-                                leftCounter2++;
+                                if (j == bestscore1 / digit % 10 && bestscore1 / digit != 0)
+                                {
+                                    DX.DrawRotaGraph(frameX + fontInterval * leftCounter2 + 120, 470, fontScale1, 0, ResourceLoader.GetGraph("image_select/mozi_" + j + ".png"));
+                                    leftCounter2++;
+                                }
+
                             }
-                            
+                            digit /= 10;
                         }
-                        digit /= 10;
+                        digit = 10;
+                        for (int i = 0; i < 2; i++)
+                        {
+                            for (int j = 0; j < 10; j++)
+                            {
+                                if (j == bestTime1[0] / digit % 10 && (bestTime1[0] / digit != 0 || digit == 1))//ベストタイム,分
+                                {
+                                    DX.DrawRotaGraph(frameX + fontInterval * leftCounter2, 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                                    leftCounter2++;
+                                }
+                            }
+                            for (int j = 0; j < 10; j++)
+                            {
+                                if (j == bestTime1[1] / digit % 10)
+                                {
+                                    DX.DrawRotaGraph(frameX + fontInterval * (2 + leftCounter2), 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                                }
+                            }
+                            digit /= 10;
+                        }
+                        DX.DrawRotaGraph(200 + fontInterval * leftCounter2, 534, 0.2, 0, coron);
                     }
-                    digit = 10;
-                    for (int i = 0; i < 2; i++)
-                    {
-                        for (int j = 0; j < 10; j++)
-                        {
-                            if (j == bestTime1[0] / digit % 10 && (bestTime1[0] / digit != 0 || digit == 1))//ベストタイム,分
-                            {
-                                DX.DrawRotaGraph(frameX + fontInterval * leftCounter2, 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
-                                leftCounter2++;
-                            }
-                        }
-                        for (int j = 0; j < 10; j++)
-                        {
-                            if (j == bestTime1[1] / digit % 10)
-                            {
-                                DX.DrawRotaGraph(frameX + fontInterval * (2 + leftCounter2), 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
-                            }
-                        }
-                        digit /= 10;
-                    }
-                    DX.DrawRotaGraph(200 + fontInterval * leftCounter2, 534, 0.2, 0, coron);
                 }
+                
             }
         }
         
@@ -288,7 +294,7 @@ namespace Giraffe
                         fadeAction = true;
                         Game.bgmManager.currentScene = "title";
                         Game.SetScene(new Tutolal(Game), new Fade(fadeTime, true, true));
-                        Tutolal.Tutorialcount = 0;
+                        Tutolal.Tutorialcount = 99;
                     }
                     else if (treebgPos == treeFixedPos[1])
                     {
