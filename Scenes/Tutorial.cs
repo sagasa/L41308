@@ -334,9 +334,6 @@ namespace Giraffe
                     }
                 }
             }
-
-            DX.ChangeFontType(DX.DX_FONTTYPE_NORMAL);
-            DX.DrawString(100, 50, "" + Tutorialcount, DX.GetColor(0, 0, 0));
         }
 
         public override void OnExit()

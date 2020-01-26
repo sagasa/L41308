@@ -10,11 +10,12 @@ namespace Giraffe
 {
     public class Title : Scene
     {
+        private DummyPlayer Dummy;
+        public List<GameObject> gameObjects = new List<GameObject>();
         private bool fadeAction = false;
         private int fadeTime = 120;
         private int fadeCounter = 0;
         private int stageCount = 0;
-        private int idouCounter;
         private int stagewaittime = 60;
         private bool isRight = false;
         private bool isLeft = false;
@@ -25,6 +26,7 @@ namespace Giraffe
         private int UIpos = 0;
         private int cursorPos = 502;
         private int[] cursorFixedPos = new int[] { 502, 617 };
+        
 
         private int head = ResourceLoader.GetGraph("player/player_head.png");
         private int horn = ResourceLoader.GetGraph("player/horn.png");
@@ -39,7 +41,8 @@ namespace Giraffe
         
         public Title(Game game) : base(game)
         {
-
+            Dummy = new DummyPlayer(this);
+            Dummy.pos = new Vec2f(Screen.Width / 2, Screen.Height-64);
         }
 
         public override void Draw()
@@ -58,9 +61,9 @@ namespace Giraffe
             {
                 DX.DrawGraph(treebgPos - Screen.Width, 0, treebg);
                 DX.DrawGraph(UIpos - Screen.Width, 0, stagename);
+                gameObjects.ForEach(obj => obj.Draw());
+                Dummy.Draw();
             }
-            
-            DX.DrawString(100, 100, "" + treebgPos, DX.GetColor(0, 0, 0));
         }
         
         public override void OnLoad()
@@ -130,6 +133,10 @@ namespace Giraffe
             }
             if (stageCount == 1)
             {
+                Dummy.Update();
+                
+                gameObjects.ForEach(obj => obj.Draw());
+                gameObjects.ForEach(obj => obj.Update());
                 if (Input.RIGHT.IsPush())
                 {
                     isRight = true;
@@ -213,7 +220,7 @@ namespace Giraffe
                         fadeAction = true;
                         Game.bgmManager.currentScene = "title";
                         Game.SetScene(new Tutolal(Game), new Fade(fadeTime, true, true));
-                        Tutolal.Tutorialcount = 99;
+                        Tutolal.Tutorialcount = 0;
                     }
                     else if (treebgPos == treeFixedPos[1])
                     {
