@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Newtonsoft.Json;
 
 namespace Giraffe.Saves
@@ -19,11 +20,18 @@ namespace Giraffe.Saves
 
         public static Type Load<Type>(string name)
         {
-            using (var fs = new FileStream("./" + name + ".json", FileMode.Open))
-            using (var sr = new StreamReader(fs))
-            using (var reader = new JsonTextReader(sr))
+            try
             {
-                return jsonSerializer.Deserialize<Type>(reader);
+                using (var fs = new FileStream("./" + name + ".json", FileMode.Open))
+                using (var sr = new StreamReader(fs))
+                using (var reader = new JsonTextReader(sr))
+                {
+                    return jsonSerializer.Deserialize<Type>(reader);
+                }
+            }
+            catch (FileNotFoundException e)
+            {
+                return default(Type);
             }
         }
     }
