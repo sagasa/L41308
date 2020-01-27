@@ -56,7 +56,7 @@ namespace Giraffe
         private void Jump()
         {
             vel = vel.SetY(-0.2f);
-            scene.ParticleManager.Jump(pos);
+            scene.ParticleManagerBottom.Jump(pos);
         }
 
         public void Goal(Vec2f pos)
@@ -247,14 +247,14 @@ namespace Giraffe
                         currentLeaf.score = 0;
                        
                         //パーティクル
-                        scene.ParticleManager.Glitter(pos);
-                        scene.ParticleManager.Swaying2(pos);
-                        scene.ParticleManager.GetPoint(pos);
+                        scene.ParticleManagerBottom.Glitter(pos);
+                        scene.ParticleManagerBottom.Swaying2(pos);
+                        scene.ParticleManagerBottom.GetPoint(pos);
                     }
                     else
                     {
                         //パーティクル
-                            scene.ParticleManager.Swaying(pos);
+                            scene.ParticleManagerBottom.Swaying(pos);
                     }
                     Sound.Play("leaf_bite_SE.mp3");
                     //姿勢変更時に中心の移動分補完
