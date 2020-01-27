@@ -25,12 +25,12 @@ namespace SAGASALib
         static Input()
         {
             binds.Clear();
-            UP = new InputBind(DX.KEY_INPUT_UP);
-            DOWN = new InputBind(DX.KEY_INPUT_DOWN);
-            RIGHT = new InputBind(DX.KEY_INPUT_RIGHT);
-            LEFT = new InputBind(DX.KEY_INPUT_LEFT);
-            ACTION = new InputBind(DX.KEY_INPUT_SPACE);
-            BACK = new InputBind(DX.KEY_INPUT_X);
+            UP = new InputBind(DX.KEY_INPUT_UP,DX.PAD_INPUT_UP);
+            DOWN = new InputBind(DX.KEY_INPUT_DOWN,DX.PAD_INPUT_DOWN);
+            RIGHT = new InputBind(DX.KEY_INPUT_RIGHT, DX.PAD_INPUT_RIGHT);
+            LEFT = new InputBind(DX.KEY_INPUT_LEFT, DX.PAD_INPUT_LEFT);
+            ACTION = new InputBind(DX.KEY_INPUT_SPACE, DX.PAD_INPUT_3);
+            BACK = new InputBind(DX.KEY_INPUT_X, DX.PAD_INPUT_2);
         }
 
         // 最新の入力状況に更新する処理。
@@ -41,7 +41,8 @@ namespace SAGASALib
             binds.ForEach(bind =>
             {
                 bind.lastKey = bind.nowKey;
-                bind.nowKey = DX.CheckHitKey(bind.keyCode) != 0;
+                int pad = DX.GetJoypadInputState(DX.DX_INPUT_PAD1);
+                bind.nowKey = DX.CheckHitKey(bind.keyCode) != 0 || (pad & bind.padMask) != 0;
                 
                 if (bind.nowKey)
                 {
@@ -74,12 +75,14 @@ namespace SAGASALib
 
         public class InputBind
         {
-            internal InputBind(int key)
+            internal InputBind(int key,int pad)
             {
+                padMask = pad;
                 keyCode = key;
                 Input.binds.Add(this);
             }
             internal readonly int keyCode;
+            internal readonly int padMask;
             internal bool nowKey = false;
             internal bool lastKey = false;
             internal int keyCount = 0;
