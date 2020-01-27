@@ -103,8 +103,8 @@ namespace Giraffe
 
         public override void Draw()
         {
-            //Vec2f pos = GetScreenPos(Vec2f.ZERO);
-            DX.DrawGraph(0, 0, playbg);
+            Vec2f pos = GetScreenPos(Vec2f.ZERO);
+            DX.DrawGraph(0, (int)pos.Y, playbg);
             base.Draw();
             gameObjects.ForEach(obj => obj.Draw());
             player.Draw();
