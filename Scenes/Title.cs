@@ -230,11 +230,11 @@ namespace Giraffe
                     }
                 }
 
-                iif(Dummy.isDummyRight == false)
+                if(Dummy.isDunnyRight == false)
                 {
                     Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, -0.01f, 0.1f));
                 }
-                else if (Dummy.isDummyRight == true)
+                else if (Dummy.isDunnyRight == true)
                 {
                     Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, 0.01f, 0.1f));
                 }
