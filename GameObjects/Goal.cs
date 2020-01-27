@@ -29,6 +29,12 @@ namespace Giraffe
         }
         public override void Update()
         {
+#if DEBUG
+            if (Input.BACK.IsPush())
+            {
+                ((ScenePlay)scene).Goal(pos);
+            }
+#endif
             base.Update();
         }
 
@@ -36,10 +42,11 @@ namespace Giraffe
         {
             if (obj is Player)
             {
-                ((ScenePlay)scene).IsGoal = true;
+                ((ScenePlay)scene).Goal(pos);
             }
             
         }
+
 
         public override bool IsDead()
         {
