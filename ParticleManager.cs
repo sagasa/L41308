@@ -15,7 +15,9 @@ namespace Giraffe
         private int particleJump = ResourceLoader.GetGraph("image_effect/effectjump.png");
         private int particleSwaying = ResourceLoader.GetGraph("image_effect/effectleaf_1.png");
         private int particlePoint = ResourceLoader.GetGraph("image_effect/effectscore.png");
-       
+        private int particleSelect = ResourceLoader.GetGraph("image_effect/effectselect_1.png");
+        private int palticleTutorial = ResourceLoader.GetGraph("image_effect/effectselect_2.png");
+
 
         private Scene scene;
 
@@ -50,7 +52,7 @@ namespace Giraffe
         //キラキラ
         public void Glitter(Vec2f pos_)
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 6; i++)
             {
                 particles.Add(new Particle(scene)
                 {
@@ -129,9 +131,9 @@ namespace Giraffe
                     endScale = 0.3f,
                     fadeOutTime = 0.8f,
                     blendMode = DX.DX_BLENDMODE_ADD,
-                    red = 0,
-                    green = 0,
-                    blue =255,
+                    red = 94,
+                    green = 69,
+                    blue =0,
 
                 });
             }
@@ -143,17 +145,38 @@ namespace Giraffe
         {
             particles.Add(new Particle(scene)
             {
-                pos = pos,
-                lifeSpan=60,
+                pos = pos + new Vec2f(0, MyRandom.PlusMinus(40f)) * scale,
+                lifeSpan=50,
                 imageHndle=particlePoint,
                 vel=new Vec2f(0,-3f)*scale,
                 startScale=1.2f,
-                endScale=0.5f,
-                fadeInTime=0.5f,
-                fadeOutTime=1.5f,
+                endScale=0.4f,
+                fadeInTime=0.7f,
+                fadeOutTime=1.3f,
                 blendMode=DX.DX_BLENDMODE_ADD,
             });
         }
 
+        //ステージセレクト
+        public void Select(Vec2f pos)
+        {
+            particles.Add(new Particle(scene)
+            {
+                pos=pos,
+                lifeSpan=60,
+                imageHndle=particleSelect,
+            });
+        }
+
+        //チュートリアル
+        public void Tutorial(Vec2f pos)
+        {
+            particles.Add(new Particle(scene)
+            {
+                pos=pos,
+                lifeSpan=10,
+                imageHndle=palticleTutorial,
+            });
+        }
     }
 }
