@@ -12,17 +12,31 @@ namespace Giraffe
         private readonly int[] leafImages = ResourceLoader.GetGraph("leaf.png", 5);
         public readonly AnimationManager<Leaf> AnimationManager;
 
-        public int score;
+        public int score { get; private set; }
 
         public Leaf(ScenePlay scene, Vec2f vec2f, int scoreValue=0) : base(scene)
         {
             pos = vec2f;
             score = scoreValue;
             AnimationManager = new AnimationManager<Leaf>(this);
-            if(scoreValue!=0)
+            if (scoreValue != 0)
+            {
                 AnimationManager.Start(Animations.GliterParticle);
+            }
+           
+           
         }
-       
+        
+        //使用したならプレイヤーから呼ぶ
+        public void RemoveScore()
+        {
+            if (score !=0)
+            {
+                score = 0;
+                AnimationManager.Stop(Animations.GliterParticle);
+            }
+               
+        }
 
         private CircleCollision[] collisions = new CircleCollision[]{new CircleCollision(new Vec2f(1,1.1f), 0.6f) };
 
@@ -67,6 +81,7 @@ namespace Giraffe
 
         public override void Update()
         {
+
             base.Update();
         }
     }
