@@ -15,9 +15,13 @@ namespace Giraffe
         private int[] fixedPosX = new int[] { 100, 400 };
         private int[] fixedPosY = new int[] { 100, 200, 300 };
         private bool[] playOn = new bool[] { true, true };
-        
-        private int bg = ResourceLoader.GetGraph("play_bg.png");
-        private int cursor = ResourceLoader.GetGraph("cursor.png");
+
+        private int bg = ResourceLoader.GetGraph("title_bg.png");
+        private int dark = ResourceLoader.GetGraph("option/dark.png");
+        private int bgmImage = ResourceLoader.GetGraph("option/bgm_image.png");
+        private int seImage = ResourceLoader.GetGraph("option/se_image.png");
+        private int back = ResourceLoader.GetGraph("option/back.png");
+        private int cursor = ResourceLoader.GetGraph("option/cursor.png");
 
         public SceneOption(Game game) : base(game)
         { }
@@ -129,34 +133,35 @@ namespace Giraffe
         public override void Draw()
         {
             DX.DrawGraph(0, 0, bg);
-            //背景
+            DX.DrawGraph(0, 0, dark);
+            DX.DrawRotaGraph(0, fixedPosY[0], 1, 0, bgmImage);
             //BGMの文字
             //SEの文字
             //戻るの文字
             //カーソル
             //オン オフの文字を明るいのと暗いのを2種類
 
-            DX.DrawRotaGraph(cursorPosX, cursorPosY, 1, 0,cursor);
-            if (Sound.playOn)
-            {
-                DX.DrawRotaGraph(fixedPosX[0], fixedPosY[0], 1, 0, ResourceLoader.GetGraph("on" + 1 + ".png"));
-                DX.DrawRotaGraph(fixedPosX[1], fixedPosY[0], 1, 0, ResourceLoader.GetGraph("off" + 2 + ".png"));
-            }
-            else if (!Sound.playOn)
-            {
-                DX.DrawRotaGraph(fixedPosX[0], fixedPosY[0], 1, 0, ResourceLoader.GetGraph("on" + 2 + ".png"));
-                DX.DrawRotaGraph(fixedPosX[1], fixedPosY[0], 1, 0, ResourceLoader.GetGraph("off" + 1 + ".png"));
-            }
-            if (Game.bgmManager.playOn)
-            {
-                DX.DrawRotaGraph(fixedPosX[0], fixedPosY[1], 1, 0, ResourceLoader.GetGraph("on" + 1 + ".png"));
-                DX.DrawRotaGraph(fixedPosX[1], fixedPosY[1], 1, 0, ResourceLoader.GetGraph("off" + 2 + ".png"));
-            }
-            else if (!Game.bgmManager.playOn)
-            {
-                DX.DrawRotaGraph(fixedPosX[0], fixedPosY[1], 1, 0, ResourceLoader.GetGraph("on" + 2 + ".png"));
-                DX.DrawRotaGraph(fixedPosX[1], fixedPosY[1], 1, 0, ResourceLoader.GetGraph("off" + 1 + ".png"));
-            }
+            //DX.DrawRotaGraph(cursorPosX, cursorPosY, 1, 0,cursor);
+            //if (Sound.playOn)
+            //{
+            //    DX.DrawRotaGraph(fixedPosX[0], fixedPosY[0], 1, 0, ResourceLoader.GetGraph("option/on" + 1 + ".png"));
+            //    DX.DrawRotaGraph(fixedPosX[1], fixedPosY[0], 1, 0, ResourceLoader.GetGraph("option/off" + 2 + ".png"));
+            //}
+            //else if (!Sound.playOn)
+            //{
+            //    DX.DrawRotaGraph(fixedPosX[0], fixedPosY[0], 1, 0, ResourceLoader.GetGraph("option/on" + 2 + ".png"));
+            //    DX.DrawRotaGraph(fixedPosX[1], fixedPosY[0], 1, 0, ResourceLoader.GetGraph("option/off" + 1 + ".png"));
+            //}
+            //if (Game.bgmManager.playOn)
+            //{
+            //    DX.DrawRotaGraph(fixedPosX[0], fixedPosY[1], 1, 0, ResourceLoader.GetGraph("option/on" + 1 + ".png"));
+            //    DX.DrawRotaGraph(fixedPosX[1], fixedPosY[1], 1, 0, ResourceLoader.GetGraph("option/off" + 2 + ".png"));
+            //}
+            //else if (!Game.bgmManager.playOn)
+            //{
+            //    DX.DrawRotaGraph(fixedPosX[0], fixedPosY[1], 1, 0, ResourceLoader.GetGraph("option/on" + 2 + ".png"));
+            //    DX.DrawRotaGraph(fixedPosX[1], fixedPosY[1], 1, 0, ResourceLoader.GetGraph("option/off" + 1 + ".png"));
+            //}
         }
 
         public override void OnExit()
