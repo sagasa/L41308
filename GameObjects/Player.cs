@@ -55,7 +55,7 @@ namespace Giraffe
 
         private void Jump()
         {
-            vel = vel.SetY(-0.15f);
+            vel = vel.SetY(-0.18f);
             scene.ParticleManagerBottom.Jump(pos);
         }
 
@@ -80,16 +80,24 @@ namespace Giraffe
             if (PlayMap.ScreenSize.X<pos.X)
                 pos = pos.SetX(0);
             //*/
+
+            //画面外の検知
+            if (!((ScenePlay)scene).IsInScreen(pos))
+            {
+                ((ScenePlay)scene).Scroll((((ScenePlay)scene).MapPos + PlayMap.ScreenSize / 2 - pos) * -1);
+            }
+
             pos = ((ScenePlay) scene).GetFixedPos(pos);
+
 
             if (Screen.Width * 0.8f < scene.GetScreenPos(pos).X)
             {
-                float f = (Screen.Width * 0.2f) / (Screen.Width - scene.GetScreenPos(pos).X) *1;
+                float f = (Screen.Width * 0.25f) / (Screen.Width - scene.GetScreenPos(pos).X) *1;
                 ((ScenePlay)scene).Scroll(new Vec2f(0.05f * f, 0));
             }
             if (scene.GetScreenPos(pos).X< Screen.Width * 0.2f)
             {
-                float f = (Screen.Width * 0.2f) / scene.GetScreenPos(pos).X*1;
+                float f = (Screen.Width * 0.25f) / scene.GetScreenPos(pos).X*1f;
                 ((ScenePlay)scene).Scroll(new Vec2f(-0.05f * f, 0));
             }
             //スクロール
@@ -244,7 +252,7 @@ namespace Giraffe
                     if (currentLeaf.score != 0)
                     {
                         ScenePlay.score += currentLeaf.score;
-                        currentLeaf.score = 0;
+                        currentLeaf.RemoveScore();
                        
                         //パーティクル
                         scene.ParticleManagerTop.Glitter(pos);

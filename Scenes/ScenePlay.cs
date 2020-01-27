@@ -64,7 +64,7 @@ namespace Giraffe
 
         public bool IsInScreen(Vec2f pos)
         {
-            return pos.IsInBetween(MapPos, MapPos + PlayMap.ScreenSize);
+            return GetScreenPos(pos).IsInBetween(Vec2f.ZERO, Screen.Size);
         }
 
         private Player player;
