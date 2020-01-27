@@ -62,11 +62,11 @@ namespace Giraffe
                 case Player.PlayerState.Fly:
                 {
                     //テクスチャ座標系で頭の位置を算出
-                    Vec2f body = BodyNeckJoint - CheckAndInvert(StandCenterPos);
+                    Vec2f body = NeckCenter - CheckAndInvert(StandCenterPos);
                     Vec2f neck = HeadNeckJoint - BodyNeckJoint;
                     neck *= NeckExt*0.5f;
                     
-                    Vec2f res = (body+neck).Rotate(GetAngle());
+                    Vec2f res = (neck+body).Rotate(GetAngle());
                     Vec2f head = CheckAndInvert(DangleCenterPos) - HeadNeckJoint;
                     head = head.Rotate(GetAngle() + HeadRotateFix);
                     res += head;

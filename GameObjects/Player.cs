@@ -44,7 +44,7 @@ namespace Giraffe
             _render = new PlayerRender(this);
             _animation = new AnimationManager<PlayerRender>(_render);
             angle = MyMath.Deg2Rad * 0;
-         //   velAngle = RotateSpeed/3;
+            //velAngle = RotateSpeed/3;
         }
 
 
@@ -75,12 +75,12 @@ namespace Giraffe
 
             if (Screen.Width * 0.8f < scene.GetScreenPos(pos).X)
             {
-                float f = scene.GetScreenPos(pos).X / (Screen.Width * 0.8f)*2;
+                float f = (Screen.Width * 0.2f) / (Screen.Width - scene.GetScreenPos(pos).X) *1;
                 ((ScenePlay)scene).Scroll(new Vec2f(0.05f * f, 0));
             }
             if (scene.GetScreenPos(pos).X< Screen.Width * 0.2f)
             {
-                float f = (Screen.Width * 0.2f) / scene.GetScreenPos(pos).X*2;
+                float f = (Screen.Width * 0.2f) / scene.GetScreenPos(pos).X*1;
                 ((ScenePlay)scene).Scroll(new Vec2f(-0.05f * f, 0));
             }
             //スクロール
