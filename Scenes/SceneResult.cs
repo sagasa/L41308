@@ -18,8 +18,7 @@ namespace Giraffe
         private int[] rankBonus = new int[] { 1000, 500, 200 };//タイムボーナス用
         private string timeRank = "d";
         private string scoreRank = "d";
-
-        private bool fadeAction;//フェード対策
+        
         private bool blinkMessage = true;//点滅表示用
         private int Counter = 0;//wait,fade,blinkのカウンター
         private const int fadeTime = 180;
@@ -35,10 +34,13 @@ namespace Giraffe
         private float rankAnimationScale = 1;//アニメーション用
         private bool rankExpansionAnimation = false;
         private const int cursorWidth = 220;
-        private int cursorInterval = 60;
         private int cursorPosX;
-        private int[] fixedPosX;
-        private const int cursorPosY = Screen.Height - 250;
+        private const int cursorPosY = Screen.Height - 200;
+        private readonly int[] fixedPosX = new int[] { 170, Screen.Width - 170 };
+        private int playerPosX;
+        private int playerPosY;
+        private const int playerSpeed = 1;
+
 
         private int bg = ResourceLoader.GetGraph("play_bg.png");
         private int result_bg = ResourceLoader.GetGraph("image_result/result_bg.png");
@@ -57,14 +59,14 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-            fadeAction = true;
             blinkMessage = true;
             Counter = 0;
             rankAnimationScale = 1;
             rankExpansionAnimation = false;
-            
-            fixedPosX = new int[] { cursorInterval, Screen.Width - (cursorWidth + cursorInterval) };
-            cursorPosX = fixedPosX[1];
+
+            cursorPosX = fixedPosX[0];
+            playerPosX = cursorPosX;
+            playerPosY = cursorPosY;
 
             currentScore = Game.currentScore;
             currentTime = Game.currentTime;
@@ -96,84 +98,76 @@ namespace Giraffe
 
         public override void Update()
         {
-            //if(cursor)
-            player.pos = new Vec2f(cursorPosX + cursorWidth / 2, cursorPosY - 40);
+            if (playerPosX != cursorPosX && cursorPosX == fixedPosX[1])
+            {
+                if (playerPosX != fixedPosX[1])
+                {
+                    playerPosX += playerSpeed;
+                }
+            }
+
+            player.pos = new Vec2f(playerPosX, playerPosY - 85);
             player.Update();
             //player.velAngle = 0;
             //player.angle = 0;
             Counter++;
-            if (Counter == fadeTime)
-            {
-                fadeAction = false;
-            }
             if (Counter < fadeTime + 10)
-            {
                 Game.bgmManager.FadeIn("result", 120);
-            }
 
             if (Counter % 60 == 0)
-            {
                 blinkMessage = true;
-            }
             else if (Counter % 60 == 40)
-            {
                 blinkMessage = false;
-            }
             //ランクのアニメーション?に使用
             if (rankExpansionAnimation)
-            {
                 rankAnimationScale += rankAnimationSpeed;
-            }
             else if (!rankExpansionAnimation)
-            {
                 rankAnimationScale -= rankAnimationSpeed;
-            }
             if (rankAnimationScale > 1)
-            {
                 rankExpansionAnimation = false;
-            }
             else if (rankAnimationScale < 0.75)
-            {
                 rankExpansionAnimation = true;
-            }
             
-            if (cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
+            if(!Game.fadeAction)
             {
-                Sound.Play("cursor_SE.mp3");
-                for (int i = 0; i < fixedPosX.Length; i++)
+                if (cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
                 {
-                    if (cursorPosX == fixedPosX[i])
+                    Sound.Play("cursor_SE.mp3");
+                    for (int i = 0; i < fixedPosX.Length; i++)
                     {
-                        cursorPosX = fixedPosX[i - 1];
-                        break;
+                        if (cursorPosX == fixedPosX[i])
+                        {
+                            cursorPosX = fixedPosX[i - 1];
+                            break;
+                        }
                     }
                 }
-            }
-            else if (cursorPosX != fixedPosX[fixedPosX.Length - 1] && Input.RIGHT.IsPush())//カーソルが一番右以外の時→を押されたら、カーソルを一つ右へ
-            {
-                Sound.Play("cursor_SE.mp3");
-                for (int i = 0; i < fixedPosX.Length; i++)
+                else if (cursorPosX != fixedPosX[fixedPosX.Length - 1] && Input.RIGHT.IsPush())//カーソルが一番右以外の時→を押されたら、カーソルを一つ右へ
                 {
-                    if (cursorPosX == fixedPosX[i])
+                    Sound.Play("cursor_SE.mp3");
+                    for (int i = 0; i < fixedPosX.Length; i++)
                     {
-                        cursorPosX = fixedPosX[i + 1];
-                        break;
+                        if (cursorPosX == fixedPosX[i])
+                        {
+                            cursorPosX = fixedPosX[i + 1];
+                            break;
+                        }
                     }
                 }
-            }
-            if (!fadeAction && cursorPosX == fixedPosX[0] && Input.ACTION.IsPush())
-            {
-                Sound.Play("decision_SE.mp3");
-                fadeAction = true;
-                Game.bgmManager.currentScene = "result";
-                Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
-            }
-            else if (!fadeAction && cursorPosX == fixedPosX[1] && Input.ACTION.IsPush())
-            {
-                Sound.Play("decision_SE.mp3");
-                fadeAction = true;
-                Game.bgmManager.currentScene = "result";
-                Game.SetScene(new Title(Game), new Fade(fadeTime, true, true));
+                if (cursorPosX == fixedPosX[0] && Input.ACTION.IsPush())
+                {
+                    Sound.Play("decision_SE.mp3");
+                    Game.fadeAction = true;
+                    Game.bgmManager.currentScene = "result";
+                    Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
+                }
+                else if (cursorPosX == fixedPosX[1] && Input.ACTION.IsPush())
+                {
+                    Sound.Play("decision_SE.mp3");
+                    Game.fadeAction = true;
+                    Game.bgmManager.currentScene = "result";
+                    Game.SetScene(new Title(Game), new Fade(fadeTime, true, true));
+                }
             }
         }
 
@@ -182,9 +176,9 @@ namespace Giraffe
             DX.DrawGraph(0, 0, bg);
             DX.DrawGraph(0, 0, result_bg);
             player.Draw();
-            DX.DrawGraph(cursorPosX - 15, cursorPosY - 12, cursor);
-            DX.DrawGraph(fixedPosX[0], cursorPosY, restart);
-            DX.DrawGraph(fixedPosX[1], cursorPosY, back);
+            DX.DrawRotaGraph(cursorPosX, cursorPosY, 1, 0, cursor);
+            DX.DrawRotaGraph(fixedPosX[0], cursorPosY, 1, 0, restart);
+            DX.DrawRotaGraph(fixedPosX[1], cursorPosY, 1, 0, back);
             //スコア
             int digit = 1000;
             int leftCounter1 = 0;
@@ -295,6 +289,7 @@ namespace Giraffe
 
         public override void OnExit()
         {
+            Game.fadeAction = false;
         }
     }
 }
