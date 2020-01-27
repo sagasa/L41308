@@ -99,37 +99,34 @@ namespace Giraffe
 
         public void CrossFade(string name, int time)
         {
-            if (playOn)
+            if (bgmPos[name].x != bgmPos[currentScene].x + interval)
             {
-                if (bgmPos[name].x != bgmPos[currentScene].x + interval)
-                {
-                    bgmPos[name] = DX.VGet(bgmPos[currentScene].x + interval, 0.0f, 0.0f);
-                    r = ListenerPos.z - bgmPos[currentScene].z;
-                    fadeDegre = 90 / (time / interval * r);
-                }
-                if (ListenerPos.z != 0)
-                {
-                    if (ListenerPos.z > 0)
-                    {
-                        degree += fadeDegre;
-                        radian = (90 + degree) * (float)Math.PI / 180;
-                        ListenerPos.z = r * (float)Math.Sin(radian) + bgmPos[currentScene].z;
-                    }
-                    if (ListenerPos.z < 0)
-                        ListenerPos.z = 0;
-                }
-                if (ListenerPos.x < bgmPos[name].x)
-                {
-                    ListenerPos.x += interval / time;
-                    DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
-                }
-                else if (ListenerPos.x > bgmPos[name].x)
-                {
-                    ListenerPos.x = bgmPos[name].x;
-                }
-                PlayBgm(currentScene);
-                PlayBgm(name);
+                bgmPos[name] = DX.VGet(bgmPos[currentScene].x + interval, 0.0f, 0.0f);
+                r = ListenerPos.z - bgmPos[currentScene].z;
+                fadeDegre = 90 / (time / interval * r);
             }
+            if (ListenerPos.z != 0)
+            {
+                if (ListenerPos.z > 0)
+                {
+                    degree += fadeDegre;
+                    radian = (90 + degree) * (float)Math.PI / 180;
+                    ListenerPos.z = r * (float)Math.Sin(radian) + bgmPos[currentScene].z;
+                }
+                if (ListenerPos.z < 0)
+                    ListenerPos.z = 0;
+            }
+            if (ListenerPos.x < bgmPos[name].x)
+            {
+                ListenerPos.x += interval / time;
+                DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+            }
+            else if (ListenerPos.x > bgmPos[name].x)
+            {
+                ListenerPos.x = bgmPos[name].x;
+            }
+            PlayBgm(currentScene);
+            PlayBgm(name);
         }
 
         //void BgmMove(string name)//検証用
@@ -141,19 +138,27 @@ namespace Giraffe
 
         void PlayBgm(string name)
         {
-            //BGMの当たり判定、斜め移動してないのでとりあえず四角形で計算
-            if (!CheckPlayBgm(name) &&
-                bgmPos[name].x - bgmDis - 5 <= ListenerPos.x && ListenerPos.x <= bgmPos[name].x + bgmDis + 5 &&
-                bgmPos[name].z - bgmDis - 5 <= ListenerPos.z && ListenerPos.z <= bgmPos[name].z + bgmDis + 5)//再生してない、範囲内の時
+            if (playOn)
             {
-                bgmMap[name] = ResourceLoader.GetSound3D(name + "_BGM.wav");//読み込み
-                DX.Set3DRadiusSoundMem(bgmDis, bgmMap[name]);
-                DX.Set3DPositionSoundMem(bgmPos[name], bgmMap[name]);
-                DX.PlaySoundMem(bgmMap[name], DX.DX_PLAYTYPE_LOOP);
+                //BGMの当たり判定、斜め移動してないのでとりあえず四角形で計算
+                if (!CheckPlayBgm(name) &&
+                    bgmPos[name].x - bgmDis - 5 <= ListenerPos.x && ListenerPos.x <= bgmPos[name].x + bgmDis + 5 &&
+                    bgmPos[name].z - bgmDis - 5 <= ListenerPos.z && ListenerPos.z <= bgmPos[name].z + bgmDis + 5)//再生してない、範囲内の時
+                {
+                    bgmMap[name] = ResourceLoader.GetSound3D(name + "_BGM.wav");//読み込み
+                    DX.Set3DRadiusSoundMem(bgmDis, bgmMap[name]);
+                    DX.Set3DPositionSoundMem(bgmPos[name], bgmMap[name]);
+                    DX.PlaySoundMem(bgmMap[name], DX.DX_PLAYTYPE_LOOP);
+                }
+                else if (CheckPlayBgm(name) &&
+                    (ListenerPos.x <= bgmPos[name].x - bgmDis - 10 || bgmPos[name].x + bgmDis + 10 <= ListenerPos.x ||
+                     ListenerPos.z <= bgmPos[name].z - bgmDis - 10 || bgmPos[name].z + bgmDis + 10 <= ListenerPos.z))//再生中、範囲外の時
+                {
+                    ResourceLoader.RemoveSound(name + "_BGM.wav");//消去
+                    DX.DeleteSoundMem(bgmMap[name]);
+                }
             }
-            else if (CheckPlayBgm(name) &&
-                (ListenerPos.x <= bgmPos[name].x - bgmDis - 10 || bgmPos[name].x + bgmDis + 10 <= ListenerPos.x ||
-                 ListenerPos.z <= bgmPos[name].z - bgmDis - 10 || bgmPos[name].z + bgmDis + 10 <= ListenerPos.z))//再生中、範囲外の時
+            else if (CheckPlayBgm(name))
             {
                 ResourceLoader.RemoveSound(name + "_BGM.wav");//消去
                 DX.DeleteSoundMem(bgmMap[name]);
