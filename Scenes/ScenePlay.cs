@@ -9,7 +9,9 @@ namespace Giraffe
     {
         public static int score = 0;
         int[] time = new int[] { 0, 0, 0 };//分,秒,フレーム
-        
+
+        public bool IsGoal = false;
+
         int goalTimer = 300;
         int fadeTime = 180;
 
@@ -153,7 +155,7 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-            Game.isGoal = false;
+            IsGoal = false;
             time[0] = 0;
             time[1] = 0;
             time[2] = 0;
@@ -162,7 +164,7 @@ namespace Giraffe
 
         public override void Update()
         {
-            if (!Game.isGoal)
+            if (!IsGoal)
             {
                 Game.bgmManager.CrossFade("play", fadeTime);
                 time[2]++;
@@ -179,7 +181,7 @@ namespace Giraffe
                 #if DEBUG
                 if (Input.BACK.IsPush())
                 {
-                    Game.isGoal = true;
+                    IsGoal = true;
                 }
                 #endif
             }
@@ -193,7 +195,7 @@ namespace Giraffe
 
             base.Update();
 
-            if (Game.isGoal)//ゴールにプレイヤーが触れたら
+            if (IsGoal)//ゴールにプレイヤーが触れたら
             {
                 player.pos = player.oldPos;
                 player.velAngle = 0;

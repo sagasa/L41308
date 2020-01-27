@@ -12,7 +12,7 @@ namespace Giraffe
     {
       
         private int image = ResourceLoader.GetGraph("ゴール.png");
-        public Goal(Scene scene,Vec2f vecsf) : base(scene)
+        public Goal(ScenePlay scene,Vec2f vecsf) : base(scene)
         {
             pos = vecsf;
         }
@@ -36,7 +36,7 @@ namespace Giraffe
         {
             if (obj is Player)
             {
-                Game.isGoal = true;
+                ((ScenePlay)scene).IsGoal = true;
             }
             
         }
