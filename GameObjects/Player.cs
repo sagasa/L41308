@@ -55,7 +55,7 @@ namespace Giraffe
 
         private void Jump()
         {
-            vel = vel.SetY(-0.2f);
+            vel = vel.SetY(-0.15f);
             scene.ParticleManagerBottom.Jump(pos);
         }
 
@@ -247,9 +247,9 @@ namespace Giraffe
                         currentLeaf.score = 0;
                        
                         //パーティクル
-                        scene.ParticleManagerBottom.Glitter(pos);
+                        scene.ParticleManagerTop.Glitter(pos);
                         scene.ParticleManagerBottom.Swaying2(pos);
-                        scene.ParticleManagerBottom.GetPoint(pos);
+                        scene.ParticleManagerTop.GetPoint(pos);
                     }
                     else
                     {

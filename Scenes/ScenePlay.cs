@@ -104,7 +104,7 @@ namespace Giraffe
         public override void Draw()
         {
             Vec2f pos = GetScreenPos(Vec2f.ZERO);
-            DX.DrawGraph(0, (int)pos.Y, playbg);
+            DX.DrawGraph(0, (int)pos.Y-70, playbg);
             ParticleManagerBottom.Draw();
             gameObjects.ForEach(obj => obj.Draw());
             player.Draw();
