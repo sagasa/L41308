@@ -40,9 +40,9 @@ namespace Giraffe
         private int playerPosX;
         private int playerPosY;
         private bool playerMove = false;
+        private int playerOnPositon = 0;
         private const int playerMoveSpeed = 4;
-
-
+        
         private int bg = ResourceLoader.GetGraph("play_bg.png");
         private int result_bg = ResourceLoader.GetGraph("image_result/result_bg.png");
         private int back = ResourceLoader.GetGraph("image_result/r_back.png");
@@ -65,7 +65,7 @@ namespace Giraffe
             rankAnimationScale = 1;
             rankExpansionAnimation = false;
 
-            cursorPosX = fixedPosX[0];
+            cursorPosX = fixedPosX[1];
             playerPosX = cursorPosX;
             playerPosY = cursorPosY;
 
@@ -99,31 +99,51 @@ namespace Giraffe
 
         public override void Update()
         {
-            if (dummyPlayer.isDunnyRight == false)
-                dummyPlayer.vel = dummyPlayer.vel.SetX(MyMath.Lerp(dummyPlayer.vel.X, -0.01f, 0.1f));
-            else if (dummyPlayer.isDunnyRight == true)
-                dummyPlayer.vel = dummyPlayer.vel.SetX(MyMath.Lerp(dummyPlayer.vel.X, 0.01f, 0.1f));
             if (!playerMove && playerPosX != cursorPosX)
             {
                 playerMove = true;
+                if (playerPosX == fixedPosX[0])
+                    playerOnPositon = fixedPosX[0];
+                else if (playerPosX == fixedPosX[1])
+                    playerOnPositon = fixedPosX[1];
             }
-            else
+            else if ((playerOnPositon != fixedPosX[0] && playerPosX == fixedPosX[0]) ||
+                     (playerOnPositon != fixedPosX[1] && playerPosX == fixedPosX[1]))
                 playerMove = false;
-            if(playerMove)
+
+            if (playerMove)
             {
-                if (cursorPosX == fixedPosX[1])//プレイヤーが戻るにいるとき
+                if (playerOnPositon == fixedPosX[0])
                 {
+                    dummyPlayer.isDunnyRight = true;
                     playerPosX += playerMoveSpeed;
+                    if (playerPosX >= fixedPosX[0] + 50)
+                    {
+                    }
                 }
-                else if(cursorPosX==fixedPosX[0])
+                else if (playerOnPositon == fixedPosX[1])
                 {
+                    dummyPlayer.isDunnyRight = false;
                     playerPosX -= playerMoveSpeed;
                 }
             }
+            else
+            {
+                if (Input.LEFT.IsPush())
+                    dummyPlayer.isDunnyRight = false;
+                else if (Input.RIGHT.IsPush())
+                    dummyPlayer.isDunnyRight = true;
+            }
+
+            if (dummyPlayer.isDunnyRight)
+                dummyPlayer.vel = dummyPlayer.vel.SetX(MyMath.Lerp(dummyPlayer.vel.X, 0.01f, 0.1f));
+            else
+                dummyPlayer.vel = dummyPlayer.vel.SetX(MyMath.Lerp(dummyPlayer.vel.X, -0.01f, 0.1f));
             dummyPlayer.pos = new Vec2f(playerPosX, playerPosY - 85);
             dummyPlayer.Update();
             //player.velAngle = 0;
             //player.angle = 0;
+
             Counter++;
             if (Counter < fadeTime + 10)
                 Game.bgmManager.FadeIn("result", 120);
@@ -144,14 +164,9 @@ namespace Giraffe
             
             if(!Game.fadeAction)
             {
-                if (cursorPosX == fixedPosX[0] && (Input.LEFT.IsPush() || Input.LEFT.IsHold()))
-                {
-                    dummyPlayer.isDunnyRight = false;
-                }
-                else if (Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
+                if (cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
                 {
                     Sound.Play("cursor_SE.mp3");
-                    dummyPlayer.isDunnyRight = false;
                     for (int i = 0; i < fixedPosX.Length; i++)
                     {
                         if (cursorPosX == fixedPosX[i])
@@ -163,12 +178,14 @@ namespace Giraffe
                 }
                 if (cursorPosX == fixedPosX[fixedPosX.Length - 1] && (Input.RIGHT.IsPush() || Input.RIGHT.IsHold()))
                 {
-                    dummyPlayer.isDunnyRight = true;
+                    if (playerMove)
+                    {
+                        dummyPlayer.isDunnyRight = true;
+                    }
                 }
                 else if (cursorPosX != fixedPosX[fixedPosX.Length - 1] && Input.RIGHT.IsPush())//カーソルが一番右以外の時→を押されたら、カーソルを一つ右へ
                 {
                     Sound.Play("cursor_SE.mp3");
-                    dummyPlayer.isDunnyRight = true;
                     for (int i = 0; i < fixedPosX.Length; i++)
                     {
                         if (cursorPosX == fixedPosX[i])
