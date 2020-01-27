@@ -10,7 +10,7 @@ namespace Giraffe
         public static int score = 0;
         int[] time = new int[] { 0, 0, 0 };//分,秒,フレーム
 
-        public bool IsGoal = false;
+        public bool IsGoal { get; private set; } = false;
 
         int goalTimer = 300;
         int fadeTime = 180;
@@ -104,7 +104,7 @@ namespace Giraffe
         public override void Draw()
         {
             Vec2f pos = GetScreenPos(Vec2f.ZERO);
-            DX.DrawGraph(0, (int)pos.Y, playbg);
+            DX.DrawGraph(0, (int)pos.Y-70, playbg);
             ParticleManagerBottom.Draw();
             gameObjects.ForEach(obj => obj.Draw());
             player.Draw();
@@ -163,6 +163,13 @@ namespace Giraffe
             time[2] = 0;
             score = 0;
         }
+        public void Goal(Vec2f pos)
+        {
+            player.Goal(pos);
+
+            IsGoal = true;
+
+        }
 
         public override void Update()
         {
@@ -180,12 +187,7 @@ namespace Giraffe
                     time[0]++;
                     time[1] = 0;
                 }
-                #if DEBUG
-                if (Input.BACK.IsPush())
-                {
-                    IsGoal = true;
-                }
-                #endif
+               
             }
 
             gameObjects.ForEach(obj=> player.CalcInteract(obj));
@@ -202,7 +204,7 @@ namespace Giraffe
                 //player.pos = player.oldPos;
                 //player.velAngle = 0;
                 //player.angle -= 20;
-                player.Goal(player.pos);
+               
                 if (goalTimer > 240)
                 {
                     Game.bgmManager.FadeOut("play", 30);
@@ -221,6 +223,7 @@ namespace Giraffe
                     Game.SetScene(new SceneResult(Game), new Fade(fadeTime, true, true));
                 }
             }
+            
         }
     }
 }

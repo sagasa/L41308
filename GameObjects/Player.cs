@@ -55,7 +55,7 @@ namespace Giraffe
 
         private void Jump()
         {
-            vel = vel.SetY(-0.2f);
+            vel = vel.SetY(-0.15f);
             scene.ParticleManagerBottom.Jump(pos);
         }
 
