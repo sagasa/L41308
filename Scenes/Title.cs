@@ -17,7 +17,6 @@ namespace Giraffe
         private const float fontScale2 = 0.1f;//タイムボーナス用
 
         private DummyPlayer Dummy;
-        public List<GameObject> gameObjects = new List<GameObject>();
         private bool fadeAction = false;
         private int fadeTime = 120;
         private int fadeCounter = 0;
@@ -80,16 +79,15 @@ namespace Giraffe
 
 
                         int digit = 1000;
-                        int leftCounter1 = 0;
-                        int leftCounter2 = 0;
+                        int leftCounter= 0;
                         for (int i = 0; i < 4; i++)
                         {
                             for (int j = 0; j < 10; j++)
                             {
                                 if (j == bestscore1 / digit % 10 && bestscore1 / digit != 0)
                                 {
-                                    DX.DrawRotaGraph(frameX + fontInterval * leftCounter2 + 120, 470, fontScale1, 0, ResourceLoader.GetGraph("image_select/mozi_" + j + ".png"));
-                                    leftCounter2++;
+                                    DX.DrawRotaGraph(frameX + fontInterval * leftCounter + 120, 470, fontScale1, 0, ResourceLoader.GetGraph("image_select/mozi_" + j + ".png"));
+                                    leftCounter++;
                                 }
 
                             }
@@ -102,20 +100,20 @@ namespace Giraffe
                             {
                                 if (j == bestTime1[0] / digit % 10 && (bestTime1[0] / digit != 0 || digit == 1))//ベストタイム,分
                                 {
-                                    DX.DrawRotaGraph(frameX + fontInterval * leftCounter2, 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
-                                    leftCounter2++;
+                                    DX.DrawRotaGraph(frameX + fontInterval * leftCounter, 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                                    leftCounter++;
                                 }
                             }
                             for (int j = 0; j < 10; j++)
                             {
                                 if (j == bestTime1[1] / digit % 10)
                                 {
-                                    DX.DrawRotaGraph(frameX + fontInterval * (2 + leftCounter2), 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                                    DX.DrawRotaGraph(frameX + fontInterval * (2 + leftCounter), 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
                                 }
                             }
                             digit /= 10;
                         }
-                        DX.DrawRotaGraph(200 + fontInterval * leftCounter2, 534, 0.2, 0, coron);
+                        DX.DrawRotaGraph(200 + fontInterval * leftCounter, 534, 0.2, 0, coron);
                     }
                 }
                 
