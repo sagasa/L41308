@@ -38,10 +38,10 @@ namespace SAGASALib
         public static void Update()
         {
             int time = GetTimeMills();
+            int pad = DX.GetJoypadInputState(DX.DX_INPUT_PAD1);
             binds.ForEach(bind =>
             {
                 bind.lastKey = bind.nowKey;
-                int pad = DX.GetJoypadInputState(DX.DX_INPUT_PAD1);
                 bind.nowKey = DX.CheckHitKey(bind.keyCode) != 0 || (pad & bind.padMask) != 0;
                 
                 if (bind.nowKey)
