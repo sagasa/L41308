@@ -12,10 +12,43 @@ namespace Giraffe
         
         int goalTimer = 300;
         int fadeTime = 180;
+
+        //ビューポートの座標を移動
+        public void Scroll(Vec2f vec)
+        {
+            MapPos += vec;
+            MapPos = GetFixedPos(MapPos);
+        }
         //Map座標からScreen座標へ変換する
         public override Vec2f GetScreenPos(Vec2f mapPos)
         {
-            return GetFixedPos(mapPos - MapPos) * PlayMap.CellSize;
+            //範囲内に
+            mapPos = GetFixedPos(mapPos);
+
+            //スクリーンの中心
+            Vec2f screenCenter = MapPos + PlayMap.ScreenSize / 2;
+            //スクリーンの中心の反対側のMap座標
+            Vec2f inversionPos = Map.MapSize.X / 2 < screenCenter.X ? 
+                screenCenter.SetX(screenCenter.X - Map.MapSize.X / 2):
+                screenCenter.SetX(screenCenter.X + Map.MapSize.X / 2);
+
+            //補完部分
+            if (screenCenter.X < Map.MapSize.X / 2)
+            {
+                //スクリーンの中心がMap座標の中央より左側
+                //補完対象なら補完
+                if (inversionPos.X < mapPos.X)
+                    mapPos = mapPos.SetX(mapPos.X-Map.MapSize.X);
+            }
+            else
+            {
+                //スクリーンの中心がMap座標の中央より右側
+                //補完対象なら補完
+                if (mapPos.X < inversionPos.X)
+                    mapPos = mapPos.SetX(mapPos.X + Map.MapSize.X);
+            }
+
+            return (mapPos - MapPos) * PlayMap.CellSize;
         }
 
         public Vec2f GetFixedPos(Vec2f pos)
@@ -48,10 +81,10 @@ namespace Giraffe
         
         public PlayMap Map { get; private set; }
          
-        //表示中の領域の左上のMap座標
-        public Vec2f MapPos;
+        //表示中の領域の左上のMap座標 常にMap座標の範囲内
+        public Vec2f MapPos { get; private set; }
 
-        
+
 
         public List<GameObject> gameObjects=new List<GameObject>();
 
