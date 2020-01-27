@@ -80,7 +80,7 @@ namespace Giraffe
             "十字キーの上下を押すとキリンの首が","長くなったり縮んだりします",//首伸び縮み,12,13
             "うまく首の長さを調節して、","うまく木の枝を飛び移りましょう",//まとめ,14
             "※これにて操作説明のチュートリアルは終了です",//画面終了,15
-            "チュートリアル画面トップへ戻ります",//戻る,16
+            "ステージセレクト画面に移ります",//戻る,16
             "それではやってみましょう",//宣告,17
             "OK!",//OK!,18
             "操作ゲージ",//やってみよう,19
@@ -326,6 +326,7 @@ namespace Giraffe
                     if (CommentTime <= 60 || CommentTime == 120)
                     {
                         DX.DrawString(100, 60, SousaText[16], black);
+                        DX.DrawString(100, 90, SousaText[17], black);
                     }
                     if (CommentTime == 120)
                     {
@@ -516,7 +517,7 @@ namespace Giraffe
                 {
                     if (Input.UP.IsHold() || Input.DOWN.IsHold())
                     {
-                        SousaCount += 1;
+                        SousaCount += 4;
                     }
 
                 }
@@ -525,7 +526,10 @@ namespace Giraffe
                     CommentTime--;
                     if (CommentTime <= 0)
                     {
+                        Game.bgmManager.currentScene = "tutorial";
+                        Game.SetScene(new Title(Game));
                         Tutorialcount = 0;
+                        Title.stageCount += 1;
                         y = 502;
                     }
                 }
