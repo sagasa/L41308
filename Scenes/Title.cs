@@ -220,6 +220,15 @@ namespace Giraffe
                         stageCount -= 1;
                     }
                 }
+                if(Dummy.isDunnyRight==false)
+                {
+                    Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, -Spin, 0.1f));
+                   
+                }
+                if(Dummy.isDunnyRight==true)
+                {
+                    Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, Spin, 0.1f));
+                }
                
                 for (int i = 0; i < treeFixedPos.Length; i++)
                 {

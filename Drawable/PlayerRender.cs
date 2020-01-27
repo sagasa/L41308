@@ -103,7 +103,6 @@ namespace Giraffe
         {
             return 0 == Target.velAngle ? Target.vel.X < 0 : 0 < Target.velAngle;
         }
-
         
         private Vec2f CheckAndInvert(Vec2f vec)
         {
