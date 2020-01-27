@@ -196,7 +196,7 @@ namespace Giraffe
                 {
                     isRight = true;
                     isLeft = false;
-                   
+                    Dummy.isDunnyRight = true;
                     if(stageCount>6)
                     {
                         stageCount += 0;
@@ -210,6 +210,7 @@ namespace Giraffe
                 {
                     isLeft = true;
                     isRight = false;
+                    Dummy.isDunnyRight = false;
                     if (stageCount < 2)
                     {
                         stageCount -= 0;
