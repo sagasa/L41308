@@ -66,6 +66,7 @@ namespace Giraffe
             angle = 0;
             vel = Vec2f.ZERO;
             velAngle = 0;
+            _render.State = PlayerState.Stand;
         }
         //Mapの1番下(地上)にいるか
         public bool IsOnGround() => GetMap().MapSize.Y <= pos.Y+StandOffset;
