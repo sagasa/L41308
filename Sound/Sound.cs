@@ -32,5 +32,13 @@ namespace Giraffe
         {
             DX.StopSoundMem(ResourceLoader.GetSound(handle));
         }
+
+
+        public static bool CheckPlaySound(string handle)
+        {
+            if (DX.CheckSoundMem(ResourceLoader.GetSound(handle)) == 1)
+                return true;
+            return false;
+        }
     }
 }

@@ -241,7 +241,8 @@ namespace Giraffe
                         {
                             if (treebgPos == treeFixedPos[i])
                             {
-                                Sound.Loop("step_SE.mp3");
+                                if (!Sound.CheckPlaySound("step_SE.mp3"))
+                                    Sound.Loop("step_SE.mp3");
                                 treebgPos -= treebgMoveWidth;
                                 UIpos -= treebgMoveWidth;
                                 break;
@@ -254,7 +255,8 @@ namespace Giraffe
                         {
                             if (treebgPos == treeFixedPos[i])
                             {
-                                Sound.Loop("step_SE.mp3");
+                                if (!Sound.CheckPlaySound("step_SE.mp3"))
+                                    Sound.Loop("step_SE.mp3");
                                 treebgPos += treebgMoveWidth;
                                 UIpos += treebgMoveWidth;
                                 break;
@@ -288,9 +290,7 @@ namespace Giraffe
                         }
                     }
                     if (!treeMove)
-                    {
                         Sound.Stop("step_SE.mp3");
-                    }
 
                     if (Input.BACK.IsPush())
                     {
@@ -298,7 +298,7 @@ namespace Giraffe
                         Sound.Play("cancel_SE.mp3");
                         stageWaitTime = 60;
                     }
-
+                    
                     stageWaitTime--;
                     if (Input.ACTION.IsPush() && stageWaitTime <= 0 && Tutolal.Tutorialcount == 0)
                     {

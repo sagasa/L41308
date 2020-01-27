@@ -112,6 +112,7 @@ namespace Giraffe
                 {
                     if (cursorPosY == fixedPosY[fixedPosY.Length - 1])
                     {
+                        Sound.Play("decision_SE.mp3");
                         Game.fadeAction = true;
                         Game.SetScene(new Title(Game), new Fade(30, true, true));
                     }

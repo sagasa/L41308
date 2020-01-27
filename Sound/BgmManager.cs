@@ -170,8 +170,7 @@ namespace Giraffe
         {
             if(DX.CheckSoundMem(bgmMap[name])==1)
                 return true;
-            else
-                return false;
+            return false;
         }
 
         //public void Remove(string name)//強制停止用
