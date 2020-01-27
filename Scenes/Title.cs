@@ -29,8 +29,8 @@ namespace Giraffe
         private const int treebgMoveWidth = Screen.Width / 80;
         private bool treeMove = false;
         private int UIpos = 0;
-        private int cursorPos = 502;
-        private int[] cursorFixedPos = new int[] { 502, 617 };
+        private int cursorPos;
+        private int[] cursorFixedPos = new int[] { 450, 550, 650 };
         int[]  bestTime1 =new int[] {0,0,0};
         int bestscore1 = 0;
         
@@ -42,6 +42,7 @@ namespace Giraffe
         private int titlebg = ResourceLoader.GetGraph("title_bg.png");
         private int select1 = ResourceLoader.GetGraph("select_1.png");
         private int select2 = ResourceLoader.GetGraph("select_2.png");
+        private int option = ResourceLoader.GetGraph("option.png");
         private int icon = ResourceLoader.GetGraph("キリンアイコン.png");
         private int treebg = ResourceLoader.GetGraph("image_select/select_bg.png");
         private int stagename=ResourceLoader.GetGraph("image_select/select_UI.png");
@@ -58,8 +59,9 @@ namespace Giraffe
             if (stageCount == 0)
             {
                 DX.DrawGraph(0, 0, titlebg);
-                DX.DrawGraph(135, 515, select1);
-                DX.DrawGraph(135, 630, select2);
+                DX.DrawGraph(135, cursorFixedPos[0], select1);
+                DX.DrawGraph(135, cursorFixedPos[1], select2);
+                DX.DrawGraph(135, cursorFixedPos[2], option);
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, head);
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, horn);
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, eye);
@@ -122,6 +124,7 @@ namespace Giraffe
         
         public override void OnLoad()
         {
+            cursorPos = cursorFixedPos[0];
             fadeCounter = 0;
             fadeAction = true;
             bestTime1 = Game.bestTime;
@@ -176,15 +179,21 @@ namespace Giraffe
                 if (cursorPos == cursorFixedPos[0] && Input.ACTION.IsPush() && !fadeAction)
                 {
                     Sound.Play("decision_SE.mp3");
-                    stageCount +=2;
+                    stageCount += 2;
                 }
                 else if (cursorPos == cursorFixedPos[1] && Input.ACTION.IsPush() && !fadeAction)
                 {
-
                     Sound.Play("decision_SE.mp3");
                     Game.bgmManager.currentScene = "title";
                     fadeAction = true;
                     Game.SetScene(new Tutolal(Game), new Fade(60, true, true));
+                }
+                else if (cursorPos == cursorFixedPos[2] && Input.ACTION.IsPush() && !fadeAction)
+                {
+                    Sound.Play("decision_SE.mp3");
+                    Game.bgmManager.currentScene = "title";
+                    fadeAction = true;
+                    Game.SetScene(new SceneOption(Game), new Fade(60, true, true));
                 }
             }
             if (stageCount >=1)
@@ -220,16 +229,17 @@ namespace Giraffe
                         stageCount -= 1;
                     }
                 }
-                if(Dummy.isDunnyRight==false)
+
+                if (Dummy.isDunnyRight == false)
                 {
                     Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, -Spin, 0.1f));
-                   
+
                 }
-                if(Dummy.isDunnyRight==true)
+                if (Dummy.isDunnyRight == true)
                 {
                     Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, Spin, 0.1f));
                 }
-               
+
                 for (int i = 0; i < treeFixedPos.Length; i++)
                 {
                     if (Input.RIGHT.IsPush())//一番右側以外にいるとき、→が押されたら右へ
