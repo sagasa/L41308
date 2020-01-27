@@ -2,6 +2,7 @@
 {
     public class Settings
     {
-        
+        public bool bgmPlayOn = true;
+        public bool sePlayOn = true;
     }
 }

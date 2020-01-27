@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DxLibDLL;
 using SAGASALib;
+using Giraffe.Saves;
 
 namespace Giraffe
 {
@@ -16,6 +13,8 @@ namespace Giraffe
         private int[] fixedPosY = new int[] { 250, 450, 650 };
         private bool[] playOn = new bool[] { true, true };
         private bool bgmReset = false;
+
+        private const string SETTINGS = "settings";
 
         private int bg = ResourceLoader.GetGraph("title_bg.png");
         private int dark = ResourceLoader.GetGraph("option/dark25.png");
@@ -184,6 +183,7 @@ namespace Giraffe
 
         public override void OnExit()
         {
+            //settings = SaveManager.Save<Settings>(SETTINGS);
         }
     }
 }

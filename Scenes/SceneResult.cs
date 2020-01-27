@@ -1,6 +1,7 @@
 ﻿using System;
 using DxLibDLL;
 using SAGASALib;
+using Giraffe.Saves;
 
 namespace Giraffe
 {
@@ -56,12 +57,6 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-            //検証用
-            //Game.currentScore = 300;
-            //Game.bestScore = 700;
-            //Game.currentTime = new int[] { 1, 23, 0 };
-            //Game.bestTime = new int[] { 12, 34, 0 };
-
             fadeAction = true;
             blinkMessage = true;
             Counter = 0;

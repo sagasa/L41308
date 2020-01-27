@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using DxLibDLL;
 using SAGASALib;
+using Giraffe.Saves;
 
 namespace Giraffe
 {
@@ -20,8 +21,14 @@ namespace Giraffe
         public static int currentScore = 0;//現在のスコア
         public static int[] currentTime = new int[] { 0, 0, 0 };//現在のタイム
 
+        public Settings settings;
+
+        private const string SETTINGS = "settings";
+
         public void Init()
         {
+            settings = SaveManager.Load<Settings>(SETTINGS);
+
             DX.SetBackgroundColor(200, 200, 200);
             bgmManager.Load();
             SetScene(new Title(this));
