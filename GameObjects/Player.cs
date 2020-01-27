@@ -214,7 +214,8 @@ namespace Giraffe
                     _render.State = _state;
                     //地上歩行アニメーション
                     _animation.Start(Animations.StandAngle);
-                    _animation.StartNext(Animations.StandAngle,Animations.WalkGround);
+                    _animation.StartNext(Animations.StandAngle,Animations.IdleAnimation);
+                    _animation.Start(Animations.WalkGround);
 
                     _animation.Start(Animations.MouthClose);
                 }
@@ -269,6 +270,7 @@ namespace Giraffe
                     //ぶら下がり時の姿勢変更
                     _animation.Start(Animations.MouthClose);
                     _animation.Stop(Animations.WalkGround);
+                    _animation.Stop(Animations.IdleAnimation);
                     _animation.Start(Animations.DongleAngle);
                 }
             }
