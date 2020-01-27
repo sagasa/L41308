@@ -31,7 +31,7 @@ namespace Giraffe
         // private int image = ResourceLoader.GetGraph("player.png");
         public enum PlayerState
         {
-            Fly,Stand,Dongle
+            Fly,Stand,Dongle,Stop
         }
 
         private PlayerState _state = PlayerState.Fly;
@@ -57,7 +57,16 @@ namespace Giraffe
         {
             vel = vel.SetY(-0.2f);
             scene.ParticleManager.Jump(pos);
-        } 
+        }
+
+        public void Goal(Vec2f pos)
+        {
+            _state = PlayerState.Stop;
+            this.pos=pos;
+            angle = 0;
+            vel = Vec2f.ZERO;
+            velAngle = 0;
+        }
         //Mapの1番下(地上)にいるか
         public bool IsOnGround() => GetMap().MapSize.Y <= pos.Y+StandOffset;
 
@@ -108,13 +117,17 @@ namespace Giraffe
             return;
             //*/
             //首の伸縮
-            if (Input.UP.IsHold()&&_render.NeckExt<2f)
+            if (_state != PlayerState.Stop)
             {
-                _render.NeckExt += 0.1f;
-            }
-            if (Input.DOWN.IsHold() && 0.85f<_render.NeckExt)
-            {
-                _render.NeckExt -= 0.1f;
+                if (Input.UP.IsHold() && _render.NeckExt < 2f)
+                {
+                    _render.NeckExt += 0.1f;
+                }
+
+                if (Input.DOWN.IsHold() && 0.85f < _render.NeckExt)
+                {
+                    _render.NeckExt -= 0.1f;
+                }
             }
 
             //操作系+状態変更
