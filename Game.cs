@@ -13,8 +13,6 @@ namespace Giraffe
 
         public BgmManager bgmManager = new BgmManager();
 
-        public static bool isGoal = false;//ゴールする判定
-
         public static bool ShowCollision = true;
         
         public static int bestScore = 700;//ベストスコア,ハイスコア

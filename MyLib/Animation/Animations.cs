@@ -21,18 +21,6 @@ namespace SAGASALib
                 //歩く速度定数
                 const int speed = 2;
                 render.LegProgress += Math.Abs(render.Target.vel.X * speed);
-                render.TailProgress += Math.Abs(animation.Delta);
-
-                if (animation.Progress < 0.5f )
-                {
-                    render.HeadRotate += MyMath.Deg2Rad * 1;
-                    render.NeckRotate -= MyMath.Deg2Rad * 1;
-                }
-                else
-                {
-                    render.HeadRotate -= MyMath.Deg2Rad * 1;
-                    render.NeckRotate += MyMath.Deg2Rad * 1;
-                }
 
                 // Console.WriteLine(render.TailProgress);
                 if (1f < render.LegProgress)
@@ -40,8 +28,16 @@ namespace SAGASALib
                 if (1f < render.TailProgress)
                     render.TailProgress = 0;
             },null,true);
+        //首を動かす
+        public static readonly AnimationEntry<PlayerRender> IdleAnimation = new AnimationEntry<PlayerRender>(100,
+            (render, animation) =>
+            {
+                render.TailProgress += Math.Abs(animation.Delta);
+                
+                if (1f < render.TailProgress)
+                    render.TailProgress = 0;
+            }, null, true);
 
-        
         //首と頭の角度を0に
         public static readonly AnimationEntry<PlayerRender> DefaultAngle = SetRotate(0,0,30);
 

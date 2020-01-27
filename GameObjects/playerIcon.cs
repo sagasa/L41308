@@ -14,7 +14,7 @@ namespace Giraffe
         int iconpos;
         private int image = ResourceLoader.GetGraph("キリンアイコン.png");
         
-        public playerIcon(Scene scene) : base(scene)
+        public playerIcon(ScenePlay scene) : base(scene)
         {
 
 
@@ -28,7 +28,7 @@ namespace Giraffe
         public override void Update()
         {
             iconpos = 460;
-            if (!Game.isGoal)
+            if (!((ScenePlay)scene).IsGoal)
             {
                 pos = new Vec2f(0, -IconPos);
             }

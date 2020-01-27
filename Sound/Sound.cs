@@ -23,6 +23,11 @@ namespace Giraffe
             }
         }
         
+        public static void DefinitelyPlay(string handle)//絶対に鳴らす
+        {
+            DX.PlaySoundMem(ResourceLoader.GetSound(handle), DX.DX_PLAYTYPE_BACK);
+        }
+
         public static void Stop(string handle)
         {
             DX.StopSoundMem(ResourceLoader.GetSound(handle));

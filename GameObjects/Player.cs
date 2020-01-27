@@ -31,7 +31,7 @@ namespace Giraffe
         // private int image = ResourceLoader.GetGraph("player.png");
         public enum PlayerState
         {
-            Fly,Stand,Dongle
+            Fly,Stand,Dongle,Stop
         }
 
         private PlayerState _state = PlayerState.Fly;
@@ -44,7 +44,7 @@ namespace Giraffe
             _render = new PlayerRender(this);
             _animation = new AnimationManager<PlayerRender>(_render);
             angle = MyMath.Deg2Rad * 0;
-         //   velAngle = RotateSpeed/3;
+            //velAngle = RotateSpeed/3;
         }
 
 
@@ -57,7 +57,16 @@ namespace Giraffe
         {
             vel = vel.SetY(-0.2f);
             scene.ParticleManager.Jump(pos);
-        } 
+        }
+
+        public void Goal(Vec2f pos)
+        {
+            _state = PlayerState.Stop;
+            this.pos=pos;
+            angle = 0;
+            vel = Vec2f.ZERO;
+            velAngle = 0;
+        }
         //Mapの1番下(地上)にいるか
         public bool IsOnGround() => GetMap().MapSize.Y <= pos.Y+StandOffset;
 
@@ -75,24 +84,24 @@ namespace Giraffe
 
             if (Screen.Width * 0.8f < scene.GetScreenPos(pos).X)
             {
-                float f = scene.GetScreenPos(pos).X / (Screen.Width * 0.8f)*2;
-                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetX(((ScenePlay)scene).MapPos.X + 0.05f * f);
+                float f = (Screen.Width * 0.2f) / (Screen.Width - scene.GetScreenPos(pos).X) *1;
+                ((ScenePlay)scene).Scroll(new Vec2f(0.05f * f, 0));
             }
             if (scene.GetScreenPos(pos).X< Screen.Width * 0.2f)
             {
-                float f = (Screen.Width * 0.2f) / scene.GetScreenPos(pos).X*2;
-                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetX(((ScenePlay)scene).MapPos.X - 0.05f * f);
+                float f = (Screen.Width * 0.2f) / scene.GetScreenPos(pos).X*1;
+                ((ScenePlay)scene).Scroll(new Vec2f(-0.05f * f, 0));
             }
             //スクロール
             if (scene.GetScreenPos(pos).Y < Screen.Height * 0.4f)
             {
                 float f = (Screen.Height * 0.4f) / scene.GetScreenPos(pos).Y;
-                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y - 0.03f* f);
+                ((ScenePlay)scene).Scroll(new Vec2f(0, -0.03f * f));
             }
             if (Screen.Height * 0.8f < scene.GetScreenPos(pos).Y)
             {
                 float f = scene.GetScreenPos(pos).Y / (Screen.Height * 0.8f)*2;
-                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y + 0.1f* f);
+                ((ScenePlay)scene).Scroll(new Vec2f(0, 0.1f * f));
             }
 
 
@@ -108,13 +117,17 @@ namespace Giraffe
             return;
             //*/
             //首の伸縮
-            if (Input.UP.IsHold()&&_render.NeckExt<2f)
+            if (_state != PlayerState.Stop)
             {
-                _render.NeckExt += 0.1f;
-            }
-            if (Input.DOWN.IsHold() && 0.85f<_render.NeckExt)
-            {
-                _render.NeckExt -= 0.1f;
+                if (Input.UP.IsHold() && _render.NeckExt < 2f)
+                {
+                    _render.NeckExt += 0.1f;
+                }
+
+                if (Input.DOWN.IsHold() && 0.85f < _render.NeckExt)
+                {
+                    _render.NeckExt -= 0.1f;
+                }
             }
 
             //操作系+状態変更
@@ -201,7 +214,8 @@ namespace Giraffe
                     _render.State = _state;
                     //地上歩行アニメーション
                     _animation.Start(Animations.StandAngle);
-                    _animation.StartNext(Animations.StandAngle,Animations.WalkGround);
+                    _animation.StartNext(Animations.StandAngle,Animations.IdleAnimation);
+                    _animation.Start(Animations.WalkGround);
 
                     _animation.Start(Animations.MouthClose);
                 }
@@ -256,6 +270,7 @@ namespace Giraffe
                     //ぶら下がり時の姿勢変更
                     _animation.Start(Animations.MouthClose);
                     _animation.Stop(Animations.WalkGround);
+                    _animation.Stop(Animations.IdleAnimation);
                     _animation.Start(Animations.DongleAngle);
                 }
             }
