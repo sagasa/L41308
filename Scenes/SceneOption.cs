@@ -15,8 +15,8 @@ namespace Giraffe
         private int[] fixedPosX = new int[] { 100, 400 };
         private int[] fixedPosY = new int[] { 100, 200, 300 };
         private bool[] playOn = new bool[] { true, true };
-        //private Dictionary<int, bool> PlayOn = new Dictionary<int, bool>();
-
+        
+        private int bg = ResourceLoader.GetGraph("play_bg.png");
         private int cursor = ResourceLoader.GetGraph("cursor.png");
 
         public SceneOption(Game game) : base(game)
@@ -97,7 +97,7 @@ namespace Giraffe
             }
             if (Input.ACTION.IsPush())
             {
-                if (cursorPosY == fixedPosX[fixedPosY.Length - 1])
+                if (cursorPosY == fixedPosY[fixedPosY.Length - 1])
                     Game.SetScene(new Title(Game), new Fade(120, true, true));
                 else
                 {
@@ -128,6 +128,7 @@ namespace Giraffe
 
         public override void Draw()
         {
+            DX.DrawGraph(0, 0, bg);
             //背景
             //BGMの文字
             //SEの文字
