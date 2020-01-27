@@ -10,7 +10,8 @@ namespace Giraffe
         private int scoreLeafImage = ResourceLoader.GetGraph("s_leaf4.png");
         //private int branch = ResourceLoader.GetGraph("branch2.png");
         private readonly int[] leafImages = ResourceLoader.GetGraph("leaf.png", 5);
-        public readonly AnimationManager<Leaf> AnimationManager;
+        private readonly int[] scoreLeafImages = ResourceLoader.GetGraph("s_leafes_1.png", 5);
+        public readonly AnimationManager<Leaf> AnimationManager; 
 
         public int score { get; private set; }
 
@@ -61,7 +62,7 @@ namespace Giraffe
               //  scene.ParticleManagerTop.Glitter(pos);
 
                 int index = MyMath.Clamp((int)(screenPos.X / Screen.Width * 5), 0, leafImages.Length - 1);
-                DX.DrawGraphF(screenPos.X, screenPos.Y, scoreLeafImage);
+                DX.DrawGraphF(screenPos.X, screenPos.Y, scoreLeafImages[index]);
                 //DX.DrawGraph(screenPos.X, screenPos.Y, branch);
                 base.Draw();
             }
