@@ -21,7 +21,7 @@ namespace Giraffe
         
         private bool blinkMessage = true;//点滅表示用
         private int Counter = 0;//wait,fade,blinkのカウンター
-        private const int fadeTime = 180;
+        private const int fadeTime = 120;
         //描画用定数
         private const int frameX = 240;
         private const int frameY = 100;
@@ -39,7 +39,8 @@ namespace Giraffe
         private readonly int[] fixedPosX = new int[] { 170, Screen.Width - 170 };
         private int playerPosX;
         private int playerPosY;
-        private const int playerSpeed = 1;
+        private bool playerMove = false;
+        private const int playerMoveSpeed = 4;
 
 
         private int bg = ResourceLoader.GetGraph("play_bg.png");
@@ -50,11 +51,11 @@ namespace Giraffe
         private int coron = ResourceLoader.GetGraph("image_result/rcolon.png");
         private int newImage = ResourceLoader.GetGraph("image_result/new.png");
 
-        private DummyPlayer player;
+        private DummyPlayer dummyPlayer;
 
         public SceneResult(Game game) : base(game)
         {
-            player = new DummyPlayer(this);
+            dummyPlayer = new DummyPlayer(this);
         }
 
         public override void OnLoad()
@@ -98,16 +99,29 @@ namespace Giraffe
 
         public override void Update()
         {
-            if (playerPosX != cursorPosX && cursorPosX == fixedPosX[1])
+            if (dummyPlayer.isDunnyRight == false)
+                dummyPlayer.vel = dummyPlayer.vel.SetX(MyMath.Lerp(dummyPlayer.vel.X, -0.01f, 0.1f));
+            else if (dummyPlayer.isDunnyRight == true)
+                dummyPlayer.vel = dummyPlayer.vel.SetX(MyMath.Lerp(dummyPlayer.vel.X, 0.01f, 0.1f));
+            if (!playerMove && playerPosX != cursorPosX)
             {
-                if (playerPosX != fixedPosX[1])
+                playerMove = true;
+            }
+            else
+                playerMove = false;
+            if(playerMove)
+            {
+                if (cursorPosX == fixedPosX[1])//プレイヤーが戻るにいるとき
                 {
-                    playerPosX += playerSpeed;
+                    playerPosX += playerMoveSpeed;
+                }
+                else if(cursorPosX==fixedPosX[0])
+                {
+                    playerPosX -= playerMoveSpeed;
                 }
             }
-
-            player.pos = new Vec2f(playerPosX, playerPosY - 85);
-            player.Update();
+            dummyPlayer.pos = new Vec2f(playerPosX, playerPosY - 85);
+            dummyPlayer.Update();
             //player.velAngle = 0;
             //player.angle = 0;
             Counter++;
@@ -130,9 +144,14 @@ namespace Giraffe
             
             if(!Game.fadeAction)
             {
-                if (cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
+                if (cursorPosX == fixedPosX[0] && (Input.LEFT.IsPush() || Input.LEFT.IsHold()))
+                {
+                    dummyPlayer.isDunnyRight = false;
+                }
+                else if (Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
                 {
                     Sound.Play("cursor_SE.mp3");
+                    dummyPlayer.isDunnyRight = false;
                     for (int i = 0; i < fixedPosX.Length; i++)
                     {
                         if (cursorPosX == fixedPosX[i])
@@ -142,9 +161,14 @@ namespace Giraffe
                         }
                     }
                 }
+                if (cursorPosX == fixedPosX[fixedPosX.Length - 1] && (Input.RIGHT.IsPush() || Input.RIGHT.IsHold()))
+                {
+                    dummyPlayer.isDunnyRight = true;
+                }
                 else if (cursorPosX != fixedPosX[fixedPosX.Length - 1] && Input.RIGHT.IsPush())//カーソルが一番右以外の時→を押されたら、カーソルを一つ右へ
                 {
                     Sound.Play("cursor_SE.mp3");
+                    dummyPlayer.isDunnyRight = true;
                     for (int i = 0; i < fixedPosX.Length; i++)
                     {
                         if (cursorPosX == fixedPosX[i])
@@ -175,7 +199,7 @@ namespace Giraffe
         {
             DX.DrawGraph(0, 0, bg);
             DX.DrawGraph(0, 0, result_bg);
-            player.Draw();
+            dummyPlayer.Draw();
             DX.DrawRotaGraph(cursorPosX, cursorPosY, 1, 0, cursor);
             DX.DrawRotaGraph(fixedPosX[0], cursorPosY, 1, 0, restart);
             DX.DrawRotaGraph(fixedPosX[1], cursorPosY, 1, 0, back);
