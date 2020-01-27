@@ -95,7 +95,9 @@
     <Compile Include="MyLib\Vec2f.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="ParticleManager.cs" />
+    <Compile Include="Saves\HightScore.cs" />
     <Compile Include="Saves\SaveManager.cs" />
+    <Compile Include="Saves\Settings.cs" />
     <Compile Include="Scenes\SceneOption.cs" />
     <Compile Include="Scenes\SceneResult.cs" />
     <Compile Include="Scenes\Tutorial.cs" />
