@@ -4,17 +4,19 @@ using SAGASALib;
 
 namespace Giraffe
 {
-    //全シーンの基底 初期化はコンストラクタ使って
+    //全シーンの基底 初期化はコンストラクタ使って パーティクルは子クラスで描画を呼んでね
     public abstract class Scene
     {
         public readonly Game Game;
 
-        public readonly ParticleManager ParticleManager;
+        public readonly ParticleManager ParticleManagerBottom;
+        public readonly ParticleManager ParticleManagerTop;
 
         protected Scene(Game game)
         {
             Game = game;
-            ParticleManager = new ParticleManager(this);
+            ParticleManagerBottom = new ParticleManager(this);
+            ParticleManagerTop = new ParticleManager(this);
         }
 
         public virtual Vec2f GetScreenPos(Vec2f pos)
@@ -25,13 +27,12 @@ namespace Giraffe
 
         public virtual void Update()
         {
-            ParticleManager.Update();
+            ParticleManagerBottom.Update();
+            ParticleManagerTop.Update();
         }
 
-        public virtual void Draw()
-        {
-            ParticleManager.Draw();
-        }
+        public abstract void Draw();
+        
 
         public abstract void OnExit();
     }

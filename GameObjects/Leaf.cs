@@ -62,7 +62,7 @@ namespace Giraffe
         public override void OnInteract(GameObject obj, float extend)
         {
             // パーティクル
-            //scene.ParticleManager.Swaying(pos);
+            //scene.ParticleManagerBottom.Swaying(pos);
         }
 
         public override void Update()
