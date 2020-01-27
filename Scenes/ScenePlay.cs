@@ -9,13 +9,48 @@ namespace Giraffe
     {
         public static int score = 0;
         int[] time = new int[] { 0, 0, 0 };//分,秒,フレーム
-        
+
+        public bool IsGoal = false;
+
         int goalTimer = 300;
         int fadeTime = 180;
+
+        //ビューポートの座標を移動
+        public void Scroll(Vec2f vec)
+        {
+            MapPos += vec;
+            MapPos = GetFixedPos(MapPos);
+        }
         //Map座標からScreen座標へ変換する
         public override Vec2f GetScreenPos(Vec2f mapPos)
         {
-            return GetFixedPos(mapPos - MapPos) * PlayMap.CellSize;
+            //範囲内に
+            mapPos = GetFixedPos(mapPos);
+
+            //スクリーンの中心
+            Vec2f screenCenter = MapPos + PlayMap.ScreenSize / 2;
+            //スクリーンの中心の反対側のMap座標
+            Vec2f inversionPos = Map.MapSize.X / 2 < screenCenter.X ? 
+                screenCenter.SetX(screenCenter.X - Map.MapSize.X / 2):
+                screenCenter.SetX(screenCenter.X + Map.MapSize.X / 2);
+
+            //補完部分
+            if (screenCenter.X < Map.MapSize.X / 2)
+            {
+                //スクリーンの中心がMap座標の中央より左側
+                //補完対象なら補完
+                if (inversionPos.X < mapPos.X)
+                    mapPos = mapPos.SetX(mapPos.X-Map.MapSize.X);
+            }
+            else
+            {
+                //スクリーンの中心がMap座標の中央より右側
+                //補完対象なら補完
+                if (mapPos.X < inversionPos.X)
+                    mapPos = mapPos.SetX(mapPos.X + Map.MapSize.X);
+            }
+
+            return (mapPos - MapPos) * PlayMap.CellSize;
         }
 
         public Vec2f GetFixedPos(Vec2f pos)
@@ -48,10 +83,10 @@ namespace Giraffe
         
         public PlayMap Map { get; private set; }
          
-        //表示中の領域の左上のMap座標
-        public Vec2f MapPos;
+        //表示中の領域の左上のMap座標 常にMap座標の範囲内
+        public Vec2f MapPos { get; private set; }
 
-        
+
 
         public List<GameObject> gameObjects=new List<GameObject>();
 
@@ -68,8 +103,8 @@ namespace Giraffe
 
         public override void Draw()
         {
-            //Vec2f pos = GetScreenPos(Vec2f.ZERO);
-            DX.DrawGraph(0, 0, playbg);
+            Vec2f pos = GetScreenPos(Vec2f.ZERO);
+            DX.DrawGraph(0, (int)pos.Y, playbg);
             base.Draw();
             gameObjects.ForEach(obj => obj.Draw());
             player.Draw();
@@ -120,7 +155,7 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-            Game.isGoal = false;
+            IsGoal = false;
             time[0] = 0;
             time[1] = 0;
             time[2] = 0;
@@ -129,7 +164,7 @@ namespace Giraffe
 
         public override void Update()
         {
-            if (!Game.isGoal)
+            if (!IsGoal)
             {
                 Game.bgmManager.CrossFade("play", fadeTime);
                 time[2]++;
@@ -146,7 +181,7 @@ namespace Giraffe
                 #if DEBUG
                 if (Input.BACK.IsPush())
                 {
-                    Game.isGoal = true;
+                    IsGoal = true;
                 }
                 #endif
             }
@@ -160,7 +195,7 @@ namespace Giraffe
 
             base.Update();
 
-            if (Game.isGoal)//ゴールにプレイヤーが触れたら
+            if (IsGoal)//ゴールにプレイヤーが触れたら
             {
                 player.pos = player.oldPos;
                 player.velAngle = 0;

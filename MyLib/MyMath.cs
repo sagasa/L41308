@@ -50,7 +50,7 @@ namespace SAGASALib
             return value;
         }
 
-        public static int Clamp(int value, int max, int min)
+        public static int Clamp(int value, int min, int max)
         {
             if (value < min)
                 return min;

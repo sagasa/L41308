@@ -44,7 +44,7 @@ namespace Giraffe
             _render = new PlayerRender(this);
             _animation = new AnimationManager<PlayerRender>(_render);
             angle = MyMath.Deg2Rad * 0;
-         //   velAngle = RotateSpeed/3;
+            //velAngle = RotateSpeed/3;
         }
 
 
@@ -75,24 +75,24 @@ namespace Giraffe
 
             if (Screen.Width * 0.8f < scene.GetScreenPos(pos).X)
             {
-                float f = scene.GetScreenPos(pos).X / (Screen.Width * 0.8f)*2;
-                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetX(((ScenePlay)scene).MapPos.X + 0.05f * f);
+                float f = (Screen.Width * 0.2f) / (Screen.Width - scene.GetScreenPos(pos).X) *1;
+                ((ScenePlay)scene).Scroll(new Vec2f(0.05f * f, 0));
             }
             if (scene.GetScreenPos(pos).X< Screen.Width * 0.2f)
             {
-                float f = (Screen.Width * 0.2f) / scene.GetScreenPos(pos).X*2;
-                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetX(((ScenePlay)scene).MapPos.X - 0.05f * f);
+                float f = (Screen.Width * 0.2f) / scene.GetScreenPos(pos).X*1;
+                ((ScenePlay)scene).Scroll(new Vec2f(-0.05f * f, 0));
             }
             //スクロール
             if (scene.GetScreenPos(pos).Y < Screen.Height * 0.4f)
             {
                 float f = (Screen.Height * 0.4f) / scene.GetScreenPos(pos).Y;
-                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y - 0.03f* f);
+                ((ScenePlay)scene).Scroll(new Vec2f(0, -0.03f * f));
             }
             if (Screen.Height * 0.8f < scene.GetScreenPos(pos).Y)
             {
                 float f = scene.GetScreenPos(pos).Y / (Screen.Height * 0.8f)*2;
-                ((ScenePlay)scene).MapPos = ((ScenePlay)scene).MapPos.SetY(((ScenePlay)scene).MapPos.Y + 0.1f* f);
+                ((ScenePlay)scene).Scroll(new Vec2f(0, 0.1f * f));
             }
 
 
