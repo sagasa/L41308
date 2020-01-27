@@ -165,7 +165,7 @@ namespace Giraffe
         }
         public void Goal(Vec2f pos)
         {
-            player.Goal(pos);
+            player.Goal(pos/0.705f);
 
             IsGoal = true;
 
