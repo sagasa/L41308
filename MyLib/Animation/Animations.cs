@@ -52,5 +52,14 @@ namespace SAGASALib
             render.NeckRotate += (neck - render.NeckRotate) / (animation.Entry.Life - animation.Time);
         }, null);
 
+
+
+        public static readonly AnimationEntry<Leaf> GliterParticle = new AnimationEntry<Leaf>(60,
+           (render, animation) =>
+           {
+               if (animation.Progress<0.3f)
+                   render.scene.ParticleManagerTop.Glitter2(render.pos+new Vec2f(1f,1f));
+
+           }, null, true);
     }
 }

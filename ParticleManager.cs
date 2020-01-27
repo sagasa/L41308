@@ -23,6 +23,7 @@ namespace Giraffe
 
         private static readonly Vec2f scale = new Vec2f(1,1) / PlayMap.CellSize;
 
+       
         public ParticleManager (Scene scene)
         {
             this.scene = scene;
@@ -67,6 +68,23 @@ namespace Giraffe
                     blendMode = DX.DX_BLENDMODE_ADD,
                 });
             }
+        }
+
+        //キラキラ
+        public void Glitter2(Vec2f pos_)
+        {
+            particles.Add(new Particle(scene)
+            {
+                pos = pos_ + new Vec2f(MyRandom.PlusMinus(45f), MyRandom.PlusMinus(12f)) * scale,
+                lifeSpan = MyRandom.Range(10, 80),
+                imageHndle = particleGlitter,
+                vel = new Vec2f(MyRandom.PlusMinus(0.5f), MyRandom.Range(-1f, -1f)) * scale,
+                startScale = MyRandom.Range(0.5f, 1.0f),
+                endScale = MyRandom.Range(0.3f, 0.6f),
+                fadeInTime = 0.5f,
+                fadeOutTime = 1.5f,
+                blendMode = DX.DX_BLENDMODE_ADD,
+            });
         }
 
         //ジャンプ

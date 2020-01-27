@@ -4,28 +4,25 @@ using SAGASALib;
 
 namespace Giraffe 
 {
-    class Leaf : GameObject
+    public class Leaf : GameObject
     {
         private int leafImage = ResourceLoader.GetGraph("leaf4.png");
         private int scoreLeafImage = ResourceLoader.GetGraph("s_leaf4.png");
         //private int branch = ResourceLoader.GetGraph("branch2.png");
         private readonly int[] leafImages = ResourceLoader.GetGraph("leaf.png", 5);
-
+        public readonly AnimationManager<Leaf> AnimationManager;
 
         public int score;
 
-        public Leaf(ScenePlay scene, Vec2f vec2f, int scoreValue) : base(scene)
+        public Leaf(ScenePlay scene, Vec2f vec2f, int scoreValue=0) : base(scene)
         {
             pos = vec2f;
             score = scoreValue;
-           
+            AnimationManager = new AnimationManager<Leaf>(this);
+            if(scoreValue!=0)
+                AnimationManager.Start(Animations.GliterParticle);
         }
-        public Leaf(Tutolal tutolal, Vec2f vec2) : base(tutolal)
-        {
-            pos = vec2;
-            score = 0;
-            
-        }
+       
 
         private CircleCollision[] collisions = new CircleCollision[]{new CircleCollision(new Vec2f(1,1.1f), 0.6f) };
 
@@ -47,11 +44,14 @@ namespace Giraffe
             }
             else if (score != 0)
             {
+              //  scene.ParticleManagerTop.Glitter(pos);
+
                 int index = MyMath.Clamp((int)(screenPos.X / Screen.Width * 5), 0, leafImages.Length - 1);
                 DX.DrawGraphF(screenPos.X, screenPos.Y, scoreLeafImage);
                 //DX.DrawGraph(screenPos.X, screenPos.Y, branch);
                 base.Draw();
             }
+            AnimationManager.Update();
         }
 
         public override bool IsDead()
