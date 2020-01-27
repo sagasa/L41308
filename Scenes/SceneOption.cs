@@ -17,7 +17,7 @@ namespace Giraffe
         private bool[] playOn = new bool[] { true, true };
 
         private int bg = ResourceLoader.GetGraph("title_bg.png");
-        private int dark = ResourceLoader.GetGraph("option/dark.png");
+        private int dark = ResourceLoader.GetGraph("option/dark25.png");
         private int bgmImage = ResourceLoader.GetGraph("option/bgm_image.png");
         private int seImage = ResourceLoader.GetGraph("option/se_image.png");
         private int back = ResourceLoader.GetGraph("option/back.png");
