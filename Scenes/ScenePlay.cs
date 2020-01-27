@@ -197,9 +197,10 @@ namespace Giraffe
 
             if (IsGoal)//ゴールにプレイヤーが触れたら
             {
-                player.pos = player.oldPos;
-                player.velAngle = 0;
-                player.angle -= 20;
+                //player.pos = player.oldPos;
+                //player.velAngle = 0;
+                //player.angle -= 20;
+                player.Goal(player.pos);
                 if (goalTimer > 240)
                 {
                     Game.bgmManager.FadeOut("play", 30);
