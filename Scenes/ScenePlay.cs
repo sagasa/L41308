@@ -105,10 +105,12 @@ namespace Giraffe
         {
             Vec2f pos = GetScreenPos(Vec2f.ZERO);
             DX.DrawGraph(0, (int)pos.Y, playbg);
-            base.Draw();
+            ParticleManagerBottom.Draw();
             gameObjects.ForEach(obj => obj.Draw());
             player.Draw();
-            
+
+            ParticleManagerTop.Draw();
+
             DX.DrawGraph(550, 200, bar);
             DX.DrawGraph(555, 150, Flag);
             playerIcon.Draw();

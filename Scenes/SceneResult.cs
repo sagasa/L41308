@@ -106,7 +106,6 @@ namespace Giraffe
             player.Update();
             //player.velAngle = 0;
             //player.angle = 0;
-
             Counter++;
             if (Counter == fadeTime)
             {
