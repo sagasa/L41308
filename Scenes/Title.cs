@@ -19,7 +19,7 @@ namespace Giraffe
         private DummyPlayer Dummy;
         private int fadeTime = 60;
         private int fadeCounter = 0;
-        private int stageCount = 0;
+        public static int stageCount = 0;
         private int stageWaitTime = 60;
         private bool isRight = false;
         private bool isLeft = false;
