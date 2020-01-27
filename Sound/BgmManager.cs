@@ -7,7 +7,7 @@ namespace Giraffe
 {
     public class BgmManager
     {
-        public static bool playOn = true;
+        public bool playOn = true;
 
         DX.VECTOR ListenerPos;
         DX.VECTOR ListenerDir;
@@ -43,64 +43,58 @@ namespace Giraffe
             bgmPos["tutorial"] = DX.VGet(0.0f, 0.0f, 0.0f);
             //bgmPos["play_fast"] = bgmPos["play"];
         }
-        
+
         public void FadeIn(string name, int time)
         {
-            if (playOn)
+            if (!CheckPlayBgm(name))
             {
-                if (!CheckPlayBgm(name))
-                {
-                    ListenerPos.x = bgmPos[name].x;
-                    ListenerPos.z = bgmPos[name].z + bgmDis;
-                    DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
-                }
-
-                if (ListenerPos.z > bgmPos[name].z)
-                {
-                    ListenerPos.z -= bgmDis / time;
-                    DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
-                }
-                else if (ListenerPos.z < bgmPos[name].z)
-                {
-                    ListenerPos.z = bgmPos[name].z;
-                    DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
-                }
-                PlayBgm(name);
+                ListenerPos.x = bgmPos[name].x;
+                ListenerPos.z = bgmPos[name].z + bgmDis;
+                DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
             }
+
+            if (ListenerPos.z > bgmPos[name].z)
+            {
+                ListenerPos.z -= bgmDis / time;
+                DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+            }
+            else if (ListenerPos.z < bgmPos[name].z)
+            {
+                ListenerPos.z = bgmPos[name].z;
+                DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+            }
+            PlayBgm(name);
         }
 
         public void FadeOut(string name, int time)
         {
-            if (playOn)
+            if (ListenerPos.x != bgmPos[name].x)
             {
-                if (ListenerPos.x != bgmPos[name].x)
+                if (ListenerPos.x > bgmPos[name].x + 1)
                 {
-                    if (ListenerPos.x > bgmPos[name].x + 1)
-                    {
-                        ListenerPos.x -= 0.7f;
-                    }
-                    else if (ListenerPos.x < bgmPos[name].x - 1)
-                    {
-                        ListenerPos.x += 0.7f;
-                    }
-                    else if (ListenerPos.x != bgmPos[name].x)
-                    {
-                        ListenerPos.x = bgmPos[name].x;
-                    }
+                    ListenerPos.x -= 0.7f;
                 }
-
-                if (ListenerPos.z < bgmPos[name].z + bgmDis + 10)
+                else if (ListenerPos.x < bgmPos[name].x - 1)
                 {
-                    ListenerPos.z += bgmDis / time;
-                    DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+                    ListenerPos.x += 0.7f;
                 }
-                else if (ListenerPos.z > bgmPos[name].z + bgmDis + 10)
+                else if (ListenerPos.x != bgmPos[name].x)
                 {
-                    ListenerPos.z = bgmPos[name].z + bgmDis + 10;
-                    DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+                    ListenerPos.x = bgmPos[name].x;
                 }
-                PlayBgm(name);
             }
+
+            if (ListenerPos.z < bgmPos[name].z + bgmDis + 10)
+            {
+                ListenerPos.z += bgmDis / time;
+                DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+            }
+            else if (ListenerPos.z > bgmPos[name].z + bgmDis + 10)
+            {
+                ListenerPos.z = bgmPos[name].z + bgmDis + 10;
+                DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
+            }
+            PlayBgm(name);
         }
 
         public void CrossFade(string name, int time)
