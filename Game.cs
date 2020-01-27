@@ -21,6 +21,8 @@ namespace Giraffe
         public static int currentScore = 0;//現在のスコア
         public static int[] currentTime = new int[] { 0, 0, 0 };//現在のタイム
 
+        public static bool fadeAction = true;
+
         public Settings settings;
 
         private const string SETTINGS = "settings";
