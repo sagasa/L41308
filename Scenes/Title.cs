@@ -20,9 +20,10 @@ namespace Giraffe
         private int fadeTime = 60;
         private int fadeCounter = 0;
         private int stageCount = 0;
-        private int stagewaittime = 60;
+        private int stageWaitTime = 60;
         private bool isRight = false;
         private bool isLeft = false;
+        private bool walk = false;
         private int treebgPos = 0;
         private int[] treeFixedPos = new int[] { Screen.Width, 0, -Screen.Width, -Screen.Width * 2 };
         private const int treebgMoveWidth = Screen.Width / 80;
@@ -234,25 +235,26 @@ namespace Giraffe
                         Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, 0.01f, 0.1f));
                     }
 
-                    for (int i = 0; i < treeFixedPos.Length; i++)
+                    if (treebgPos != treeFixedPos[treeFixedPos.Length - 1] && Input.RIGHT.IsPush())//一番右側以外にいるとき、→が押されたら右へ
                     {
-                        if (Input.RIGHT.IsPush())//一番右側以外にいるとき、→が押されたら右へ
+                        for (int i = 0; i < treeFixedPos.Length; i++)
                         {
-                            if (treebgPos == treeFixedPos[treeFixedPos.Length - 1])
-                                break;
-                            else if (treebgPos == treeFixedPos[i])
+                            if (treebgPos == treeFixedPos[i])
                             {
+                                Sound.Loop("step_SE.mp3");
                                 treebgPos -= treebgMoveWidth;
                                 UIpos -= treebgMoveWidth;
                                 break;
                             }
                         }
-                        else if (Input.LEFT.IsPush())//一番左側以外にいるとき、←が押されたら左へ
+                    }
+                    else if (treebgPos != treeFixedPos[0] && Input.LEFT.IsPush())//一番左側以外にいるとき、←が押されたら左へ
+                    {
+                        for (int i = 0; i < treeFixedPos.Length; i++)
                         {
-                            if (treebgPos == treeFixedPos[0])
-                                break;
-                            else if (treebgPos == treeFixedPos[i])
+                            if (treebgPos == treeFixedPos[i])
                             {
+                                Sound.Loop("step_SE.mp3");
                                 treebgPos += treebgMoveWidth;
                                 UIpos += treebgMoveWidth;
                                 break;
@@ -278,27 +280,27 @@ namespace Giraffe
                         {
                             treebgPos -= treebgMoveWidth;
                             UIpos -= treebgMoveWidth;
-                            //idouCounter++;
-                            //if (idouCounter % 1 == 0) { }
                         }
                         if (!isRight)
                         {
                             treebgPos += treebgMoveWidth;
                             UIpos += treebgMoveWidth;
-                            //idouCounter++;
-                            //if (idouCounter % 1 == 0) { }
                         }
+                    }
+                    if (!treeMove)
+                    {
+                        Sound.Stop("step_SE.mp3");
                     }
 
                     if (Input.BACK.IsPush())
                     {
                         stageCount = 0;
                         Sound.Play("cancel_SE.mp3");
-                        stagewaittime = 60;
+                        stageWaitTime = 60;
                     }
 
-                    stagewaittime--;
-                    if (Input.ACTION.IsPush() && stagewaittime <= 0 && Tutolal.Tutorialcount == 0)
+                    stageWaitTime--;
+                    if (Input.ACTION.IsPush() && stageWaitTime <= 0 && Tutolal.Tutorialcount == 0)
                     {
                         if (treebgPos == treeFixedPos[0])
                         {
@@ -325,9 +327,7 @@ namespace Giraffe
                         }
                     }
                 }
-            
             }
-            
         }
         
         public override void OnExit()

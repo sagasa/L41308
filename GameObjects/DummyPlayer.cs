@@ -41,10 +41,10 @@ namespace Giraffe
         }
         public override void Update()
         {
-            if (Input.LEFT.IsPush() || Input.RIGHT.IsPush())
-            {
-                Sound.Play("step_SE.mp3");
-            }
+            //if (Input.LEFT.IsPush() || Input.RIGHT.IsPush())
+            //{
+            //    Sound.Play("step_SE.mp3");
+            //}
         }
     }
 }
