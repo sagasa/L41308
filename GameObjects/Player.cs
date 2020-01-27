@@ -247,9 +247,9 @@ namespace Giraffe
                         currentLeaf.score = 0;
                        
                         //パーティクル
-                        scene.ParticleManagerBottom.Glitter(pos);
+                        scene.ParticleManagerTop.Glitter(pos);
                         scene.ParticleManagerBottom.Swaying2(pos);
-                        scene.ParticleManagerBottom.GetPoint(pos);
+                        scene.ParticleManagerTop.GetPoint(pos);
                     }
                     else
                     {
