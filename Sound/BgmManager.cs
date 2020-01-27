@@ -14,7 +14,8 @@ namespace Giraffe
 
         Dictionary<string, int> bgmMap = new Dictionary<string, int>();
         Dictionary<string, DX.VECTOR> bgmPos = new Dictionary<string, DX.VECTOR>();
-        
+        string[] bgmName = new string[] { "title", "play", "result", "tutorial" }; 
+
         float bgmDis = 100.0f;//聞こえる範囲
         float interval = 150.0f;//bgmDisとintervalでクロスフェードの重なりを調整する
 
@@ -178,6 +179,15 @@ namespace Giraffe
         //    ResourceLoader.RemoveSound(name + "_BGM.wav");//消去
         //    DX.DeleteSoundMem(bgmMap[name]);
         //}
+
+        public void AllRemove()
+        {
+            for (int i = 0; i < bgmName.Length; i++)
+            {
+                ResourceLoader.RemoveSound(bgmName[i] + "_BGm.wav");
+                DX.DeleteSoundMem(bgmMap[bgmName[i]]);
+            }
+        }
 
         public void Debug()
         {//フェードの可視化、1で再生中,0で停止中,-1でメモリにない(エラー)
