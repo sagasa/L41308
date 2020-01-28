@@ -20,7 +20,20 @@ namespace Giraffe
         {
             MapPos += vec;
             MapPos = GetFixedPos(MapPos);
+
+            BackGroundOffset += vec * 30;
+            if (BackGroundOffset.X < 0)
+                BackGroundOffset = BackGroundOffset.SetX(Screen.Width);
+            if (BackGroundOffset.Y < 0)
+                BackGroundOffset = BackGroundOffset.SetY(Screen.Height);
+            if (Screen.Width < BackGroundOffset.X)
+                BackGroundOffset = BackGroundOffset.SetX(0);
+            if (Screen.Height < BackGroundOffset.Y)
+                BackGroundOffset = BackGroundOffset.SetY(0);
         }
+
+        private Vec2f BackGroundOffset = Vec2f.ZERO;
+
         //Map座標からScreen座標へ変換する
         public override Vec2f GetScreenPos(Vec2f mapPos)
         {
@@ -70,13 +83,16 @@ namespace Giraffe
         private Player player;
         public playerIcon playerIcon;
 
-        private int Flag = ResourceLoader.GetGraph("ハタアイコン.png");
-        private int bar = ResourceLoader.GetGraph("マップ.png");
-        private int playbg = ResourceLoader.GetGraph("play_bg.png"); //背景描画
-        private int scoreImage = ResourceLoader.GetGraph("image_play/score.png");
-        private int stageName = ResourceLoader.GetGraph("image_play/stagename_" + 1 + ".png");
-        private int watch = ResourceLoader.GetGraph("tokei.png");
-        private int colon = ResourceLoader.GetGraph("image_play/colon.png");
+        private static readonly int Flag = ResourceLoader.GetGraph("ハタアイコン.png");
+        private static readonly int bar = ResourceLoader.GetGraph("マップ.png");
+        private static readonly int treeTop = ResourceLoader.GetGraph("tree_top.png");
+        private static readonly int treeMiddle = ResourceLoader.GetGraph("tree_middle.png");
+        private static readonly int treePattern = ResourceLoader.GetGraph("treePattern.png");
+        private static readonly int treeBottom = ResourceLoader.GetGraph("tree_bottom.png"); //背景描画treePattern
+        private static readonly int scoreImage = ResourceLoader.GetGraph("image_play/score.png");
+        private static readonly int stageName = ResourceLoader.GetGraph("image_play/stagename_" + 1 + ".png");
+        private static readonly int watch = ResourceLoader.GetGraph("tokei.png");
+        private static readonly int colon = ResourceLoader.GetGraph("image_play/colon.png");
 
         private int fontInterval = 25;
         private float fontScale = 1.0f;
@@ -104,7 +120,12 @@ namespace Giraffe
         public override void Draw()
         {
             Vec2f pos = GetScreenPos(Vec2f.ZERO);
-            DX.DrawGraph(0, (int)pos.Y-70, playbg);
+            DX.DrawGraph(0, 0, treeMiddle);
+            DX.DrawExtendGraphF(BackGroundOffset.X * -1, BackGroundOffset.Y * -1, BackGroundOffset.X * -1 + Screen.Width * 2, BackGroundOffset.Y * -1 + Screen.Height * 2, treePattern);
+            DX.DrawGraph(0, (int)pos.Y - 120, treeTop);
+            pos = GetScreenPos(Map.MapSize);
+            DX.DrawGraph(0, (int)pos.Y - 90, treeBottom);
+
             ParticleManagerBottom.Draw();
             gameObjects.ForEach(obj => obj.Draw());
             player.Draw();
