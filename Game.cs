@@ -13,23 +13,34 @@ namespace Giraffe
         List<StaticMapObject> objList = new List<StaticMapObject>();
 
         public BgmManager bgmManager = new BgmManager();
+        public static bool fadeAction = true;
 
         public static bool ShowCollision = true;
-        
-        public static int bestScore = 700;//ベストスコア,ハイスコア
-        public static int[] bestTime = new int[] { 2, 0, 0 };//ベストタイム
+
+        public static int bestScore = 0;//ベストスコア,ハイスコア
+        public static int[] bestTime = new int[] { 0, 0, 0 };//ベストタイム
         public static int currentScore = 0;//現在のスコア
         public static int[] currentTime = new int[] { 0, 0, 0 };//現在のタイム
 
-        public static bool fadeAction = true;
-
         public Settings settings;
-
         private const string SETTINGS = "settings";
+        public HightScore hightScore;
+        private const string HIGHTSCORE = "hightscore";
 
         public void Init()
         {
+            //設定の読み込み
             settings = SaveManager.Load<Settings>(SETTINGS);
+            if (settings == null)
+                settings = new Settings();
+            bgmManager.playOn = settings.bgmPlayOn;
+            Sound.playOn = settings.sePlayOn;
+            //ハイスコアとベストタイムの読み込み
+            hightScore = SaveManager.Load<HightScore>(HIGHTSCORE);
+            if (hightScore == null)
+                hightScore = new HightScore();
+            bestScore = hightScore.bestScore;
+            bestTime = hightScore.bestTime;
 
             DX.SetBackgroundColor(200, 200, 200);
             bgmManager.Load();

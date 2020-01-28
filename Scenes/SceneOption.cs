@@ -7,17 +7,15 @@ namespace Giraffe
 {
     public class SceneOption : Scene
     {
+        private const string SETTINGS = "settings";
+
         private int cursorPosX = 0;
         private int cursorPosY = 0;
         private readonly int[] fixedPosX = new int[] { 320, 520 };
         private readonly int[] fixedPosY = new int[] { 250, 450, 650 };
-        private bool[] playOn = new bool[] { true, true };
-        private bool bgmReset = false;
+
         private const float fontScale = 0.8f;
-
-        private const string SETTINGS = "settings";
-        
-
+        private bool[] playOn = new bool[] { true, true };//描画用
         private int bg = ResourceLoader.GetGraph("title_bg.png");
         private int dark = ResourceLoader.GetGraph("option/dark25.png");
         private int bgmImage = ResourceLoader.GetGraph("option/bgm_image.png");
@@ -30,15 +28,17 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-            playOn[0] = Game.bgmManager.playOn;
-            playOn[1] = Sound.playOn;
             cursorPosX = fixedPosX[0];
             cursorPosY = fixedPosY[0];
         }
 
         public override void Update()
         {
-            if(!Game.fadeAction)
+            //BGMの再生
+            if (Game.bgmManager.playOn)
+                Game.bgmManager.FadeIn(Game.bgmManager.currentScene, 30);
+
+            if (!Game.fadeAction)
             {
                 if (cursorPosY != fixedPosY[fixedPosY.Length - 1] &&
                     cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())
@@ -118,46 +118,38 @@ namespace Giraffe
                     }
                     else
                     {
-                        for (int i = 0; i < playOn.Length; i++)
+                        if (cursorPosY == fixedPosY[0])//BGM
                         {
-                            if (cursorPosY == fixedPosY[i])
+                            if (!Game.bgmManager.playOn && cursorPosX == fixedPosX[0])
                             {
-                                if (!playOn[i] && cursorPosX == fixedPosX[0])
-                                {
-                                    playOn[i] = true;
-                                    if (cursorPosY == fixedPosY[1])
-                                        Sound.DefinitelyPlay("decision_SE.mp3");
-                                    else
-                                        Sound.Play("decision_SE.mp3");
-                                }
-                                else if (playOn[i] && cursorPosX == fixedPosX[1])
-                                {
-                                    playOn[i] = false;
-                                    if (cursorPosY != fixedPosY[1])
-                                        Sound.Play("decision_SE.mp3");
-                                }
-                                break;
+                                Sound.Play("decision_SE.mp3");
+                                Game.bgmManager.playOn = true;
                             }
+                            else if (Game.bgmManager.playOn && cursorPosX == fixedPosX[1])
+                            {
+                                Sound.Play("decision_SE.mp3");
+                                Game.bgmManager.playOn = false;
+                                Game.bgmManager.AllRemove();
+                            }
+                        }
+                        else if (cursorPosY == fixedPosY[1])//SE
+                        {
+                            if (!Sound.playOn && cursorPosX == fixedPosX[0])
+                            {
+                                Sound.DefinitelyPlay("decision_SE.mp3");
+                                Sound.playOn = true;
+                            }
+                            else if (Sound.playOn && cursorPosX == fixedPosX[1])
+                                Sound.playOn = false;
                         }
                     }
                 }
             }
-            
 
-            if (Game.bgmManager.playOn != playOn[0])
-            {
-                bgmReset = false;
-                Game.bgmManager.playOn = playOn[0];
-            }
-            if (Sound.playOn != playOn[1])
-            {
-                Sound.playOn = playOn[1];
-            }
-            if (!Game.bgmManager.playOn && !bgmReset)
-            {
-                bgmReset = true;
-                Game.bgmManager.AllRemove();
-            }
+            if (playOn[0] != Game.bgmManager.playOn)
+                playOn[0] = Game.bgmManager.playOn;
+            if (playOn[1] != Sound.playOn)
+                playOn[1] = Sound.playOn;
         }
 
         public override void Draw()
@@ -186,7 +178,9 @@ namespace Giraffe
         public override void OnExit()
         {
             Game.fadeAction = false;
-            //settings = SaveManager.Save<Settings>(SETTINGS);
+            Game.settings.bgmPlayOn = Game.bgmManager.playOn;
+            Game.settings.sePlayOn = Sound.playOn;
+            SaveManager.Save(SETTINGS, Game.settings);
         }
     }
 }

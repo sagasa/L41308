@@ -166,7 +166,7 @@ namespace Giraffe
             }
         }
 
-        bool CheckPlayBgm (string name)//鳴っていたらtrue
+        public bool CheckPlayBgm (string name)//鳴っていたらtrue
         {
             if(DX.CheckSoundMem(bgmMap[name])==1)
                 return true;
@@ -183,7 +183,7 @@ namespace Giraffe
         {
             for (int i = 0; i < bgmName.Length; i++)
             {
-                ResourceLoader.RemoveSound(bgmName[i] + "_BGm.wav");
+                ResourceLoader.RemoveSound(bgmName[i] + "_BGM.wav");
                 DX.DeleteSoundMem(bgmMap[bgmName[i]]);
             }
         }

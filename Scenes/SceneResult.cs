@@ -7,6 +7,8 @@ namespace Giraffe
 {
     public class SceneResult : Scene
     {
+        private const string HIGHTSCORE = "hightscore";
+
         int currentScore = 0;
         int bestScore = 0;
         int[] currentTime = new int[] { 0, 0, 0 };
@@ -21,7 +23,7 @@ namespace Giraffe
         
         private bool blinkMessage = true;//点滅表示用
         private int Counter = 0;//wait,fade,blinkのカウンター
-        private const int fadeTime = 180;
+        private const int fadeTime = 120;
         //描画用定数
         private const int frameX = 240;
         private const int frameY = 100;
@@ -39,9 +41,10 @@ namespace Giraffe
         private readonly int[] fixedPosX = new int[] { 170, Screen.Width - 170 };
         private int playerPosX;
         private int playerPosY;
-        private const int playerSpeed = 1;
-
-
+        private bool playerMove = false;
+        private int playerOnPositon = 0;
+        private const int playerMoveSpeed = 4;
+        
         private int bg = ResourceLoader.GetGraph("play_bg.png");
         private int result_bg = ResourceLoader.GetGraph("image_result/result_bg.png");
         private int back = ResourceLoader.GetGraph("image_result/r_back.png");
@@ -50,11 +53,11 @@ namespace Giraffe
         private int coron = ResourceLoader.GetGraph("image_result/rcolon.png");
         private int newImage = ResourceLoader.GetGraph("image_result/new.png");
 
-        private DummyPlayer player;
+        private DummyPlayer dummyPlayer;
 
         public SceneResult(Game game) : base(game)
         {
-            player = new DummyPlayer(this);
+            dummyPlayer = new DummyPlayer(this);
         }
 
         public override void OnLoad()
@@ -64,7 +67,7 @@ namespace Giraffe
             rankAnimationScale = 1;
             rankExpansionAnimation = false;
 
-            cursorPosX = fixedPosX[0];
+            cursorPosX = fixedPosX[1];
             playerPosX = cursorPosX;
             playerPosY = cursorPosY;
 
@@ -94,22 +97,59 @@ namespace Giraffe
                 Game.bestScore = currentScore;
             if (currentTime[0] * 60 + currentTime[1] < bestTime[0] * 60 + bestTime[1])
                 Game.bestTime = currentTime;
+
+            Game.hightScore.bestScore = Game.bestScore;
+            Game.hightScore.bestTime = Game.bestTime;
+            SaveManager.Save(HIGHTSCORE, Game.hightScore);
         }
 
         public override void Update()
         {
-            if (playerPosX != cursorPosX && cursorPosX == fixedPosX[1])
+            if (!playerMove && playerPosX != cursorPosX)
             {
-                if (playerPosX != fixedPosX[1])
+                playerMove = true;
+                if (playerPosX == fixedPosX[0])
+                    playerOnPositon = fixedPosX[0];
+                else if (playerPosX == fixedPosX[1])
+                    playerOnPositon = fixedPosX[1];
+            }
+            else if ((playerOnPositon != fixedPosX[0] && playerPosX == fixedPosX[0]) ||
+                     (playerOnPositon != fixedPosX[1] && playerPosX == fixedPosX[1]))
+                playerMove = false;
+
+            if (playerMove)
+            {
+                if (playerOnPositon == fixedPosX[0])
                 {
-                    playerPosX += playerSpeed;
+                    dummyPlayer.isDunnyRight = true;
+                    playerPosX += playerMoveSpeed;
+                    if (playerPosX >= fixedPosX[0] + 50)
+                    {
+                    }
+                }
+                else if (playerOnPositon == fixedPosX[1])
+                {
+                    dummyPlayer.isDunnyRight = false;
+                    playerPosX -= playerMoveSpeed;
                 }
             }
+            else
+            {
+                if (Input.LEFT.IsPush())
+                    dummyPlayer.isDunnyRight = false;
+                else if (Input.RIGHT.IsPush())
+                    dummyPlayer.isDunnyRight = true;
+            }
 
-            player.pos = new Vec2f(playerPosX, playerPosY - 85);
-            player.Update();
+            if (dummyPlayer.isDunnyRight)
+                dummyPlayer.vel = dummyPlayer.vel.SetX(MyMath.Lerp(dummyPlayer.vel.X, 0.01f, 0.1f));
+            else
+                dummyPlayer.vel = dummyPlayer.vel.SetX(MyMath.Lerp(dummyPlayer.vel.X, -0.01f, 0.1f));
+            dummyPlayer.pos = new Vec2f(playerPosX, playerPosY - 85);
+            dummyPlayer.Update();
             //player.velAngle = 0;
             //player.angle = 0;
+
             Counter++;
             if (Counter < fadeTime + 10)
                 Game.bgmManager.FadeIn("result", 120);
@@ -140,6 +180,13 @@ namespace Giraffe
                             cursorPosX = fixedPosX[i - 1];
                             break;
                         }
+                    }
+                }
+                if (cursorPosX == fixedPosX[fixedPosX.Length - 1] && (Input.RIGHT.IsPush() || Input.RIGHT.IsHold()))
+                {
+                    if (playerMove)
+                    {
+                        dummyPlayer.isDunnyRight = true;
                     }
                 }
                 else if (cursorPosX != fixedPosX[fixedPosX.Length - 1] && Input.RIGHT.IsPush())//カーソルが一番右以外の時→を押されたら、カーソルを一つ右へ
@@ -175,7 +222,7 @@ namespace Giraffe
         {
             DX.DrawGraph(0, 0, bg);
             DX.DrawGraph(0, 0, result_bg);
-            player.Draw();
+            dummyPlayer.Draw();
             DX.DrawRotaGraph(cursorPosX, cursorPosY, 1, 0, cursor);
             DX.DrawRotaGraph(fixedPosX[0], cursorPosY, 1, 0, restart);
             DX.DrawRotaGraph(fixedPosX[1], cursorPosY, 1, 0, back);
@@ -234,9 +281,7 @@ namespace Giraffe
                 }
             }
             if (blinkMessage && currentScore > bestScore)//スコアの「new」
-            {
                 DX.DrawRotaGraph(frameX + 65 + fontInterval * (leftCounter1 + 1) + fontInterval / 2 * leftCounter2, frameY, 1, 0, newImage);
-            }
             //タイム
             digit = 10;
             leftCounter1 = 0;
@@ -282,9 +327,7 @@ namespace Giraffe
             }
             //タイムの「new」
             if (blinkMessage && currentTime[0] * 60 + currentTime[1] < bestTime[0] * 60 + bestTime[1])
-            {
                 DX.DrawRotaGraph(frameX + 65 + fontInterval * (leftCounter1 + 3), frameY + 98, 1, 0, newImage);
-            }
         }
 
         public override void OnExit()

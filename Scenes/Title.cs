@@ -304,7 +304,7 @@ namespace Giraffe
                             UIpos += treebgMoveWidth;
                         }
                     }
-                    if (!treeMove)
+                    if (!treeMove || stageCount == 0)
                         Sound.Stop("step_SE.mp3");
 
                     if (Input.BACK.IsPush())
