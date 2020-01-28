@@ -129,6 +129,7 @@ namespace Giraffe
                 DX.DrawGraph(7, 668, body);
                 DX.DrawRectGraphF(7, 668, 0, 0, 128, 128, tail);
                 DX.DrawRotaGraph3(7, neckPos, 0, 64, 1, neckSize, 0, neck, DX.TRUE, DX.FALSE);
+                DX.DrawGraph(7, 668, neck);
                 if (Input.DOWN.IsPush())
                 {
                     y = 617;
@@ -145,8 +146,8 @@ namespace Giraffe
 
                     neckSize += 2.5f;
                     neckPos -= 61;
-
                 }
+               
             }
 
             if (Tutorialcount >= 1 && Tutorialcount < 99)
