@@ -25,6 +25,8 @@ namespace Giraffe
         private bool isLeft = false;
         private bool walk = false;
         private int treebgPos = 0;
+        private float neckSize = 6.2f;
+        private int neckPos = 600;
         private int[] treeFixedPos = new int[] { Screen.Width, 0, -Screen.Width, -Screen.Width * 2 };
         private const int treebgMoveWidth = Screen.Width / 80;
         private bool treeMove = false;
@@ -39,6 +41,10 @@ namespace Giraffe
         private int horn = ResourceLoader.GetGraph("player/horn.png");
         private int eye = ResourceLoader.GetGraph("player/player_eye.png");
         private int ear = ResourceLoader.GetGraph("player/player_ear.png");
+        private int body = ResourceLoader.GetGraph("player/body.png");
+        private int leg = ResourceLoader.GetGraph("player/player_leg.png");
+        private int tail = ResourceLoader.GetGraph("player/player_tail.png");
+        private int neck = ResourceLoader.GetGraph("player/neck.png");
         private int titlebg = ResourceLoader.GetGraph("title_bg.png");
         private int select1 = ResourceLoader.GetGraph("select_1.png");
         private int select2 = ResourceLoader.GetGraph("select_2.png");
@@ -66,6 +72,11 @@ namespace Giraffe
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, horn);
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, eye);
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, ear);
+                DX.DrawRectGraphF(7, 668, 0, 0, 128, 128, leg);
+                DX.DrawGraph(7, 668, body);
+                DX.DrawRectGraphF(7, 668, 0, 0, 128, 128, tail);
+                DX.DrawRotaGraph3(7,neckPos,0,64,1,neckSize,0,neck,DX.TRUE,DX.FALSE);
+                
             }
             if (stageCount >= 1)
             {
@@ -154,6 +165,8 @@ namespace Giraffe
                         {
                             if (cursorPos == cursorFixedPos[i])
                             {
+                                neckSize += 2.5f;
+                                neckPos -= 61;
                                 Sound.Play("cursor_SE.mp3");
                                 cursorPos = cursorFixedPos[i - 1];
                                 break;
@@ -166,6 +179,8 @@ namespace Giraffe
                         {
                             if (cursorPos == cursorFixedPos[i])
                             {
+                                neckSize -= 2.5f;
+                                neckPos +=61;
                                 Sound.Play("cursor_SE.mp3");
                                 cursorPos = cursorFixedPos[i + 1];
                                 break;

@@ -28,7 +28,10 @@ namespace Giraffe
         int SousaCount = 0;
         int CommentTime = 120;
         int Sounsa;
-        
+
+        private int neckPos = 632;
+        private float neckSize = 4.8f;
+
         private AnimationManager<PlayerRender> _animation;
 
 
@@ -37,6 +40,10 @@ namespace Giraffe
         private int horn = ResourceLoader.GetGraph("player/horn.png");
         private int eye = ResourceLoader.GetGraph("player/player_eye.png");
         private int ear = ResourceLoader.GetGraph("player/player_ear.png");
+        private int body = ResourceLoader.GetGraph("player/body.png");
+        private int leg = ResourceLoader.GetGraph("player/player_leg.png");
+        private int tail = ResourceLoader.GetGraph("player/player_tail.png");
+        private int neck = ResourceLoader.GetGraph("player/neck.png");
         private int titlebg = ResourceLoader.GetGraph("title_bg.png");
         private int select1 = ResourceLoader.GetGraph("select_3.png");
         private int select2 = ResourceLoader.GetGraph("select_4.png");
@@ -118,16 +125,27 @@ namespace Giraffe
                 DX.DrawRectGraphF(7, y, 0, 0, 128, 128, horn);
                 DX.DrawRectGraphF(7, y, 0, 0, 128, 128, eye);
                 DX.DrawRectGraphF(7, y, 0, 0, 128, 128, ear);
+                DX.DrawRectGraphF(7, 668, 0, 0, 128, 128, leg);
+                DX.DrawGraph(7, 668, body);
+                DX.DrawRectGraphF(7, 668, 0, 0, 128, 128, tail);
+                DX.DrawRotaGraph3(7, neckPos, 0, 64, 1, neckSize, 0, neck, DX.TRUE, DX.FALSE);
                 if (Input.DOWN.IsPush())
                 {
                     y = 617;
                     Sound.Play("cursor_SE.mp3");
+
+                    neckSize -= 2.5f;
+                    neckPos += 61;
 
                 }
                 if (Input.UP.IsPush())
                 {
                     y = 502;
                     Sound.Play("cursor_SE.mp3");
+
+                    neckSize += 2.5f;
+                    neckPos -= 61;
+
                 }
             }
 
