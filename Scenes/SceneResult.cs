@@ -275,9 +275,7 @@ namespace Giraffe
                 }
             }
             if (blinkMessage && currentScore > bestScore)//スコアの「new」
-            {
                 DX.DrawRotaGraph(frameX + 65 + fontInterval * (leftCounter1 + 1) + fontInterval / 2 * leftCounter2, frameY, 1, 0, newImage);
-            }
             //タイム
             digit = 10;
             leftCounter1 = 0;
@@ -323,9 +321,7 @@ namespace Giraffe
             }
             //タイムの「new」
             if (blinkMessage && currentTime[0] * 60 + currentTime[1] < bestTime[0] * 60 + bestTime[1])
-            {
                 DX.DrawRotaGraph(frameX + 65 + fontInterval * (leftCounter1 + 3), frameY + 98, 1, 0, newImage);
-            }
         }
 
         public override void OnExit()

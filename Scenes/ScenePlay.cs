@@ -153,6 +153,7 @@ namespace Giraffe
 
         public override void OnExit()
         {
+            Game.fadeAction = false;
         }
 
         public override void OnLoad()
@@ -215,11 +216,12 @@ namespace Giraffe
                     Sound.Play("goal_jingle.mp3");
                 }
                 goalTimer--;
-                if (goalTimer == 0)
+                if (!Game.fadeAction && goalTimer <= 0)
                 {
                     Game.currentScore = score;
                     Game.currentTime = time;
                     Game.bgmManager.currentScene = "play";
+                    Game.fadeAction = true;
                     Game.SetScene(new SceneResult(Game), new Fade(fadeTime, true, true));
                 }
             }
