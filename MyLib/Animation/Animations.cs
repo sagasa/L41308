@@ -44,6 +44,22 @@ namespace SAGASALib
                 }
             }, null, true);
 
+        public static readonly AnimationEntry<PlayerRender> Test = new AnimationEntry<PlayerRender>(100,
+            (render, animation) =>
+            {
+                int distance = 300;//距離
+                int height = 5;//高さ
+                int speed = 3;//初速？
+                if (animation.Progress < 0.5f)
+                {
+                    render.Target.pos += new Vec2f(animation.Delta * distance, animation.Delta * (animation.Progress) * (animation.Progress));
+                }
+                else
+                {
+                    render.Target.pos += new Vec2f(animation.Delta * distance, 0);
+                }
+            }, null);
+
         //首と頭の角度を0に
         public static readonly AnimationEntry<PlayerRender> DefaultAngle = SetRotate(0,0,30);
 

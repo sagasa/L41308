@@ -40,7 +40,6 @@ namespace Giraffe
         private const int cursorPosY = Screen.Height - 200;
         private readonly int[] fixedPosX = new int[] { 170, Screen.Width - 170 };
         private int playerPosX;
-        private int playerPosY;
         private bool playerMove = false;
         private int playerOnPositon = 0;
         private const int playerMoveSpeed = 4;
@@ -54,10 +53,12 @@ namespace Giraffe
         private int newImage = ResourceLoader.GetGraph("image_result/new.png");
 
         private DummyPlayer dummyPlayer;
+        private DummyPlayer testPlayer;
 
         public SceneResult(Game game) : base(game)
         {
             dummyPlayer = new DummyPlayer(this);
+            testPlayer = new DummyPlayer(this);
         }
 
         public override void OnLoad()
@@ -69,8 +70,9 @@ namespace Giraffe
 
             cursorPosX = fixedPosX[1];
             playerPosX = cursorPosX;
-            playerPosY = cursorPosY;
-
+            dummyPlayer.pos = new Vec2f(cursorPosX, cursorPosY - 85);
+            testPlayer.pos = new Vec2f(fixedPosX[0], cursorPosY - 85); 
+            　
             currentScore = Game.currentScore;
             currentTime = Game.currentTime;
             bestScore = Game.bestScore;
@@ -118,14 +120,14 @@ namespace Giraffe
                 playerMove = false;
 
             if (playerMove)
+                testPlayer.AnimationManager.Start(Animations.Test);
+
+            if (playerMove)
             {
                 if (playerOnPositon == fixedPosX[0])
                 {
                     dummyPlayer.isDunnyRight = true;
                     playerPosX += playerMoveSpeed;
-                    if (playerPosX >= fixedPosX[0] + 50)
-                    {
-                    }
                 }
                 else if (playerOnPositon == fixedPosX[1])
                 {
@@ -145,10 +147,10 @@ namespace Giraffe
                 dummyPlayer.vel = dummyPlayer.vel.SetX(MyMath.Lerp(dummyPlayer.vel.X, 0.01f, 0.1f));
             else
                 dummyPlayer.vel = dummyPlayer.vel.SetX(MyMath.Lerp(dummyPlayer.vel.X, -0.01f, 0.1f));
-            dummyPlayer.pos = new Vec2f(playerPosX, playerPosY - 85);
+            dummyPlayer.pos = new Vec2f(playerPosX, dummyPlayer.pos.Y);
             dummyPlayer.Update();
-            //player.velAngle = 0;
-            //player.angle = 0;
+
+            testPlayer.Update();
 
             Counter++;
             if (Counter < fadeTime + 10)
@@ -226,6 +228,9 @@ namespace Giraffe
             DX.DrawRotaGraph(cursorPosX, cursorPosY, 1, 0, cursor);
             DX.DrawRotaGraph(fixedPosX[0], cursorPosY, 1, 0, restart);
             DX.DrawRotaGraph(fixedPosX[1], cursorPosY, 1, 0, back);
+
+            testPlayer.Draw();
+
             //スコア
             int digit = 1000;
             int leftCounter1 = 0;
