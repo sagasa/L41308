@@ -7,6 +7,8 @@ namespace Giraffe
 {
     public class SceneResult : Scene
     {
+        private const string HIGHTSCORE = "hightscore";
+
         int currentScore = 0;
         int bestScore = 0;
         int[] currentTime = new int[] { 0, 0, 0 };
@@ -95,6 +97,10 @@ namespace Giraffe
                 Game.bestScore = currentScore;
             if (currentTime[0] * 60 + currentTime[1] < bestTime[0] * 60 + bestTime[1])
                 Game.bestTime = currentTime;
+
+            Game.hightScore.bestScore = Game.bestScore;
+            Game.hightScore.bestTime = Game.bestTime;
+            SaveManager.Save(HIGHTSCORE, Game.hightScore);
         }
 
         public override void Update()

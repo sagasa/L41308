@@ -35,7 +35,7 @@ namespace Giraffe
         public override void Update()
         {
             //BGMの再生
-            if (Game.bgmManager.playOn && Game.bgmManager.CheckPlayBgm(Game.bgmManager.currentScene))
+            if (Game.bgmManager.playOn)
                 Game.bgmManager.FadeIn(Game.bgmManager.currentScene, 30);
 
             if (!Game.fadeAction)
@@ -178,7 +178,9 @@ namespace Giraffe
         public override void OnExit()
         {
             Game.fadeAction = false;
-            //settings = SaveManager.Save<Settings>(SETTINGS);
+            Game.settings.bgmPlayOn = Game.bgmManager.playOn;
+            Game.settings.sePlayOn = Sound.playOn;
+            SaveManager.Save(SETTINGS, Game.settings);
         }
     }
 }
