@@ -166,7 +166,7 @@ namespace Giraffe
             }
         }
 
-        bool CheckPlayBgm (string name)//鳴っていたらtrue
+        public bool CheckPlayBgm (string name)//鳴っていたらtrue
         {
             if(DX.CheckSoundMem(bgmMap[name])==1)
                 return true;
