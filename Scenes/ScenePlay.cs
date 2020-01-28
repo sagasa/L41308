@@ -75,8 +75,13 @@ namespace Giraffe
             return pos;
         }
 
-        public bool IsInScreen(Vec2f pos)
+        public bool IsInScreen(Vec2f pos,float ext = 0)
         {
+            if (ext != 0)
+            {
+                Vec2f extVec = new Vec2f(ext,ext);
+                return GetScreenPos(pos).IsInBetween(Vec2f.ZERO - extVec, Screen.Size + extVec);
+            }
             return GetScreenPos(pos).IsInBetween(Vec2f.ZERO, Screen.Size);
         }
 
@@ -122,14 +127,18 @@ namespace Giraffe
             Vec2f pos = GetScreenPos(Vec2f.ZERO);
             DX.DrawGraph(0, 0, treeMiddle);
             DX.DrawExtendGraphF(BackGroundOffset.X * -1, BackGroundOffset.Y * -1, BackGroundOffset.X * -1 + Screen.Width * 2, BackGroundOffset.Y * -1 + Screen.Height * 2, treePattern);
-            DX.DrawGraph(0, (int)pos.Y - 120, treeTop);
+            DX.DrawGraph(0, (int) pos.Y - 985, treeTop);
             pos = GetScreenPos(Map.MapSize);
             DX.DrawGraph(0, (int)pos.Y - 90, treeBottom);
 
             ParticleManagerBottom.Draw();
-            gameObjects.ForEach(obj => obj.Draw());
+            gameObjects.ForEach(obj =>
+            {
+                if(IsInScreen(obj.pos,100))
+                    obj.Draw();
+            });
             player.Draw();
-
+            
             ParticleManagerTop.Draw();
 
             DX.DrawGraph(550, 200, bar);

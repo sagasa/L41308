@@ -56,6 +56,12 @@ namespace SAGASALib
             }
         }
 
+        public void StopAll(bool finish = false)
+        {   
+            _list.ForEach(value=>value.Finish(_target));
+            _list.Clear();
+        }
+
         //アニメーションを再生中か?
         public bool IsPlaying(AnimationEntry<T> entry)=> _list.Any(animation => animation.Entry==entry);
 
