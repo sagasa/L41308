@@ -60,6 +60,6 @@ namespace SAGASALib
                if (animation.Progress<0.3f)
                    render.scene.ParticleManagerTop.Glitter2(render.pos+new Vec2f(1f,1f));
 
-           }, null, true);
+           }, (render, animation) => animation.Progress = MyRandom.Range(0f,1f), true);
     }
 }
