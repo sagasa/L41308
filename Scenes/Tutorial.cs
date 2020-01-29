@@ -36,7 +36,8 @@ namespace Giraffe
         private float neckSize = 4.6f;
         private AnimationManager<PlayerRender> _animation;
 
-        private const int fadeTime = 30;
+        private const int fadeTime = 90;
+        private const int shortFadeTime = 30;
         private int fadeCounter = 0;
         
         private int head = ResourceLoader.GetGraph("player/player_head.png");
@@ -353,7 +354,7 @@ namespace Giraffe
         {
             fadeCounter++;
             if (fadeCounter < fadeTime + 10)
-                Game.bgmManager.CrossFade("tutorial", 60);
+                Game.bgmManager.CrossFade("tutorial",fadeTime);
 
             if (!Game.fadeAction)
             {
@@ -382,17 +383,17 @@ namespace Giraffe
                         Sound.Play("cancel_SE.mp3");
                         Game.bgmManager.currentScene = "tutorial";
                         Game.fadeAction = true;
-                        Game.SetScene(new Title(Game), new Fade(fadeTime, true, true));
+                        Game.SetScene(new Title(Game), new Fade(shortFadeTime, true, true));
                     }
                 }
                 
-                if (cursorPosY == 617 && Input.ACTION.IsPush())
+                if (cursorPosY == cursorFixedPosY[1] && Input.ACTION.IsPush())
                 {
                     Tutorialcount += 1;
                     cursorPosY = 0;
                     Sound.Play("decision_SE.mp3");
                 }
-                else if (cursorPosY == 502 && Input.ACTION.IsPush())
+                else if (cursorPosY == cursorFixedPosY[0] && Input.ACTION.IsPush())
                 {
                     Tutorialcount += 99;
                     cursorPosY = 0;
@@ -562,7 +563,7 @@ namespace Giraffe
                             Game.fadeAction = true;
                             Game.SetScene(new Title(Game),new Fade(fadeTime, true, true));
                             Tutorialcount = 0;
-                            cursorPosY = 502;
+                            cursorPosY = cursorFixedPosY[0];
                         }
                     }
                 }
@@ -570,5 +571,3 @@ namespace Giraffe
         }
     }
 }
-
-

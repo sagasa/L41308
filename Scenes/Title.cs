@@ -18,7 +18,7 @@ namespace Giraffe
 
         private DummyPlayer Dummy;
         private const int fadeTime = 90;
-        private const int shortFadeTime = 30;
+        private const int shortFadeTime = 60;
         private int fadeCounter = 0;
         private int stageWaitTime = 60;
         private bool isRight = false;
@@ -30,7 +30,7 @@ namespace Giraffe
         private bool treeMove = false;
         private int UIpos = 0;
         private int cursorPos;
-        private int[] cursorFixedPos = new int[] { 450, 550, 650 };
+        private int[] cursorFixedPosY = new int[] { 450, 550, 650 };
         int[]  bestTime1 =new int[] {0,0,0};
         int bestscore1 = 0;
 
@@ -64,9 +64,10 @@ namespace Giraffe
             if (!stageSelect)//タイトル画面
             {
                 DX.DrawGraph(0, 0, titlebg);
-                DX.DrawGraph(135, cursorFixedPos[0], select1);
-                DX.DrawGraph(135, cursorFixedPos[1], select2);
-                DX.DrawGraph(135, cursorFixedPos[2], option);
+                for (int i = 0; i < cursorFixedPosY.Length; i++)//選択肢
+                {
+                    DX.DrawGraph(135, cursorFixedPosY[i], ResourceLoader.GetGraph("select_" + i + ".png"));
+                }
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, head);
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, horn);
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, eye);
@@ -96,7 +97,6 @@ namespace Giraffe
                                 DX.DrawRotaGraph(frameX + fontInterval * leftCounter + 120, 470, fontScale1, 0, ResourceLoader.GetGraph("image_select/mozi_" + j + ".png"));
                                 leftCounter++;
                             }
-
                         }
                         digit /= 10;
                     }
@@ -127,7 +127,7 @@ namespace Giraffe
         
         public override void OnLoad()
         {
-            cursorPos = cursorFixedPos[0];
+            cursorPos = cursorFixedPosY[0];
             Dummy.pos = new Vec2f(Screen.Width / 2, Screen.Height - 64);
             fadeCounter = 0;
 
@@ -140,7 +140,7 @@ namespace Giraffe
             fadeCounter++;
             if (fadeCounter < fadeTime + 10)//BGMのフェード
             {
-                if (Game.bgmManager.currentScene == "title"){ }//何もしない
+                if (Game.bgmManager.currentScene == "title") { }//何もしない
                 else if (Game.bgmManager.currentScene == "none")
                 {
                     Game.bgmManager.FadeIn("title", fadeTime);
@@ -155,47 +155,47 @@ namespace Giraffe
             {
                 if (!stageSelect)//タイトル画面
                 {
-                    if (cursorPos != cursorFixedPos[0] && Input.UP.IsPush())//カーソルが一番上以外の時に↑が押されたら、カーソルを一つ上へ
+                    if (cursorPos != cursorFixedPosY[0] && Input.UP.IsPush())//カーソルが一番上以外の時に↑が押されたら、カーソルを一つ上へ
                     {
-                        for (int i = 0; i < cursorFixedPos.Length; i++)
+                        for (int i = 0; i < cursorFixedPosY.Length; i++)
                         {
-                            if (cursorPos == cursorFixedPos[i])
+                            if (cursorPos == cursorFixedPosY[i])
                             {
                                 neckSize += 2.5f;
                                 neckPos -= 61;
                                 Sound.Play("cursor_SE.mp3");
-                                cursorPos = cursorFixedPos[i - 1];
+                                cursorPos = cursorFixedPosY[i - 1];
                                 break;
                             }
                         }
                     }
-                    else if (cursorPos != cursorFixedPos[cursorFixedPos.Length - 1] && Input.DOWN.IsPush())//カーソルが一番下以外の時下を押されたら、カーソルが一つ下へ
+                    else if (cursorPos != cursorFixedPosY[cursorFixedPosY.Length - 1] && Input.DOWN.IsPush())//カーソルが一番下以外の時下を押されたら、カーソルが一つ下へ
                     {
-                        for (int i = 0; i < cursorFixedPos.Length; i++)
+                        for (int i = 0; i < cursorFixedPosY.Length; i++)
                         {
-                            if (cursorPos == cursorFixedPos[i])
+                            if (cursorPos == cursorFixedPosY[i])
                             {
                                 neckSize -= 2.5f;
                                 neckPos +=61;
                                 Sound.Play("cursor_SE.mp3");
-                                cursorPos = cursorFixedPos[i + 1];
+                                cursorPos = cursorFixedPosY[i + 1];
                                 break;
                             }
                         }
                     }
-                    if (cursorPos == cursorFixedPos[0] && Input.ACTION.IsPush())
+                    if (cursorPos == cursorFixedPosY[0] && Input.ACTION.IsPush())
                     {
                         Sound.Play("decision_SE.mp3");
                         stageSelect = true;
                     }
-                    else if (cursorPos == cursorFixedPos[1] && Input.ACTION.IsPush())
+                    else if (cursorPos == cursorFixedPosY[1] && Input.ACTION.IsPush())
                     {
                         Sound.Play("decision_SE.mp3");
                         Game.bgmManager.currentScene = "title";
                         Game.fadeAction = true;
                         Game.SetScene(new Tutolal(Game), new Fade(shortFadeTime, true, true));
                     }
-                    else if (cursorPos == cursorFixedPos[2] && Input.ACTION.IsPush())
+                    else if (cursorPos == cursorFixedPosY[2] && Input.ACTION.IsPush())
                     {
                         Sound.Play("decision_SE.mp3");
                         Game.bgmManager.currentScene = "title";
@@ -207,8 +207,6 @@ namespace Giraffe
                 {
                     stageWaitTime--;
                     Dummy.Update();
-
-                    
 
                     if (Dummy.isDunnyRight == false)
                     {
@@ -286,9 +284,6 @@ namespace Giraffe
                     }
                     if (!treeMove || !stageSelect)
                         Sound.Stop("step_SE.mp3");
-
-                   
-                    
                     
                     if (Input.ACTION.IsPush() && stageWaitTime <= 0 && Tutolal.Tutorialcount == 0)
                     {
