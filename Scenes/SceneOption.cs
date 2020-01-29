@@ -8,20 +8,25 @@ namespace Giraffe
     public class SceneOption : Scene
     {
         private const string SETTINGS = "settings";
-
+        
+        private readonly int[] cursorFixedPosX = new int[] { 320, 520 };
+        private readonly int[] cursorFixedPosY = new int[] { 250, 350, 450, 575 };
         private int cursorPosX = 0;
         private int cursorPosY = 0;
-        private readonly int[] fixedPosX = new int[] { 320, 520 };
-        private readonly int[] fixedPosY = new int[] { 250, 350, 450, 550 };
-
-        private int bgmPlay = 1;
-        private int sePlay = 1;
+        private int bgmPlay = 0;
+        private int sePlay = 0;
         private const int on = 0;
         private const int off = 1;
 
+        private readonly int[] messageFixedPosX = new int[] { Screen.Width / 2 - 125, Screen.Width / 2 + 125, Screen.Width / 2 };
+        private int messageCursorPosX = 0;
+        private const int messageCursorPosY =450;
+        private readonly string[] messages = new string[] { "save", "save_done", "reset", "reset_done" };
+        private string displayMessage;
+        private bool messageIndicate = false;
+
         private const float fontScale = 0.8f;
-        private int bg = ResourceLoader.GetGraph("title_bg.png");
-        private int dark = ResourceLoader.GetGraph("option/dark25.png");
+        private int shadow = ResourceLoader.GetGraph("option/dark25.png");
         private int cursor = ResourceLoader.GetGraph("option/cursor.png");
 
         public SceneOption(Game game) : base(game)
@@ -29,8 +34,16 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-            cursorPosX = fixedPosX[0];
-            cursorPosY = fixedPosY[0];
+            cursorPosX = cursorFixedPosX[0];
+            cursorPosY = cursorFixedPosY[0];
+            if (Game.bgmManager.playOn)
+                bgmPlay = on;
+            else
+                bgmPlay = off;
+            if (Sound.playOn)
+                sePlay = on;
+            else
+                sePlay = off;
         }
 
         public override void Update()
@@ -39,71 +52,61 @@ namespace Giraffe
             if (Game.bgmManager.playOn)
                 Game.bgmManager.FadeIn(Game.bgmManager.currentScene, 30);
 
-            if (!Game.fadeAction)
+            if (!Game.fadeAction && !messageIndicate)
             {
-                if (cursorPosY != fixedPosY[fixedPosY.Length - 1] &&
-                    cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())
+                if (cursorPosX != cursorFixedPosX[0] && Input.LEFT.IsPush())
                 {
-                    for (int i = 0; i < fixedPosX.Length; i++)
+                    for (int i = 0; i < cursorFixedPosX.Length; i++)
                     {
-                        if (cursorPosX == fixedPosX[i])
+                        if (cursorPosX == cursorFixedPosX[i])
                         {
                             Sound.Play("cursor_SE.mp3");
-                            cursorPosX = fixedPosX[i - 1];
+                            cursorPosX = cursorFixedPosX[i - 1];
                             break;
                         }
                     }
                 }
-                else if (cursorPosY != fixedPosY[fixedPosY.Length - 1] &&
-                         cursorPosX != fixedPosX[fixedPosX.Length - 1] && Input.RIGHT.IsPush())
+                else if (cursorPosY != cursorFixedPosY[cursorFixedPosY.Length - 1] &&
+                         cursorPosX != cursorFixedPosX[cursorFixedPosX.Length - 1] && Input.RIGHT.IsPush())
                 {
-                    for (int i = 0; i < fixedPosX.Length; i++)
+                    for (int i = 0; i < cursorFixedPosX.Length; i++)
                     {
-                        if (cursorPosX == fixedPosX[i])
+                        if (cursorPosX == cursorFixedPosX[i])
                         {
                             Sound.Play("cursor_SE.mp3");
-                            cursorPosX = fixedPosX[i + 1];
+                            cursorPosX = cursorFixedPosX[i + 1];
                             break;
                         }
                     }
                 }
-                else if (Input.UP.IsPush())
+                else if (cursorPosY != cursorFixedPosY[0] && Input.UP.IsPush())
                 {
-                    if (cursorPosY == fixedPosY[fixedPosY.Length - 1])
+                    for (int i = 0; i < cursorFixedPosY.Length; i++)
                     {
-                        Sound.Play("cursor_SE.mp3");
-                        cursorPosX = fixedPosX[0];
-                        cursorPosY = fixedPosY[fixedPosY.Length - 2];
-                    }
-                    else if (cursorPosY != fixedPosY[0])
-                    {
-                        for (int i = 0; i < fixedPosY.Length; i++)
+                        if (cursorPosY == cursorFixedPosY[i])
                         {
-                            if (cursorPosY == fixedPosY[i])
-                            {
-                                Sound.Play("cursor_SE.mp3");
-                                cursorPosY = fixedPosY[i - 1];
-                                break;
-                            }
+                            Sound.Play("cursor_SE.mp3");
+                            cursorPosY = cursorFixedPosY[i - 1];
+                            break;
                         }
                     }
                 }
-                else if (Input.DOWN.IsPush())
+                else if (cursorPosY != cursorFixedPosY[cursorFixedPosY.Length - 1] && Input.DOWN.IsPush())
                 {
-                    if (cursorPosY == fixedPosY[fixedPosY.Length - 2])
+                    if (cursorPosY == cursorFixedPosY[cursorFixedPosY.Length - 2])
                     {
                         Sound.Play("cursor_SE.mp3");
-                        cursorPosX = fixedPosX[0];
-                        cursorPosY = fixedPosY[fixedPosY.Length - 1];
+                        cursorPosX = cursorFixedPosX[0];
+                        cursorPosY = cursorFixedPosY[cursorFixedPosY.Length - 1];
                     }
-                    else if (cursorPosY != fixedPosY[fixedPosY.Length - 1])
+                    else
                     {
-                        for (int i = 0; i < fixedPosY.Length; i++)
+                        for (int i = 0; i < cursorFixedPosY.Length; i++)
                         {
-                            if (cursorPosY == fixedPosY[i])
+                            if (cursorPosY == cursorFixedPosY[i])
                             {
                                 Sound.Play("cursor_SE.mp3");
-                                cursorPosY = fixedPosY[i + 1];
+                                cursorPosY = cursorFixedPosY[i + 1];
                                 break;
                             }
                         }
@@ -111,7 +114,7 @@ namespace Giraffe
                 }
                 else if (Input.ACTION.IsPush())
                 {
-                    if (cursorPosY == fixedPosY[fixedPosY.Length - 1])
+                    if (cursorPosY == cursorFixedPosY[cursorFixedPosY.Length - 1])
                     {
                         Sound.Play("decision_SE.mp3");
                         Game.fadeAction = true;
@@ -119,15 +122,15 @@ namespace Giraffe
                     }
                     else
                     {
-                        if (cursorPosY == fixedPosY[0])//BGM
+                        if (cursorPosY == cursorFixedPosY[0])//BGM
                         {
-                            if (!Game.bgmManager.playOn && cursorPosX == fixedPosX[0])
+                            if (!Game.bgmManager.playOn && cursorPosX == cursorFixedPosX[0])
                             {
                                 Sound.Play("decision_SE.mp3");
                                 bgmPlay = on;
                                 Game.bgmManager.playOn = true;
                             }
-                            else if (Game.bgmManager.playOn && cursorPosX == fixedPosX[1])
+                            else if (Game.bgmManager.playOn && cursorPosX == cursorFixedPosX[1])
                             {
                                 Sound.Play("decision_SE.mp3");
                                 bgmPlay = off;
@@ -135,47 +138,138 @@ namespace Giraffe
                                 Game.bgmManager.AllRemove();
                             }
                         }
-                        else if (cursorPosY == fixedPosY[1])//SE
+                        else if (cursorPosY == cursorFixedPosY[1])//SE
                         {
-                            if (!Sound.playOn && cursorPosX == fixedPosX[0])
+                            if (!Sound.playOn && cursorPosX == cursorFixedPosX[0])
                             {
                                 Sound.DefinitelyPlay("decision_SE.mp3");
                                 sePlay = on;
                                 Sound.playOn = true;
                             }
-                            else if (Sound.playOn && cursorPosX == fixedPosX[1])
+                            else if (Sound.playOn && cursorPosX == cursorFixedPosX[1])
                             {
                                 sePlay = off;
                                 Sound.playOn = false;
                             }
                         }
+                        else if (cursorPosY == cursorFixedPosY[2])//設定
+                        {
+                            if (cursorPosX == cursorFixedPosX[0])//セーブ
+                            {
+                                messageIndicate = true;
+                                displayMessage = messages[0];
+                                messageCursorPosX = messageFixedPosX[0];
+                            }
+                            else if (cursorPosX == cursorFixedPosX[1])//リセット
+                            {
+                                messageIndicate = true;
+                                displayMessage = messages[2];
+                                messageCursorPosX = messageFixedPosX[1];
+                            }
+                        }
                     }
+                }
+            }
+            else if (!Game.fadeAction && messageIndicate)
+            {
+                if (messageCursorPosX == messageFixedPosX[0] && Input.RIGHT.IsPush())
+                {
+                    Sound.Play("cursor_SE.mp3");
+                    messageCursorPosX = messageFixedPosX[1];
+                }
+                else if (messageCursorPosX == messageFixedPosX[1] && Input.LEFT.IsPush())
+                {
+                    Sound.Play("cursor_SE.mp3");
+                    messageCursorPosX = messageFixedPosX[0];
+                }
+                else if (Input.ACTION.IsPush())
+                {
+                    if (messageCursorPosX == messageFixedPosX[0])
+                    {
+                        Sound.Play("decision_SE.mp3");
+                        if (displayMessage == messages[0])//セーブ
+                        {
+                            Game.settings.bgmPlayOn = Game.bgmManager.playOn;
+                            Game.settings.sePlayOn = Sound.playOn;
+                            SaveManager.Save(SETTINGS, Game.settings);
+                            displayMessage = messages[1];
+                            messageCursorPosX = messageFixedPosX[2];
+                        }
+                        else if (displayMessage == messages[2])//リセット
+                        {
+                            Game.bgmManager.playOn = true;
+                            Sound.playOn = true;
+                            Game.settings.bgmPlayOn = true;
+                            Game.settings.sePlayOn = true;
+                            bgmPlay = on;
+                            sePlay = on;
+                            //リセットでセーブいる？
+                            //SaveManager.Save(SETTINGS, Game.settings);
+                            displayMessage = messages[3];
+                            messageCursorPosX = messageFixedPosX[2];
+                        }
+                    }
+                    else if (messageCursorPosX == messageFixedPosX[1])
+                    {
+                        Sound.Play("decision_SE.mp3");
+                        messageIndicate = false;
+                    }
+                    else if (messageCursorPosX == messageFixedPosX[2])
+                    {
+                        if (displayMessage == messages[1] || displayMessage == messages[3])
+                        {
+                            Sound.Play("decision_SE.mp3");
+                            messageIndicate = false;
+                        }
+                    }
+                }
+                else if (Input.BACK.IsPush())
+                {
+                    Sound.Play("cancel_SE.mp3");
+                    messageIndicate = false;
                 }
             }
         }
 
         public override void Draw()
         {
-            DX.DrawGraph(0, 0, bg);
-            DX.DrawGraph(0, 0, dark);
+            DX.DrawGraph(0, 0, ResourceLoader.GetGraph("title_bg.png"));
+            DX.DrawGraph(0, 0, shadow);
 
-            DX.DrawRotaGraph(cursorPosX, cursorPosY, fontScale, 0, cursor);
+            if (!messageIndicate)
+                DX.DrawRotaGraph(cursorPosX, cursorPosY, fontScale, 0, cursor);
 
-            DX.DrawRotaGraph(120, fixedPosY[0], fontScale, 0, ResourceLoader.GetGraph("option/bgm_image.png"));
-            DX.DrawRotaGraph(120, fixedPosY[1], fontScale, 0, ResourceLoader.GetGraph("option/se_image.png"));
-            DX.DrawRotaGraph(120, fixedPosY[2], fontScale, 0, ResourceLoader.GetGraph("option/setup.png"));
-            DX.DrawRotaGraph(fixedPosX[0], fixedPosY[fixedPosY.Length - 1], fontScale, 0, ResourceLoader.GetGraph("option/back.png"));
+            DX.DrawRotaGraph(120, cursorFixedPosY[0], fontScale, 0, ResourceLoader.GetGraph("option/bgm_image.png"));
+            DX.DrawRotaGraph(120, cursorFixedPosY[1], fontScale, 0, ResourceLoader.GetGraph("option/se_image.png"));
+            DX.DrawRotaGraph(120, cursorFixedPosY[2], fontScale, 0, ResourceLoader.GetGraph("option/setup.png"));
+            DX.DrawRotaGraph(cursorFixedPosX[0], cursorFixedPosY[0], fontScale, 0, ResourceLoader.GetGraph("option/on" + bgmPlay + ".png"));
+            DX.DrawRotaGraph(cursorFixedPosX[1], cursorFixedPosY[0], fontScale, 0, ResourceLoader.GetGraph("option/off" + bgmPlay + ".png"));
+            DX.DrawRotaGraph(cursorFixedPosX[0], cursorFixedPosY[1], fontScale, 0, ResourceLoader.GetGraph("option/on" + sePlay + ".png"));
+            DX.DrawRotaGraph(cursorFixedPosX[1], cursorFixedPosY[1], fontScale, 0, ResourceLoader.GetGraph("option/off" + sePlay + ".png"));
+            DX.DrawRotaGraph(cursorFixedPosX[0], cursorFixedPosY[2], 0.6f, 0, ResourceLoader.GetGraph("option/save.png"));
+            DX.DrawRotaGraph(cursorFixedPosX[1], cursorFixedPosY[2], 0.6f, 0, ResourceLoader.GetGraph("option/reset.png"));
+            DX.DrawRotaGraph(cursorFixedPosX[0], cursorFixedPosY[cursorFixedPosY.Length - 1], fontScale, 0, ResourceLoader.GetGraph("option/back.png"));
 
-            DX.DrawRotaGraph(fixedPosX[0], fixedPosY[0], fontScale, 0, ResourceLoader.GetGraph("option/on" + bgmPlay + ".png"));
-            DX.DrawRotaGraph(fixedPosX[1], fixedPosY[1], fontScale, 0, ResourceLoader.GetGraph("option/off" + sePlay + ".png"));
+            if (messageIndicate)
+            {
+                DX.DrawGraph(0, 0, shadow);
+                DX.DrawGraph(0, 0, ResourceLoader.GetGraph("option/" + displayMessage + "_message.png"));
+                DX.DrawRotaGraph(messageCursorPosX, messageCursorPosY, 0.9, 0, cursor);
+                if (displayMessage == messages[0] || displayMessage == messages[2])
+                {
+                    DX.DrawRotaGraph(messageFixedPosX[0], messageCursorPosY, 0.9, 0, ResourceLoader.GetGraph("option/yes.png"));
+                    DX.DrawRotaGraph(messageFixedPosX[1], messageCursorPosY, 0.9, 0, ResourceLoader.GetGraph("option/no.png"));
+                }
+                else if (displayMessage == messages[1] || displayMessage == messages[3])
+                {
+                    DX.DrawRotaGraph(messageFixedPosX[2], messageCursorPosY, 0.9, 0, ResourceLoader.GetGraph("option/yes.png"));
+                }
+            }
         }
 
         public override void OnExit()
         {
             Game.fadeAction = false;
-            Game.settings.bgmPlayOn = Game.bgmManager.playOn;
-            Game.settings.sePlayOn = Sound.playOn;
-            SaveManager.Save(SETTINGS, Game.settings);
         }
     }
 }
