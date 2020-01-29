@@ -45,9 +45,6 @@ namespace Giraffe
         private int tail = ResourceLoader.GetGraph("player/player_tail.png");
         private int neck = ResourceLoader.GetGraph("player/neck.png");
         private int titlebg = ResourceLoader.GetGraph("title_bg.png");
-        private int select1 = ResourceLoader.GetGraph("select_4.png");
-        private int select2 = ResourceLoader.GetGraph("select_2.png");
-        private int option = ResourceLoader.GetGraph("option.png");
         private int icon = ResourceLoader.GetGraph("キリンアイコン.png");
         private int treebg = ResourceLoader.GetGraph("image_select/select_bg.png");
         private int stagename=ResourceLoader.GetGraph("image_select/select_UI.png");
@@ -64,11 +61,13 @@ namespace Giraffe
             if (!stageSelect)//タイトル画面
             {
                 DX.DrawGraph(0, 0, titlebg);
-                DX.DrawGraph(100, 100, select1);
-                for (int i = 0; i < cursorFixedPosY.Length; i++)//選択肢
-                {
-                    DX.DrawGraph(135, cursorFixedPosY[i], ResourceLoader.GetGraph("select_" + i + ".png"));
-                }
+                //for (int i = 0; i < cursorFixedPosY.Length; i++)//選択肢
+                //{
+                //    DX.DrawGraph(135, cursorFixedPosY[i], ResourceLoader.GetGraph("select_" + i + ".png"));
+                //}
+                DX.DrawGraph(135, cursorFixedPosY[0], ResourceLoader.GetGraph("select_" + 0 + ".png"));
+                DX.DrawGraph(90, cursorFixedPosY[1], ResourceLoader.GetGraph("select_" + 1 + ".png"));
+                DX.DrawGraph(135, cursorFixedPosY[2], ResourceLoader.GetGraph("select_" + 2 + ".png"));
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, head);
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, horn);
                 DX.DrawRectGraphF(7, cursorPos, 0, 0, 128, 128, eye);

@@ -39,9 +39,9 @@ namespace Giraffe
             bgmMap["tutorial"] = 0;
 
             bgmPos["title"] = DX.VGet(0.0f, 0.0f, 0.0f);//BGMの位置の設定
-            bgmPos["play"] = DX.VGet(0.0f, 0.0f, 0.0f);
-            bgmPos["result"] = DX.VGet(0.0f, 0.0f, 0.0f);
-            bgmPos["tutorial"] = DX.VGet(0.0f, 0.0f, 0.0f);
+            bgmPos["play"] = DX.VGet(interval, 0.0f, 0.0f);
+            bgmPos["result"] = DX.VGet(interval * 2, 0.0f, 0.0f);
+            bgmPos["tutorial"] = DX.VGet(interval * 3, 0.0f, 0.0f);
             //bgmPos["play_fast"] = bgmPos["play"];
         }
 
@@ -69,7 +69,7 @@ namespace Giraffe
 
         public void FadeOut(string name, int time)
         {
-            if (ListenerPos.x != bgmPos[name].x)
+            if ((int)ListenerPos.x != (int)bgmPos[name].x)
             {
                 if (ListenerPos.x > bgmPos[name].x + 1)
                 {
@@ -100,29 +100,29 @@ namespace Giraffe
 
         public void CrossFade(string name, int time)
         {
-            if (bgmPos[name].x != bgmPos[currentScene].x + interval)
+            if ((int)bgmPos[name].x < (int)bgmPos[currentScene].x + interval)
             {
                 bgmPos[name] = DX.VGet(bgmPos[currentScene].x + interval, 0.0f, 0.0f);
                 r = ListenerPos.z - bgmPos[currentScene].z;
                 fadeDegre = 90 / (time / interval * r);
             }
-            if (ListenerPos.z != 0)
-            {
-                if (ListenerPos.z > 0)
-                {
-                    degree += fadeDegre;
-                    radian = (90 + degree) * (float)Math.PI / 180;
-                    ListenerPos.z = r * (float)Math.Sin(radian) + bgmPos[currentScene].z;
-                }
-                if (ListenerPos.z < 0)
-                    ListenerPos.z = 0;
-            }
-            if (ListenerPos.x < bgmPos[name].x)
+            //if ((int)ListenerPos.z != 0)
+            //{
+            //    if (ListenerPos.z > 0)
+            //    {
+            //        degree += fadeDegre;
+            //        radian = (90 + degree) * (float)Math.PI / 180;
+            //        ListenerPos.z = r * (float)Math.Sin(radian) + bgmPos[currentScene].z;
+            //    }
+            //    if (ListenerPos.z < 0)
+            //        ListenerPos.z = 0;
+            //}
+            if ((int)ListenerPos.x < (int)bgmPos[name].x)
             {
                 ListenerPos.x += interval / time;
                 DX.Set3DSoundListenerPosAndFrontPos_UpVecY(ListenerPos, ListenerDir);
             }
-            else if (ListenerPos.x > bgmPos[name].x)
+            else if ((int)ListenerPos.x > (int)bgmPos[name].x)
             {
                 ListenerPos.x = bgmPos[name].x;
             }
@@ -201,6 +201,8 @@ namespace Giraffe
             DX.DrawCircle(100 + (int)bgmPos["play"].x, 150 + (int)bgmPos["play"].z, (int)bgmDis, DX.GetColor(255, 255, 0), DX.FALSE);
             //リザルト,紫
             DX.DrawCircle(100 + (int)bgmPos["result"].x, 150 + (int)bgmPos["result"].z, (int)bgmDis, DX.GetColor(255, 0, 255), DX.FALSE);
+            //チュートリアル,黒
+            DX.DrawCircle(100 + (int)bgmPos[bgmName[3]].x, 150 + (int)bgmPos[bgmName[3]].z, (int)bgmDis, DX.GetColor(0, 0, 0), DX.FALSE);
             //リスナー,青
             DX.DrawCircle(100 + (int)ListenerPos.x, 150 + (int)ListenerPos.z, 2, DX.GetColor(0, 0, 255));
         }
