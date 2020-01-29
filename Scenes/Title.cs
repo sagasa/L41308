@@ -17,13 +17,11 @@ namespace Giraffe
         private const float fontScale2 = 0.1f;//タイムボーナス用
 
         private DummyPlayer Dummy;
-        private int fadeTime = 60;
+        private const int fadeTime = 90;
+        private const int shortFadeTime = 30;
         private int fadeCounter = 0;
-        public static int stageCount = 0;
         private int stageWaitTime = 60;
         private bool isRight = false;
-        private bool isLeft = false;
-        private bool walk = false;
         private int treebgPos = 0;
         private float neckSize = 6.2f;
         private int neckPos = 600;
@@ -35,7 +33,8 @@ namespace Giraffe
         private int[] cursorFixedPos = new int[] { 450, 550, 650 };
         int[]  bestTime1 =new int[] {0,0,0};
         int bestscore1 = 0;
-        
+
+        private bool stageSelect = false;
 
         private int head = ResourceLoader.GetGraph("player/player_head.png");
         private int horn = ResourceLoader.GetGraph("player/horn.png");
@@ -62,7 +61,7 @@ namespace Giraffe
 
         public override void Draw()
         {
-            if (stageCount == 0)
+            if (!stageSelect)//タイトル画面
             {
                 DX.DrawGraph(0, 0, titlebg);
                 DX.DrawGraph(135, cursorFixedPos[0], select1);
@@ -75,66 +74,63 @@ namespace Giraffe
                 DX.DrawRectGraphF(7, 668, 0, 0, 128, 128, leg);
                 DX.DrawGraph(7, 668, body);
                 DX.DrawRectGraphF(7, 668, 0, 0, 128, 128, tail);
-                DX.DrawRotaGraph3(7,neckPos,0,64,1,neckSize,0,neck,DX.TRUE,DX.FALSE);
-                
+                DX.DrawRotaGraph3(7, neckPos, 0, 64, 1, neckSize, 0, neck, DX.TRUE, DX.FALSE);
+
             }
-            if (stageCount >= 1)
+            if (stageSelect)//ステージセレクト
             {
-                
                 DX.DrawGraph(treebgPos - Screen.Width, 0, treebg);
                 DX.DrawGraph(UIpos - Screen.Width, 0, stagename);
-               
                 Dummy.Draw();
-                if (stageCount == 2)
-                {
-                    if (treebgPos == 0)
-                    {
-                        int digit = 1000;
-                        int leftCounter= 0;
-                        for (int i = 0; i < 4; i++)
-                        {
-                            for (int j = 0; j < 10; j++)
-                            {
-                                if (j == bestscore1 / digit % 10 && bestscore1 / digit != 0)
-                                {
-                                    DX.DrawRotaGraph(frameX + fontInterval * leftCounter + 120, 470, fontScale1, 0, ResourceLoader.GetGraph("image_select/mozi_" + j + ".png"));
-                                    leftCounter++;
-                                }
 
-                            }
-                            digit /= 10;
-                        }
-                        digit = 10;
-                        for (int i = 0; i < 2; i++)
+                if (treebgPos == treeFixedPos[1])
+                {
+                    int digit = 1000;
+                    int leftCounter = 0;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        for (int j = 0; j < 10; j++)
                         {
-                            for (int j = 0; j < 10; j++)
+                            if (j == bestscore1 / digit % 10 && bestscore1 / digit != 0)
                             {
-                                if (j == bestTime1[0] / digit % 10 && (bestTime1[0] / digit != 0 || digit == 1))//ベストタイム,分
-                                {
-                                    DX.DrawRotaGraph(frameX + fontInterval * leftCounter, 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
-                                    leftCounter++;
-                                }
+                                DX.DrawRotaGraph(frameX + fontInterval * leftCounter + 120, 470, fontScale1, 0, ResourceLoader.GetGraph("image_select/mozi_" + j + ".png"));
+                                leftCounter++;
                             }
-                            for (int j = 0; j < 10; j++)
-                            {
-                                if (j == bestTime1[1] / digit % 10)
-                                {
-                                    DX.DrawRotaGraph(frameX + fontInterval * (2 + leftCounter), 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
-                                }
-                            }
-                            digit /= 10;
+
                         }
-                        DX.DrawRotaGraph(200 + fontInterval * leftCounter, 534, 0.2, 0, coron);
+                        digit /= 10;
                     }
+                    digit = 10;
+                    for (int i = 0; i < 2; i++)
+                    {
+                        for (int j = 0; j < 10; j++)
+                        {
+                            if (j == bestTime1[0] / digit % 10 && (bestTime1[0] / digit != 0 || digit == 1))//ベストタイム,分
+                            {
+                                DX.DrawRotaGraph(frameX + fontInterval * leftCounter, 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                                leftCounter++;
+                            }
+                        }
+                        for (int j = 0; j < 10; j++)
+                        {
+                            if (j == bestTime1[1] / digit % 10)
+                            {
+                                DX.DrawRotaGraph(frameX + fontInterval * (2 + leftCounter), 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                            }
+                        }
+                        digit /= 10;
+                    }
+                    DX.DrawRotaGraph(200 + fontInterval * leftCounter, 534, 0.2, 0, coron);
                 }
-                
             }
         }
         
         public override void OnLoad()
         {
             cursorPos = cursorFixedPos[0];
+            Dummy.pos = new Vec2f(Screen.Width / 2, Screen.Height - 64);
             fadeCounter = 0;
+
             bestTime1 = Game.bestTime;
             bestscore1 = Game.bestScore;
         }
@@ -157,7 +153,7 @@ namespace Giraffe
             
             if (!Game.fadeAction)
             {
-                if (stageCount == 0)
+                if (!stageSelect)//タイトル画面
                 {
                     if (cursorPos != cursorFixedPos[0] && Input.UP.IsPush())//カーソルが一番上以外の時に↑が押されたら、カーソルを一つ上へ
                     {
@@ -190,56 +186,29 @@ namespace Giraffe
                     if (cursorPos == cursorFixedPos[0] && Input.ACTION.IsPush())
                     {
                         Sound.Play("decision_SE.mp3");
-                        stageCount += 2;
+                        stageSelect = true;
                     }
                     else if (cursorPos == cursorFixedPos[1] && Input.ACTION.IsPush())
                     {
                         Sound.Play("decision_SE.mp3");
                         Game.bgmManager.currentScene = "title";
                         Game.fadeAction = true;
-                        Game.SetScene(new Tutolal(Game), new Fade(60, true, true));
+                        Game.SetScene(new Tutolal(Game), new Fade(shortFadeTime, true, true));
                     }
                     else if (cursorPos == cursorFixedPos[2] && Input.ACTION.IsPush())
                     {
                         Sound.Play("decision_SE.mp3");
                         Game.bgmManager.currentScene = "title";
                         Game.fadeAction = true;
-                        Game.SetScene(new SceneOption(Game), new Fade(30, true, true));
+                        Game.SetScene(new SceneOption(Game), new Fade(shortFadeTime, true, true));
                     }
                 }
-                if (stageCount >= 1)
+                else if (stageSelect)//ステージセレクト
                 {
+                    stageWaitTime--;
                     Dummy.Update();
-                    Dummy.pos = new Vec2f(Screen.Width / 2, Screen.Height - 64);
 
-                    if (Input.RIGHT.IsPush())
-                    {
-                        isRight = true;
-                        isLeft = false;
-                        Dummy.isDunnyRight = true;
-                        if (stageCount > 6)
-                        {
-                            stageCount += 0;
-                        }
-                        else
-                        {
-                            stageCount += 1;
-                        }
-                    }
-                    else if (Input.LEFT.IsPush())
-                    {
-                        isLeft = true;
-                        isRight = false;
-                        Dummy.isDunnyRight = false;
-                        if (stageCount < 2)
-                        {
-                            stageCount -= 0;
-                        }
-                        else
-                        {
-                            stageCount -= 1;
-                        }
-                    }
+                    
 
                     if (Dummy.isDunnyRight == false)
                     {
@@ -248,6 +217,17 @@ namespace Giraffe
                     else if (Dummy.isDunnyRight == true)
                     {
                         Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, 0.01f, 0.1f));
+                    }
+
+                    if (Input.RIGHT.IsPush())
+                    {
+                        isRight = true;
+                        Dummy.isDunnyRight = true;
+                    }
+                    else if (Input.LEFT.IsPush())
+                    {
+                        isRight = false;
+                        Dummy.isDunnyRight = false;
                     }
 
                     if (treebgPos != treeFixedPos[treeFixedPos.Length - 1] && Input.RIGHT.IsPush())//一番右側以外にいるとき、→が押されたら右へ
@@ -304,42 +284,43 @@ namespace Giraffe
                             UIpos += treebgMoveWidth;
                         }
                     }
-                    if (!treeMove || stageCount == 0)
+                    if (!treeMove || !stageSelect)
                         Sound.Stop("step_SE.mp3");
 
-                    if (Input.BACK.IsPush())
-                    {
-                        stageCount = 0;
-                        Sound.Play("cancel_SE.mp3");
-                        stageWaitTime = 60;
-                    }
+                   
                     
-                    stageWaitTime--;
+                    
                     if (Input.ACTION.IsPush() && stageWaitTime <= 0 && Tutolal.Tutorialcount == 0)
                     {
-                        if (treebgPos == treeFixedPos[0])
+                        //共通のもの
+                        for (int i = 0; i < treeFixedPos.Length; i++)
                         {
-                            Sound.Play("decision_SE.mp3");
-                            Game.fadeAction = true;
-                            Game.bgmManager.currentScene = "title";
-                            Game.SetScene(new Tutolal(Game), new Fade(fadeTime, true, true));
-                            Tutolal.Tutorialcount = 99;
+                            if (treebgPos == treeFixedPos[i])
+                            {
+                                Sound.Play("decision_SE.mp3");
+                                Game.fadeAction = true;
+                                Game.bgmManager.currentScene = "title";
+                                break;
+                            }
                         }
-                        else if (treebgPos == treeFixedPos[1])
+                        //固有のもの
+                        if (treebgPos == treeFixedPos[0])//チュートリアル
                         {
-                            Sound.Play("decision_SE.mp3");
-                            Game.fadeAction = true;
-                            Game.bgmManager.currentScene = "title";
+                            Tutolal.Tutorialcount = 99;
+                            Game.SetScene(new Tutolal(Game), new Fade(fadeTime, true, true));
+                        }
+                        else if (treebgPos == treeFixedPos[1])//ステージ1
+                        {
                             Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
                         }
-                        else if (treebgPos == treeFixedPos[2])
-                        {
-
-                        }
-                        else if (treebgPos == treeFixedPos[3])
-                        {
-
-                        }
+                        else if (treebgPos == treeFixedPos[2]) { }
+                        else if (treebgPos == treeFixedPos[3]) { }
+                    }
+                    if (Input.BACK.IsPush())
+                    {
+                        stageSelect = false;
+                        Sound.Play("cancel_SE.mp3");
+                        stageWaitTime = 60;
                     }
                 }
             }

@@ -99,7 +99,6 @@ namespace Giraffe
                 Game.bestScore = currentScore;
             if (currentTime[0] * 60 + currentTime[1] < bestTime[0] * 60 + bestTime[1])
                 Game.bestTime = currentTime;
-
             Game.hightScore.bestScore = Game.bestScore;
             Game.hightScore.bestTime = Game.bestTime;
             SaveManager.Save(HIGHTSCORE, Game.hightScore);

@@ -120,8 +120,7 @@ namespace Giraffe
             player.pos = MapPos+new Vec2f(2,2);
             playerIcon = new playerIcon(this);
         }
-
-
+        
         public override void Draw()
         {
             Vec2f pos = GetScreenPos(Vec2f.ZERO);

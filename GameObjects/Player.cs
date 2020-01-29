@@ -134,11 +134,15 @@ namespace Giraffe
                 if (Input.UP.IsHold() && _render.NeckExt < 2f)
                 {
                     _render.NeckExt += 0.1f;
+                    if (!Sound.CheckPlaySound("neck_up_SE.mp3"))
+                        Sound.Play("neck_up_SE.mp3");
                 }
 
                 if (Input.DOWN.IsHold() && 0.85f < _render.NeckExt)
                 {
                     _render.NeckExt -= 0.1f;
+                    if (!Sound.CheckPlaySound("neck_down_SE.mp3"))
+                        Sound.Play("neck_down_SE.mp3");
                 }
             }
 
@@ -288,13 +292,9 @@ namespace Giraffe
             }
 
             if (IsOnGround()&&((Input.LEFT.IsPush() && !Input.RIGHT.IsHold()) || (Input.RIGHT.IsPush() && !Input.LEFT.IsHold())))
-            {
                 Sound.Loop("step_SE.mp3");
-            }
             if (!IsOnGround() || (!Input.LEFT.IsHold() && !Input.RIGHT.IsHold()))
-            {
                 Sound.Stop("step_SE.mp3");
-            }
 
             base.Update();
             currentLeaf = null;
