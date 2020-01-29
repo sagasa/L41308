@@ -64,6 +64,7 @@ namespace Giraffe
             if (!stageSelect)//タイトル画面
             {
                 DX.DrawGraph(0, 0, titlebg);
+                DX.DrawGraph(100, 100, select1);
                 for (int i = 0; i < cursorFixedPosY.Length; i++)//選択肢
                 {
                     DX.DrawGraph(135, cursorFixedPosY[i], ResourceLoader.GetGraph("select_" + i + ".png"));
