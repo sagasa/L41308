@@ -52,11 +52,11 @@ namespace SAGASALib
                 int speed = 3;//初速？
                 if (animation.Progress < 0.5f)
                 {
-                    render.Target.pos += new Vec2f(animation.Delta * distance, animation.Delta * (animation.Progress) * (animation.Progress));
+                    render.Target.pos += new Vec2f(animation.Delta * distance, -animation.Progress * (animation.Delta * distance) * (animation.Delta * distance));
                 }
                 else
                 {
-                    render.Target.pos += new Vec2f(animation.Delta * distance, 0);
+                    render.Target.pos += new Vec2f(animation.Delta * distance, 0); //(animation.Delta * distance) * (animation.Delta * distance));
                 }
             }, null);
 

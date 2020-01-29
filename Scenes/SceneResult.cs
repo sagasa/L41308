@@ -228,7 +228,7 @@ namespace Giraffe
             DX.DrawRotaGraph(fixedPosX[0], cursorPosY, 1, 0, restart);
             DX.DrawRotaGraph(fixedPosX[1], cursorPosY, 1, 0, back);
 
-            testPlayer.Draw();
+            //testPlayer.Draw();
 
             //スコア
             int digit = 1000;
