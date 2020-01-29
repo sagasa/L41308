@@ -90,10 +90,10 @@ namespace Giraffe
 
         private static readonly int Flag = ResourceLoader.GetGraph("ハタアイコン.png");
         private static readonly int bar = ResourceLoader.GetGraph("マップ.png");
-        private static readonly int treeTop = ResourceLoader.GetGraph("tree_top.png");
-        private static readonly int treeMiddle = ResourceLoader.GetGraph("tree_middle.png");
+        private static readonly int treeTop = ResourceLoader.GetGraph("tree_top" + 1 + ".png");
+        private static readonly int treeMiddle = ResourceLoader.GetGraph("tree_middle_" + 1 + ".png");
         private static readonly int treePattern = ResourceLoader.GetGraph("treePattern.png");
-        private static readonly int treeBottom = ResourceLoader.GetGraph("tree_bottom.png"); //背景描画treePattern
+        private static readonly int treeBottom = ResourceLoader.GetGraph("tree_bottom_" + 1 + ".png"); //背景描画treePattern
         private static readonly int scoreImage = ResourceLoader.GetGraph("image_play/score.png");
         private static readonly int stageName = ResourceLoader.GetGraph("image_play/stagename_" + 1 + ".png");
         private static readonly int watch = ResourceLoader.GetGraph("tokei.png");
