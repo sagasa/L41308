@@ -115,9 +115,8 @@ namespace Giraffe
         {
             Map = new PlayMap(this, "map_1");
             MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y);
-
             player = new Player(this);
-            player.pos = MapPos+new Vec2f(2,2);
+            player.pos = MapPos+new Vec2f(PlayMap.ScreenSize.X/2, PlayMap.ScreenSize.Y / 4*3);
             playerIcon = new playerIcon(this);
         }
         
