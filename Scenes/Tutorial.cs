@@ -358,10 +358,12 @@ namespace Giraffe
                     if (Input.DOWN.IsPush())
                     {
                         Tutorialcount += 1;
+                        Sound.Play("cursor_SE.mp3");
                     }
                     else if (Input.UP.IsPush())
                     {
                         Tutorialcount -= 1;
+                        Sound.Play("cursor_SE.mp3");
                     }
                 }
                 if (cursorPosY == 0 && Input.DOWN.IsPush())
@@ -405,6 +407,7 @@ namespace Giraffe
 
                 if (Tutorialcount == 8 && Input.ACTION.IsPush())
                 {
+                    Game.bgmManager.currentScene = "tutorial";
                     Game.SetScene(new Title(Game));
                     Sound.Play("decision_SE.mp3");
                     Tutorialcount = 0;
@@ -525,9 +528,10 @@ namespace Giraffe
                         if (CommentTime <= 0)
                         {
                             Game.bgmManager.currentScene = "tutorial";
-                            Game.fadeAction = true;
+                            
                             Game.SetScene(new Title(Game),new Fade(fadeTime, true, true));
                             cursorPosY = cursorFixedPosY[0];
+                            Title.stageSelect = true;
                         }
                     }
                 }
