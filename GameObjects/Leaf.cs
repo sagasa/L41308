@@ -9,7 +9,7 @@ namespace Giraffe
         private int leafImage = ResourceLoader.GetGraph("leaf4.png");
         private int scoreLeafImage = ResourceLoader.GetGraph("s_leaf4.png");
         //private int branch = ResourceLoader.GetGraph("branch2.png");
-        private readonly int[] leafImages = ResourceLoader.GetGraph("leaf.png", 5);
+        private readonly int[] leafImages = ResourceLoader.GetGraph("leafes_1.png", 5);
         private readonly int[] scoreLeafImages = ResourceLoader.GetGraph("s_leafes_1.png", 5);
         public readonly AnimationManager<Leaf> AnimationManager; 
 
