@@ -194,6 +194,7 @@ namespace Giraffe
                         Game.bgmManager.currentScene = "title";
                         Game.fadeAction = true;
                         Game.SetScene(new Tutolal(Game), new Fade(shortFadeTime, true, true));
+                        Tutolal.Tutorialcount += 1;
                     }
                     else if (cursorPos == cursorFixedPosY[2] && Input.ACTION.IsPush())
                     {
@@ -301,7 +302,7 @@ namespace Giraffe
                         //固有のもの
                         if (treebgPos == treeFixedPos[0])//チュートリアル
                         {
-                            Tutolal.Tutorialcount = 99;
+                            Tutolal.Tutorialcount += 99;
                             Game.SetScene(new Tutolal(Game), new Fade(fadeTime, true, true));
                         }
                         else if (treebgPos == treeFixedPos[1])//ステージ1

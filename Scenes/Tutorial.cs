@@ -40,14 +40,6 @@ namespace Giraffe
         private const int shortFadeTime = 30;
         private int fadeCounter = 0;
         
-        private int head = ResourceLoader.GetGraph("player/player_head.png");
-        private int horn = ResourceLoader.GetGraph("player/horn.png");
-        private int eye = ResourceLoader.GetGraph("player/player_eye.png");
-        private int ear = ResourceLoader.GetGraph("player/player_ear.png");
-        private int body = ResourceLoader.GetGraph("player/body.png");
-        private int leg = ResourceLoader.GetGraph("player/player_leg.png");
-        private int tail = ResourceLoader.GetGraph("player/player_tail.png");
-        private int neck = ResourceLoader.GetGraph("player/neck.png");
         private int titlebg = ResourceLoader.GetGraph("title_bg.png");
         private int select1 = ResourceLoader.GetGraph("select_3.png");
         private int select2 = ResourceLoader.GetGraph("select_4.png");
@@ -123,15 +115,7 @@ namespace Giraffe
                 DX.DrawGraph(0, 0, titlebg);
                 DX.DrawGraph(105, 515, select1);
                 DX.DrawGraph(105, 630, select2);
-                DX.DrawRectGraphF(7, cursorPosY, 0, 0, 128, 128, head);
-                DX.DrawRectGraphF(7, cursorPosY, 0, 0, 128, 128, horn);
-                DX.DrawRectGraphF(7, cursorPosY, 0, 0, 128, 128, eye);
-                DX.DrawRectGraphF(7, cursorPosY, 0, 0, 128, 128, ear);
-                DX.DrawRectGraphF(7, 668, 0, 0, 128, 128, leg);
-                DX.DrawGraph(7, Screen.Height - 132, body);
-                DX.DrawRectGraphF(7, 668, 0, 0, 128, 128, tail);
-                DX.DrawRotaGraph3(7, neckPos, 0, 64, 1, neckSize, 0, neck, DX.TRUE, DX.FALSE);
-                DX.DrawGraph(7, 668, neck);
+               
             }
 
             if (Tutorialcount >= 1 && Tutorialcount < 99)
@@ -245,7 +229,7 @@ namespace Giraffe
                 DX.DrawString(580, 120, SousaText[19], black);//OK!
                 DX.DrawBox(98, 133, 602, 162, black, DX.FALSE);//進行ゲージ外枠
                 DX.DrawString(110, 115, SousaText[20], black);
-                DX.DrawGraph(0, 160, stagename2);
+                DX.DrawRotaGraph(100, 15, 0.6f, 0, stagename2);
 
                 if (Tutorialcount >= 99 && Tutorialcount <= 100)//右
                 {
@@ -358,26 +342,9 @@ namespace Giraffe
 
             if (!Game.fadeAction)
             {
-                if (Tutorialcount == 0)
+                if (Tutorialcount >= 0)
                 {
-                    if (cursorPosY == cursorFixedPosY[0] && Input.DOWN.IsPush())
-                    {
-                        cursorPosY = cursorFixedPosY[1];
-                        Sound.Play("cursor_SE.mp3");
-                        
-                        neckSize -= 2.5f;
-                        neckPos += 61;
-
-                    }
-                    if (cursorPosY == cursorFixedPosY[1] && Input.UP.IsPush())
-                    {
-                        cursorPosY = cursorFixedPosY[0];
-                        Sound.Play("cursor_SE.mp3");
-
-                        neckSize += 2.5f;
-                        neckPos -= 61;
-                    }
-
+                   
                     if (Input.BACK.IsPush())
                     {
                         Sound.Play("cancel_SE.mp3");
@@ -386,18 +353,16 @@ namespace Giraffe
                         Game.SetScene(new Title(Game), new Fade(shortFadeTime, true, true));
                     }
                 }
-                
-                if (cursorPosY == cursorFixedPosY[1] && Input.ACTION.IsPush())
+                if (Tutorialcount >= 0 && Tutorialcount <= 8)
                 {
-                    Tutorialcount += 1;
-                    cursorPosY = 0;
-                    Sound.Play("decision_SE.mp3");
-                }
-                else if (cursorPosY == cursorFixedPosY[0] && Input.ACTION.IsPush())
-                {
-                    Tutorialcount += 99;
-                    cursorPosY = 0;
-                    Sound.Play("decision_SE.mp3");
+                    if (Input.DOWN.IsPush())
+                    {
+                        Tutorialcount += 1;
+                    }
+                    else if (Input.UP.IsPush())
+                    {
+                        Tutorialcount -= 1;
+                    }
                 }
                 if (cursorPosY == 0 && Input.DOWN.IsPush())
                 {
@@ -440,9 +405,9 @@ namespace Giraffe
 
                 if (Tutorialcount == 8 && Input.ACTION.IsPush())
                 {
-                    Tutorialcount = 0;
-                    cursorPosY = 502;
+                    Game.SetScene(new Title(Game));
                     Sound.Play("decision_SE.mp3");
+                    Tutorialcount = 0;
 
                 }
                 if (Tutorialcount == 4 || Tutorialcount == 2)
@@ -562,7 +527,6 @@ namespace Giraffe
                             Game.bgmManager.currentScene = "tutorial";
                             Game.fadeAction = true;
                             Game.SetScene(new Title(Game),new Fade(fadeTime, true, true));
-                            Tutorialcount = 0;
                             cursorPosY = cursorFixedPosY[0];
                         }
                     }
