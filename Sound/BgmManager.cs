@@ -106,17 +106,17 @@ namespace Giraffe
                 r = ListenerPos.z - bgmPos[currentScene].z;
                 fadeDegre = 90 / (time / interval * r);
             }
-            //if ((int)ListenerPos.z != 0)
-            //{
-            //    if (ListenerPos.z > 0)
-            //    {
-            //        degree += fadeDegre;
-            //        radian = (90 + degree) * (float)Math.PI / 180;
-            //        ListenerPos.z = r * (float)Math.Sin(radian) + bgmPos[currentScene].z;
-            //    }
-            //    if (ListenerPos.z < 0)
-            //        ListenerPos.z = 0;
-            //}
+            if ((int)ListenerPos.z != 0)
+            {
+                if (ListenerPos.z > 0)
+                {
+                    degree += fadeDegre;
+                    radian = (90 + degree) * (float)Math.PI / 180;
+                    ListenerPos.z = r * (float)Math.Sin(radian) + bgmPos[currentScene].z;
+                }
+                if (ListenerPos.z < 0)
+                    ListenerPos.z = 0;
+            }
             if ((int)ListenerPos.x < (int)bgmPos[name].x)
             {
                 ListenerPos.x += interval / time;
