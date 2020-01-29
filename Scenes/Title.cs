@@ -34,7 +34,7 @@ namespace Giraffe
         int[]  bestTime1 =new int[] {0,0,0};
         int bestscore1 = 0;
 
-        private bool stageSelect = false;
+        public static bool stageSelect = false;
 
         private int head = ResourceLoader.GetGraph("player/player_head.png");
         private int horn = ResourceLoader.GetGraph("player/horn.png");
@@ -45,7 +45,7 @@ namespace Giraffe
         private int tail = ResourceLoader.GetGraph("player/player_tail.png");
         private int neck = ResourceLoader.GetGraph("player/neck.png");
         private int titlebg = ResourceLoader.GetGraph("title_bg.png");
-        private int select1 = ResourceLoader.GetGraph("select_1.png");
+        private int select1 = ResourceLoader.GetGraph("select_4.png");
         private int select2 = ResourceLoader.GetGraph("select_2.png");
         private int option = ResourceLoader.GetGraph("option.png");
         private int icon = ResourceLoader.GetGraph("キリンアイコン.png");
