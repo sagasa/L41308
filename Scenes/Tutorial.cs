@@ -29,12 +29,15 @@ namespace Giraffe
         int CommentTime = 120;
         int Sounsa;
 
+        readonly int[] cursorFixedPosY = new int[] { 502, 617 };
+        int cursorPosY;//キリンの頭の座標
+        private readonly Vec2f giraffePos;
         private int neckPos = 632;
-        private float neckSize = 4.8f;
-
+        private float neckSize = 4.6f;
         private AnimationManager<PlayerRender> _animation;
 
-
+        private const int fadeTime = 30;
+        private int fadeCounter = 0;
         
         private int head = ResourceLoader.GetGraph("player/player_head.png");
         private int horn = ResourceLoader.GetGraph("player/horn.png");
@@ -53,9 +56,7 @@ namespace Giraffe
         private int waku = ResourceLoader.GetGraph("waku.png");
         private int mes = ResourceLoader.GetGraph("mes11_02_.png");
         private int stagename2 = ResourceLoader.GetGraph("image_play/stagename_0.png");
-
-        int y = 502;//キリンの頭の座標
-
+        
         string[] GamenText = new string[]//画面説明用コメント
         {
           "画面説明です",//画面説明,1
@@ -121,33 +122,15 @@ namespace Giraffe
                 DX.DrawGraph(0, 0, titlebg);
                 DX.DrawGraph(105, 515, select1);
                 DX.DrawGraph(105, 630, select2);
-                DX.DrawRectGraphF(7, y, 0, 0, 128, 128, head);
-                DX.DrawRectGraphF(7, y, 0, 0, 128, 128, horn);
-                DX.DrawRectGraphF(7, y, 0, 0, 128, 128, eye);
-                DX.DrawRectGraphF(7, y, 0, 0, 128, 128, ear);
+                DX.DrawRectGraphF(7, cursorPosY, 0, 0, 128, 128, head);
+                DX.DrawRectGraphF(7, cursorPosY, 0, 0, 128, 128, horn);
+                DX.DrawRectGraphF(7, cursorPosY, 0, 0, 128, 128, eye);
+                DX.DrawRectGraphF(7, cursorPosY, 0, 0, 128, 128, ear);
                 DX.DrawRectGraphF(7, 668, 0, 0, 128, 128, leg);
-                DX.DrawGraph(7, 668, body);
+                DX.DrawGraph(7, Screen.Height - 132, body);
                 DX.DrawRectGraphF(7, 668, 0, 0, 128, 128, tail);
                 DX.DrawRotaGraph3(7, neckPos, 0, 64, 1, neckSize, 0, neck, DX.TRUE, DX.FALSE);
                 DX.DrawGraph(7, 668, neck);
-                if (Input.DOWN.IsPush())
-                {
-                    y = 617;
-                    Sound.Play("cursor_SE.mp3");
-
-                    neckSize -= 2.5f;
-                    neckPos += 61;
-
-                }
-                if (Input.UP.IsPush())
-                {
-                    y = 502;
-                    Sound.Play("cursor_SE.mp3");
-
-                    neckSize += 2.5f;
-                    neckPos -= 61;
-                }
-               
             }
 
             if (Tutorialcount >= 1 && Tutorialcount < 99)
@@ -357,203 +340,232 @@ namespace Giraffe
 
         public override void OnExit()
         {
-
+            Game.fadeAction = false;
         }
 
         public override void OnLoad()
         {
-
+            fadeCounter = 0;
+            cursorPosY = cursorFixedPosY[0];
         }
 
         public override void Update()
         {
+            fadeCounter++;
+            if (fadeCounter < fadeTime + 10)
+                Game.bgmManager.CrossFade("tutorial", 60);
 
-            if (Tutorialcount == 0 && Input.BACK.IsPush())
+            if (!Game.fadeAction)
             {
-                Game.SetScene(new Title(Game));
-                Sound.Play("cancel_SE.mp3");
-            }
-            if (y == 617 && Input.ACTION.IsPush())
-            {
-                Tutorialcount += 1;
-                y = 0;
-                Sound.Play("decision_SE.mp3");
-            }
-            else if (y == 502 && Input.ACTION.IsPush())
-            {
-                Tutorialcount += 99;
-                y = 0;
-                Sound.Play("decision_SE.mp3");
-            }
-            if (y == 0 && Input.DOWN.IsPush())
-            {
-                if (Tutorialcount >= 99)
+                if (Tutorialcount == 0)
                 {
+                    if (cursorPosY == cursorFixedPosY[0] && Input.DOWN.IsPush())
+                    {
+                        cursorPosY = cursorFixedPosY[1];
+                        Sound.Play("cursor_SE.mp3");
+                        
+                        neckSize -= 2.5f;
+                        neckPos += 61;
 
+                    }
+                    if (cursorPosY == cursorFixedPosY[1] && Input.UP.IsPush())
+                    {
+                        cursorPosY = cursorFixedPosY[0];
+                        Sound.Play("cursor_SE.mp3");
+
+                        neckSize += 2.5f;
+                        neckPos -= 61;
+                    }
+
+                    if (Input.BACK.IsPush())
+                    {
+                        Sound.Play("cancel_SE.mp3");
+                        Game.bgmManager.currentScene = "tutorial";
+                        Game.fadeAction = true;
+                        Game.SetScene(new Title(Game), new Fade(fadeTime, true, true));
+                    }
                 }
-                else
+                
+                if (cursorPosY == 617 && Input.ACTION.IsPush())
                 {
                     Tutorialcount += 1;
-                    Sound.Play("cursor_SE.mp3");
+                    cursorPosY = 0;
+                    Sound.Play("decision_SE.mp3");
                 }
+                else if (cursorPosY == 502 && Input.ACTION.IsPush())
+                {
+                    Tutorialcount += 99;
+                    cursorPosY = 0;
+                    Sound.Play("decision_SE.mp3");
+                }
+                if (cursorPosY == 0 && Input.DOWN.IsPush())
+                {
+                    if (Tutorialcount >= 99)
+                    {
 
-            }
-            else if (y == 0 && Input.UP.IsPush())
-            {
-                if (Tutorialcount <= 2)
-                {
-                    Tutorialcount += 0;
-                    Sound.Play("cancel_SE.mp3");
-                }
-                else if (Tutorialcount >= 99)
-                {
-                    Tutorialcount += 0;
-                }
-                else
-                {
-                    Tutorialcount -= 1;
-                    Sound.Play("cursor_SE.mp3");
-                }
-            }
-            if (Tutorialcount >= 8 && Tutorialcount <= 10)
-            {
-                Tutorialcount = 8;
-            }
-            else if (Tutorialcount <= 98 && Tutorialcount >= 11)
-            {
-                Tutorialcount = 99;
-            }
+                    }
+                    else
+                    {
+                        Tutorialcount += 1;
+                        Sound.Play("cursor_SE.mp3");
+                    }
 
-            if (Tutorialcount == 8 && Input.ACTION.IsPush())
-            {
-                Tutorialcount = 0;
-                y = 502;
-                Sound.Play("decision_SE.mp3");
-                
-            }
-            if (Tutorialcount == 4 || Tutorialcount == 2)
-            {
-                if (CommentTime <= 0)
-                {
-                    CommentTime = 120;
                 }
-            }
-
-            if (Tutorialcount >= 99)//操作画面トップ
-            {
-                gameObjects.ForEach(obj => player.CalcInteract(obj));
-                player.Update();
-                gameObjects.ForEach(obj => obj.Update());
-                gameObjects.RemoveAll(obj => obj.IsDead());
-                if(Tutorialcount>=112)
+                else if (cursorPosY == 0 && Input.UP.IsPush())
+                {
+                    if (Tutorialcount <= 2)
+                    {
+                        Tutorialcount += 0;
+                        Sound.Play("cancel_SE.mp3");
+                    }
+                    else if (Tutorialcount >= 99)
+                    {
+                        Tutorialcount += 0;
+                    }
+                    else
+                    {
+                        Tutorialcount -= 1;
+                        Sound.Play("cursor_SE.mp3");
+                    }
+                }
+                if (Tutorialcount >= 8 && Tutorialcount <= 10)
+                {
+                    Tutorialcount = 8;
+                }
+                else if (Tutorialcount <= 98 && Tutorialcount >= 11)
                 {
                     Tutorialcount = 99;
                 }
-                if (CommentTime <= 0)
-                {
-                    Tutorialcount += 1;
-                    CommentTime = 120;
-                }
-                if (Input.BACK.IsPush())//Xボタンで戻ります
+
+                if (Tutorialcount == 8 && Input.ACTION.IsPush())
                 {
                     Tutorialcount = 0;
-                    y = 502;
-                    Sound.Play("cancel_SE.mp3");
-                }
-                if (SousaCount == 200)
-                {
-                    Tutorialcount += 1;
-                    SousaCount = 0;
-                }
-                if (Tutorialcount == 99)
-                {
-                    CommentTime--;
-                }
-                if (Tutorialcount == 100)//右移動(地面に足がついてるとき)
-                {
-                    if (Input.RIGHT.IsHold() && player.IsOnGround())
-                    {
-                        SousaCount += 20;
-                    }
-                }
-                if (Tutorialcount == 101)
-                {
-                    CommentTime--;
+                    cursorPosY = 502;
+                    Sound.Play("decision_SE.mp3");
 
                 }
-                if (Tutorialcount == 102)//左移動(地面に足がついているとき)
+                if (Tutorialcount == 4 || Tutorialcount == 2)
                 {
-                    if (Input.LEFT.IsHold() && player.IsOnGround())
-                    {
-                        SousaCount += 20;
-                    }
-                }
-                if (Tutorialcount == 103)
-                {
-                    CommentTime--;
-
-                }
-                if (Tutorialcount == 104)//ジャンプ
-                {
-                    if (Input.ACTION.IsPush())
-                    {
-                        SousaCount += 100;
-                    }
-                }
-                if (Tutorialcount == 105)
-                {
-                    CommentTime--;
-                }
-                if (Tutorialcount == 106)//木につかまる
-                {
-                    if (player.velAngle > 0 || player.velAngle < 0 && Input.ACTION.IsHold())
-                    {
-                        SousaCount += 2;
-                    }
-                }
-                if (Tutorialcount == 107)
-                {
-                    CommentTime--;
-
-                }
-                if (Tutorialcount == 108)//回転方向変更
-                {
-                    if (player.velAngle < 0 && Input.LEFT.IsPush() && Input.ACTION.IsHold())
-                    {
-                        SousaCount = +200;
-                    }
-                    else if (player.velAngle > 0 && Input.RIGHT.IsPush() && Input.ACTION.IsHold())
-                    {
-                        SousaCount = +200;
-                    }
-                }
-                if (Tutorialcount == 109)
-                {
-                    CommentTime--;
-
-                }
-                if (Tutorialcount == 110)//首伸ばし
-                {
-                    if (Input.UP.IsHold() || Input.DOWN.IsHold())
-                    {
-                        SousaCount += 4;
-                    }
-
-                }
-                if (Tutorialcount == 111)//説明終了
-                {
-                    CommentTime--;
                     if (CommentTime <= 0)
                     {
-                        Game.bgmManager.currentScene = "tutorial";
-                        Game.SetScene(new Title(Game));
-                        Tutorialcount = 0;
-                        Title.stageCount += 1;
-                        y = 502;
+                        CommentTime = 120;
                     }
                 }
 
+                if (Tutorialcount >= 99)//操作画面トップ
+                {
+                    gameObjects.ForEach(obj => player.CalcInteract(obj));
+                    player.Update();
+                    gameObjects.ForEach(obj => obj.Update());
+                    gameObjects.RemoveAll(obj => obj.IsDead());
+                    if (Tutorialcount >= 112)
+                    {
+                        Tutorialcount = 99;
+                    }
+                    if (CommentTime <= 0)
+                    {
+                        Tutorialcount += 1;
+                        CommentTime = 120;
+                    }
+                    if (Input.BACK.IsPush())//Xボタンで戻ります
+                    {
+                        Tutorialcount = 0;
+                        cursorPosY = 502;
+                        Sound.Play("cancel_SE.mp3");
+                    }
+                    if (SousaCount == 200)
+                    {
+                        Tutorialcount += 1;
+                        SousaCount = 0;
+                    }
+                    if (Tutorialcount == 99)
+                    {
+                        CommentTime--;
+                    }
+                    if (Tutorialcount == 100)//右移動(地面に足がついてるとき)
+                    {
+                        if (Input.RIGHT.IsHold() && player.IsOnGround())
+                        {
+                            SousaCount += 20;
+                        }
+                    }
+                    if (Tutorialcount == 101)
+                    {
+                        CommentTime--;
 
+                    }
+                    if (Tutorialcount == 102)//左移動(地面に足がついているとき)
+                    {
+                        if (Input.LEFT.IsHold() && player.IsOnGround())
+                        {
+                            SousaCount += 20;
+                        }
+                    }
+                    if (Tutorialcount == 103)
+                    {
+                        CommentTime--;
+
+                    }
+                    if (Tutorialcount == 104)//ジャンプ
+                    {
+                        if (Input.ACTION.IsPush())
+                        {
+                            SousaCount += 100;
+                        }
+                    }
+                    if (Tutorialcount == 105)
+                    {
+                        CommentTime--;
+                    }
+                    if (Tutorialcount == 106)//木につかまる
+                    {
+                        if (player.velAngle > 0 || player.velAngle < 0 && Input.ACTION.IsHold())
+                        {
+                            SousaCount += 2;
+                        }
+                    }
+                    if (Tutorialcount == 107)
+                    {
+                        CommentTime--;
+
+                    }
+                    if (Tutorialcount == 108)//回転方向変更
+                    {
+                        if (player.velAngle < 0 && Input.LEFT.IsPush() && Input.ACTION.IsHold())
+                        {
+                            SousaCount = +200;
+                        }
+                        else if (player.velAngle > 0 && Input.RIGHT.IsPush() && Input.ACTION.IsHold())
+                        {
+                            SousaCount = +200;
+                        }
+                    }
+                    if (Tutorialcount == 109)
+                    {
+                        CommentTime--;
+
+                    }
+                    if (Tutorialcount == 110)//首伸ばし
+                    {
+                        if (Input.UP.IsHold() || Input.DOWN.IsHold())
+                        {
+                            SousaCount += 4;
+                        }
+
+                    }
+                    if (Tutorialcount == 111)//説明終了
+                    {
+                        CommentTime--;
+                        if (CommentTime <= 0)
+                        {
+                            Game.bgmManager.currentScene = "tutorial";
+                            Game.fadeAction = true;
+                            Game.SetScene(new Title(Game),new Fade(fadeTime, true, true));
+                            Tutorialcount = 0;
+                            cursorPosY = 502;
+                        }
+                    }
+                }
             }
         }
     }
