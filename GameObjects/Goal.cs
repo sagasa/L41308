@@ -11,7 +11,7 @@ namespace Giraffe
     public  class Goal:GameObject
     {
       
-        private int image = ResourceLoader.GetGraph("goal.png");
+        private int image = ResourceLoader.GetGraph("goal_1.png");
         public Goal(ScenePlay scene,Vec2f vecsf) : base(scene)
         {
             pos = vecsf;

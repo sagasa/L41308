@@ -135,7 +135,7 @@ namespace Giraffe
                 DX.DrawString(400, 410, Gamennamae[5], white);
                 DX.DrawString(400, 475, Gamennamae[6], white);
                 DX.DrawString(400, 540, Gamennamae[7], white);
-                DX.DrawGraph(0, -20, stagename2);
+                DX.DrawRotaGraph(110,15,0.7f,0, stagename2);
             }
             if (Tutorialcount == 1)//画面説明(タイトル)
             {
@@ -229,7 +229,7 @@ namespace Giraffe
                 DX.DrawString(580, 120, SousaText[19], black);//OK!
                 DX.DrawBox(98, 133, 602, 162, black, DX.FALSE);//進行ゲージ外枠
                 DX.DrawString(110, 115, SousaText[20], black);
-                DX.DrawRotaGraph(100, 15, 0.6f, 0, stagename2);
+                DX.DrawRotaGraph(530, 15, 0.6f, 0, stagename2);
 
                 if (Tutorialcount >= 99 && Tutorialcount <= 100)//右
                 {
@@ -528,7 +528,6 @@ namespace Giraffe
                         if (CommentTime <= 0)
                         {
                             Game.bgmManager.currentScene = "tutorial";
-                            
                             Game.SetScene(new Title(Game),new Fade(fadeTime, true, true));
                             cursorPosY = cursorFixedPosY[0];
                             Title.stageSelect = true;
