@@ -6,28 +6,28 @@ namespace Giraffe
 {
     public class Leaf : GameObject
     {
-        private int leafImage = ResourceLoader.GetGraph("leaf4.png");
-        private int scoreLeafImage = ResourceLoader.GetGraph("s_leaf4.png");
+ 
+
         //private int branch = ResourceLoader.GetGraph("branch2.png");
-        private readonly int[] leafImages = ResourceLoader.GetGraph("leafes_1.png", 5);
-        private readonly int[] scoreLeafImages = ResourceLoader.GetGraph("s_leafes_1.png", 5);
+        private int[] leafImages = ResourceLoader.GetGraph("leafes_1.png", 5);
+        private int[] scoreLeafImages = ResourceLoader.GetGraph("s_leafes_1.png", 5);
         public readonly AnimationManager<Leaf> AnimationManager; 
 
         public int score { get; private set; }
 
-        public Leaf(ScenePlay scene, Vec2f vec2f, int scoreValue=0) : base(scene)
+        public Leaf(ScenePlay scene, Vec2f vec2f, int score) : base(scene)
         {
+            leafImages = ResourceLoader.GetGraph("leafes"+scene.ResourcesName+".png", 5);
+            scoreLeafImages = ResourceLoader.GetGraph("s_leafes" + scene.ResourcesName + ".png", 5);
             pos = vec2f;
-            score = scoreValue;
+            this.score = score;
             AnimationManager = new AnimationManager<Leaf>(this);
-            if (scoreValue != 0)
+            if (score != 0)
             {
                 AnimationManager.Start(Animations.GliterParticle);
             }
-           
-           
         }
-        
+
         //使用したならプレイヤーから呼ぶ
         public void RemoveScore()
         {
@@ -52,7 +52,7 @@ namespace Giraffe
             Vec2f screenPos = scene.GetScreenPos(pos);
             if (score == 0)
             {
-                int index = MyMath.Clamp((int)(screenPos.X / Screen.Width * 5), 0, leafImages.Length-1);
+                int index = MyMath.Clamp((int)(screenPos.X / Screen.Width * leafImages.Length), 0, leafImages.Length-1);
                 DX.DrawGraphF(screenPos.X, screenPos.Y, leafImages[index]);
                 //DX.DrawGraph(screenPos.X, screenPos.Y, branch);
                 base.Draw();
@@ -61,7 +61,7 @@ namespace Giraffe
             {
               //  scene.ParticleManagerTop.Glitter(pos);
 
-                int index = MyMath.Clamp((int)(screenPos.X / Screen.Width * 5), 0, leafImages.Length - 1);
+                int index = MyMath.Clamp((int)(screenPos.X / Screen.Width * scoreLeafImages.Length), 0, scoreLeafImages.Length - 1);
                 DX.DrawGraphF(screenPos.X, screenPos.Y, scoreLeafImages[index]);
                 //DX.DrawGraph(screenPos.X, screenPos.Y, branch);
                 base.Draw();

@@ -90,12 +90,13 @@ namespace Giraffe
 
         private static readonly int Flag = ResourceLoader.GetGraph("ハタアイコン.png");
         private static readonly int bar = ResourceLoader.GetGraph("マップ.png");
-        private static readonly int treeTop = ResourceLoader.GetGraph("tree_top" + 1 + ".png");
-        private static readonly int treeMiddle = ResourceLoader.GetGraph("tree_middle_" + 1 + ".png");
+        private readonly int treeTop;
+        private readonly int treeMiddle;
+        private readonly int treeBottom;
+        private readonly int stageName;
         private static readonly int treePattern = ResourceLoader.GetGraph("treePattern.png");
-        private static readonly int treeBottom = ResourceLoader.GetGraph("tree_bottom_" + 1 + ".png"); //背景描画treePattern
+
         private static readonly int scoreImage = ResourceLoader.GetGraph("image_play/score.png");
-        private static readonly int stageName = ResourceLoader.GetGraph("image_play/stagename_" + 1 + ".png");
         private static readonly int watch = ResourceLoader.GetGraph("tokei.png");
         private static readonly int colon = ResourceLoader.GetGraph("image_play/colon.png");
 
@@ -111,14 +112,23 @@ namespace Giraffe
 
         public List<GameObject> gameObjects=new List<GameObject>();
 
-        public ScenePlay(Game game) : base(game)
+        public readonly string ResourcesName;
+
+        public ScenePlay(Game game, PlayMap map,string name) : base(game)
         {
-            Map = new PlayMap(this, "map_1");
+            ResourcesName = name;
+            Map = map;
+            Map.SpawnObject(this);
             MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y);
             player = new Player(this);
             player.pos = MapPos+new Vec2f(PlayMap.ScreenSize.X/2, PlayMap.ScreenSize.Y / 4*3);
             playerIcon = new playerIcon(this);
-        }
+
+            treeTop = ResourceLoader.GetGraph("tree_top" + ResourcesName + ".png");
+            treeMiddle = ResourceLoader.GetGraph("tree_middle" + ResourcesName + ".png");
+            treeBottom = ResourceLoader.GetGraph("tree_bottom" + ResourcesName + ".png"); //背景描画treePattern
+            stageName = ResourceLoader.GetGraph("image_play/stagename" + ResourcesName + ".png");
+    }
         
         public override void Draw()
         {
@@ -250,7 +260,7 @@ namespace Giraffe
                     Game.currentTime = time;
                     Game.bgmManager.currentScene = "play";
                     Game.fadeAction = true;
-                    Game.SetScene(new SceneResult(Game), new Fade(fadeTime, true, true));
+                    Game.SetScene(new SceneResult(Game,this), new Fade(fadeTime, true, true));
                 }
             }
             

@@ -10,10 +10,12 @@ namespace Giraffe
 {
     public  class Goal:GameObject
     {
-      
-        private int image = ResourceLoader.GetGraph("goal_1.png");
-        public Goal(ScenePlay scene,Vec2f vecsf) : base(scene)
+
+        private int image;
+
+        public Goal(ScenePlay scene, Vec2f vecsf) : base(scene)
         {
+            image = ResourceLoader.GetGraph("goal" + scene.ResourcesName + ".png");
             pos = vecsf;
         }
         private CircleCollision[] collisions = new CircleCollision[] { new CircleCollision(new Vec2f(2f, 1.8f), 1.3f) };

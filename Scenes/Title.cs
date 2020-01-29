@@ -307,10 +307,16 @@ namespace Giraffe
                         }
                         else if (treebgPos == treeFixedPos[1])//ステージ1
                         {
-                            Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
+                            Game.SetScene(new ScenePlay(Game, new PlayMap( "map_1"), "_1"), new Fade(fadeTime, true, true));
                         }
-                        else if (treebgPos == treeFixedPos[2]) { }
-                        else if (treebgPos == treeFixedPos[3]) { }
+                        else if (treebgPos == treeFixedPos[2])
+                        {
+                            Game.SetScene(new ScenePlay(Game, new PlayMap("map_2"), "_2"), new Fade(fadeTime, true, true));
+                        }
+                        else if (treebgPos == treeFixedPos[3])
+                        {
+                            Game.SetScene(new ScenePlay(Game, new PlayMap("map_2"), "_3"), new Fade(fadeTime, true, true));
+                        }
                     }
                     if (Input.BACK.IsPush())
                     {

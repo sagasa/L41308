@@ -23,18 +23,16 @@ namespace Giraffe
         //画面に入るセルの量
         public static readonly Vec2f ScreenSize = Screen.Size / CellSize;
 
-        ScenePlay scenePlay;
         public readonly int[,] MapData;
         public readonly Vec2f MapSize;
       
 
-        public PlayMap(ScenePlay scenePlay, string filePath)
+        public PlayMap(string filePath)
         {
-            this.scenePlay = scenePlay;
             MapData = Read("Map/" + filePath + ".csv");
             MapSize = new Vec2f(MapData.GetLength(0), MapData.GetLength(1));
 
-            SpawnObject();
+            //SpawnObject();
             //LoadObject("Map/" + filePath + ".csv");
 
             
@@ -112,7 +110,7 @@ namespace Giraffe
             }
         }//*/
 
-        void SpawnObject()
+        public void SpawnObject(ScenePlay scenePlay)
         {
             // 生成位置
             for (int y = MapData.GetLength(1) - 1; y >= 0; y--)
@@ -139,11 +137,6 @@ namespace Giraffe
             }
         }
 
-        void SpawnObject(Vec2f pos, int objectID)
-        {
-            // 生成位置
-            
-        }
 
         //public void DrawTerrain()
         //{

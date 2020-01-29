@@ -9,6 +9,7 @@ namespace Giraffe
     {
         private const string HIGHTSCORE = "hightscore";
 
+        private ScenePlay _scenePlay;
         int currentScore = 0;
         int bestScore = 0;
         int[] currentTime = new int[] { 0, 0, 0 };
@@ -55,8 +56,9 @@ namespace Giraffe
         private DummyPlayer dummyPlayer;
         private DummyPlayer testPlayer;
 
-        public SceneResult(Game game) : base(game)
+        public SceneResult(Game game, ScenePlay scenePlay) : base(game)
         {
+            _scenePlay = scenePlay;
             dummyPlayer = new DummyPlayer(this);
             testPlayer = new DummyPlayer(this);
         }
@@ -209,7 +211,7 @@ namespace Giraffe
                     Sound.Play("decision_SE.mp3");
                     Game.fadeAction = true;
                     Game.bgmManager.currentScene = "result";
-                    Game.SetScene(new ScenePlay(Game), new Fade(fadeTime, true, true));
+                    Game.SetScene(new ScenePlay(Game,_scenePlay.Map,_scenePlay.ResourcesName), new Fade(fadeTime, true, true));
                 }
                 else if (cursorPosX == fixedPosX[1] && Input.ACTION.IsPush())
                 {
