@@ -124,9 +124,9 @@ namespace Giraffe
                         endScale = 0.3f,
                         fadeOutTime = 0.8f,
                         blendMode = DX.DX_BLENDMODE_ADD,
-                        red = 255,
-                        green = 214,
-                        blue = 250,
+                        red = 252,
+                        green = 174,
+                        blue = 242,
                     });
                 }
             }
