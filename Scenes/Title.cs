@@ -193,7 +193,7 @@ namespace Giraffe
                         Sound.Play("decision_SE.mp3");
                         Game.bgmManager.currentScene = "title";
                         Game.fadeAction = true;
-                        Game.SetScene(new Tutolal(Game), new Fade(shortFadeTime, true, true));
+                        Game.SetScene(new Tutolal(Game,new PlayMap("map_0"),"_0"), new Fade(shortFadeTime, true, true));
                         Tutolal.Tutorialcount += 1;
                     }
                     else if (cursorPos == cursorFixedPosY[2] && Input.ACTION.IsPush())
@@ -303,7 +303,7 @@ namespace Giraffe
                         if (treebgPos == treeFixedPos[0])//チュートリアル
                         {
                             Tutolal.Tutorialcount += 99;
-                            Game.SetScene(new Tutolal(Game), new Fade(fadeTime, true, true));
+                            Game.SetScene(new Tutolal(Game,new PlayMap("map_0"),"_0"), new Fade(fadeTime, true, true));
                         }
                         else if (treebgPos == treeFixedPos[1])//ステージ1
                         {

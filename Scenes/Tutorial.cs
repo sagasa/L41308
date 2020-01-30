@@ -93,12 +93,17 @@ namespace Giraffe
         };
 
 
-        public Tutolal(Game game) : base(game, new PlayMap("map1_leaf"),"_1")
+        public Tutolal(Game game,PlayMap map, string name):base(game,new PlayMap( "map_0"),"_0")
         {
-            MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y+4.8f);
+            Map = map;
+            Map.SpawnObject(this);
+            MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y);
+            //MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y+4.8f);
 
             player = new Player(this);
             player.pos = MapPos + new Vec2f(2, 2);
+
+
         }
 
         uint white = DX.GetColor(255, 255, 255);//白
@@ -218,7 +223,7 @@ namespace Giraffe
             {
                 DX.SetFontSize(15);
                 DX.ChangeFontType(DX.DX_FONTTYPE_NORMAL);
-                DX.DrawGraph(0, 0, playbg);
+               // DX.DrawGraph(0, 0, playbg);
                 Vec2f pos = GetScreenPos(Vec2f.ZERO);
                 DX.DrawGraph((int)pos.X, (int)pos.Y, playbg);
                 gameObjects.ForEach(obj => obj.Draw());
