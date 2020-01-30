@@ -264,13 +264,13 @@ namespace Giraffe
                        
                         //パーティクル
                         scene.ParticleManagerTop.Glitter(pos);
-                        scene.ParticleManagerBottom.Swaying2(pos);
+                        scene.ParticleManagerBottom.Swaying2((ScenePlay)scene, pos);
                         scene.ParticleManagerTop.GetPoint(pos);
                     }
                     else
                     {
                         //パーティクル
-                            scene.ParticleManagerBottom.Swaying(pos);
+                        scene.ParticleManagerBottom.Swaying((ScenePlay)scene, pos);
                     }
                     Sound.Play("leaf_bite_SE.mp3");
                     //姿勢変更時に中心の移動分補完
