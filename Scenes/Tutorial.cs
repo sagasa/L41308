@@ -131,6 +131,7 @@ namespace Giraffe
                 DX.DrawGraph(0, 30, setumei);
                 DX.DrawGraph(-150, 615, window);
                 DX.DrawGraph(390, 30, waku);
+                DX.DrawBox(0, 0, 640, 30, white, DX.TRUE);
                 DX.DrawString(420, 75, Gamennamae[0], white);
                 DX.DrawString(400, 145, Gamennamae[1], white);
                 DX.DrawString(400, 210, Gamennamae[2], white);
