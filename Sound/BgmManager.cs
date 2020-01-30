@@ -41,7 +41,7 @@ namespace Giraffe
             bgmPos["title"] = DX.VGet(0.0f, 0.0f, 0.0f);//BGMの位置の設定
             bgmPos["play"] = DX.VGet(interval, 0.0f, 0.0f);
             bgmPos["result"] = DX.VGet(interval * 2, 0.0f, 0.0f);
-            bgmPos["tutorial"] = DX.VGet(interval * 3, 0.0f, 0.0f);
+            bgmPos["tutorial"] = DX.VGet(interval, 0.0f, 0.0f);
             //bgmPos["play_fast"] = bgmPos["play"];
         }
 
@@ -190,9 +190,10 @@ namespace Giraffe
 
         public void Debug()
         {//フェードの可視化、1で再生中,0で停止中,-1でメモリにない(エラー)
-            DX.DrawString(0, 15, "　タイトル:" + DX.CheckSoundMem(bgmMap["title"]) +
-                                 "　プレイ:"   + DX.CheckSoundMem(bgmMap["play"]) +
-                                 "　リザルト:" + DX.CheckSoundMem(bgmMap["result"]) +
+            DX.DrawString(0, 15, "　タ:" + DX.CheckSoundMem(bgmMap["title"]) +
+                                 "　プ:" + DX.CheckSoundMem(bgmMap["play"]) +
+                                 "　リ:" + DX.CheckSoundMem(bgmMap["result"]) +
+                                 "　チュ:" + DX.CheckSoundMem(bgmMap["tutorial"]) +
                                  "　リスナー x:" + ListenerPos.x + "　z:" + ListenerPos.z, DX.GetColor(255, 0, 0));
             // BGMの再生位置を描画
             //タイトル,赤

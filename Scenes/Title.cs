@@ -88,44 +88,48 @@ namespace Giraffe
                 DX.DrawGraph(UIpos - Screen.Width, 0, stagename);
                 Dummy.Draw();
 
-                if (treebgPos == treeFixedPos[1])
-                {
-                    int digit = 1000;
-                    int leftCounter = 0;
-                    for (int i = 0; i < 4; i++)
-                    {
-                        for (int j = 0; j < 10; j++)
-                        {
-                            if (j == bestscore1 / digit % 10 && bestscore1 / digit != 0)
-                            {
-                                DX.DrawRotaGraph(frameX + fontInterval * leftCounter + 120, 470, fontScale1, 0, ResourceLoader.GetGraph("image_select/mozi_" + j + ".png"));
-                                leftCounter++;
-                            }
-                        }
-                        digit /= 10;
-                    }
-                    digit = 10;
-                    for (int i = 0; i < 2; i++)
-                    {
-                        for (int j = 0; j < 10; j++)
-                        {
-                            if (j == bestTime1[0] / digit % 10 && (bestTime1[0] / digit != 0 || digit == 1))//ベストタイム,分
-                            {
-                                DX.DrawRotaGraph(frameX + fontInterval * leftCounter, 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
-                                leftCounter++;
-                            }
-                        }
-                        for (int j = 0; j < 10; j++)
-                        {
-                            if (j == bestTime1[1] / digit % 10)
-                            {
-                                DX.DrawRotaGraph(frameX + fontInterval * (2 + leftCounter), 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
-                            }
-                        }
-                        digit /= 10;
-                    }
-                    DX.DrawRotaGraph(200 + fontInterval * leftCounter, 534, 0.2, 0, coron);
-                }
+                //for (int i = 0; i < 3; i++)
+                //{
+                //    if (treebgPos == treeFixedPos[1])
+                //    {
+                //        int digit = 1000;
+                //        int leftCounter = 0;
+                //        for (int i = 0; i < 4; i++)
+                //        {
+                //            for (int j = 0; j < 10; j++)
+                //            {
+                //                if (j == bestscore1 / digit % 10 && bestscore1 / digit != 0)
+                //                {
+                //                    DX.DrawRotaGraph(frameX + fontInterval * leftCounter + 120, 470, fontScale1, 0, ResourceLoader.GetGraph("image_select/mozi_" + j + ".png"));
+                //                    leftCounter++;
+                //                }
+                //            }
+                //            digit /= 10;
+                //        }
+                //        digit = 10;
+                //        for (int i = 0; i < 2; i++)
+                //        {
+                //            for (int j = 0; j < 10; j++)
+                //            {
+                //                if (j == bestTime1[0] / digit % 10 && (bestTime1[0] / digit != 0 || digit == 1))//ベストタイム,分
+                //                {
+                //                    DX.DrawRotaGraph(frameX + fontInterval * leftCounter, 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                //                    leftCounter++;
+                //                }
+                //            }
+                //            for (int j = 0; j < 10; j++)
+                //            {
+                //                if (j == bestTime1[1] / digit % 10)
+                //                {
+                //                    DX.DrawRotaGraph(frameX + fontInterval * (2 + leftCounter), 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                //                }
+                //            }
+                //            digit /= 10;
+                //        }
+                //        DX.DrawRotaGraph(200 + fontInterval * leftCounter, 534, 0.2, 0, coron);
+                //    }
+                //}
+                
                 if(treebgPos==treeFixedPos[2])
                 {
                     int digit = 1000;

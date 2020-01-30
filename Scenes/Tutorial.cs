@@ -358,17 +358,31 @@ namespace Giraffe
                         Game.SetScene(new Title(Game), new Fade(shortFadeTime, true, true));
                     }
                 }
-                if (Tutorialcount >= 0 && Tutorialcount <= 8)
+                if (Tutorialcount >= 1 && Tutorialcount <= 8)
                 {
                     if (Input.DOWN.IsPush())
                     {
-                        Tutorialcount += 1;
-                        Sound.Play("cursor_SE.mp3");
+                        if (Tutorialcount >= 8)
+                        {
+                            Sound.Play("cancel_SE.mp3");
+                        }
+                        else
+                        {
+                            Tutorialcount += 1;
+                            Sound.Play("cursor_SE.mp3");
+                        }
                     }
                     else if (Input.UP.IsPush())
                     {
-                        Tutorialcount -= 1;
-                        Sound.Play("cursor_SE.mp3");
+                        if (Tutorialcount <= 1)
+                        {
+                            Sound.Play("cancel_SE.mp3");
+                        }
+                        else
+                        {
+                            Tutorialcount -= 1;
+                            Sound.Play("cursor_SE.mp3");
+                        }
                     }
                 }
                 if (cursorPosY == 0 && Input.DOWN.IsPush())
