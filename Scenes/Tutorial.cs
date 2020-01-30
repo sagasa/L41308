@@ -228,6 +228,7 @@ namespace Giraffe
                 DX.DrawGraph((int)pos.X, (int)pos.Y, playbg);
                 gameObjects.ForEach(obj => obj.Draw());
                 player.Draw();
+                ParticleManagerBottom.Draw();
                 DX.DrawGraph(-90, 0, mes);
                 DX.DrawBox(100, 135, 100 + Sounsa * 5 / 2, 160, green, DX.TRUE);//進行ゲージのゲージ
                 DX.DrawString(580, 120, SousaText[19], black);//OK!
@@ -429,6 +430,7 @@ namespace Giraffe
                 {
                     gameObjects.ForEach(obj => player.CalcInteract(obj));
                     player.Update();
+                    ParticleManagerBottom.Update();
                     gameObjects.ForEach(obj => obj.Update());
                     gameObjects.RemoveAll(obj => obj.IsDead());
                     if (Tutorialcount >= 112)
