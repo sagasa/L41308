@@ -10,16 +10,17 @@ namespace Giraffe
     {
         //パーティクルを入れておくためのリスト
         List<Particle> particles = new List<Particle>();
+        private Scene scene;
 
         private int particleGlitter = ResourceLoader.GetGraph("image_effect/effectitem.png");
         private int particleJump = ResourceLoader.GetGraph("image_effect/effectjump.png");
-        private int particleSwaying = ResourceLoader.GetGraph("image_effect/effectleaf_1.png");
+        private int[] particleSwaying = ResourceLoader.GetGraph("image_effect/effectleaf_0.png",5);
+        private int[] particleSwaying2 = ResourceLoader.GetGraph("image_effect/s_leffecteaf_0.png", 5);
         private int particlePoint = ResourceLoader.GetGraph("image_effect/effectscore.png");
+
+
         private int particleSelect = ResourceLoader.GetGraph("image_effect/effectselect_1.png");
-        private int palticleTutorial = ResourceLoader.GetGraph("image_effect/effectselect_2.png");
-
-
-        private Scene scene;
+        private int palticleTutorial = ResourceLoader.GetGraph("image_effect/effectselect_0.png");
 
         private static readonly Vec2f scale = new Vec2f(1,1) / PlayMap.CellSize;
 
@@ -103,20 +104,205 @@ namespace Giraffe
         }
 
         //葉
-        public void Swaying(Vec2f pos)
+        public void Swaying(ScenePlay scenePlay, Vec2f pos)
         {
-            for (int i = 0; i < 15; i++)
+            if (scenePlay.ResourcesName == "_0")
+            {
+                for (int i = 0; i < 15; i++)
+                {
+                    float angle = MyRandom.PlusMinus(MyMath.PI);
+                    float speed = MyRandom.Range(2f, 8f);
+
+                    particles.Add(new Particle(scene)
+                    {
+                        pos = pos + new Vec2f(0, MyRandom.PlusMinus(40f)) * scale,
+                        lifeSpan = MyRandom.Range(40, 70),
+                        imageHndle = ResourceLoader.GetGraph("image_effect/effectleaf" + scenePlay.ResourcesName + ".png"),  //particleSwaying,
+                        vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed) * scale,
+                        force = new Vec2f(0, 0.55f) * scale,
+                        damp = 0.86f,
+                        endScale = 0.3f,
+                        fadeOutTime = 0.8f,
+                        blendMode = DX.DX_BLENDMODE_ADD,
+                        red = 255,
+                        green = 214,
+                        blue = 250,
+                    });
+                }
+            }
+
+            if (scenePlay.ResourcesName == "_1")
+            {
+                for (int i = 0; i < 15; i++)
+                {
+                    float angle = MyRandom.PlusMinus(MyMath.PI);
+                    float speed = MyRandom.Range(2f, 8f);
+
+                    particles.Add(new Particle(scene)
+                    {
+                        pos = pos + new Vec2f(0, MyRandom.PlusMinus(40f)) * scale,
+                        lifeSpan = MyRandom.Range(40, 70),
+                        imageHndle = ResourceLoader.GetGraph("image_effect/effectleaf" + scenePlay.ResourcesName + ".png"),  //particleSwaying,
+                        vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed) * scale,
+                        force = new Vec2f(0, 0.55f) * scale,
+                        damp = 0.86f,
+                        endScale = 0.3f,
+                        fadeOutTime = 0.8f,
+                        blendMode = DX.DX_BLENDMODE_ADD,
+                        red = 10,
+                        green = 222,
+                        blue = 3,
+                    });
+                }
+            }
+
+            if (scenePlay.ResourcesName == "_2")
+            {
+                for (int i = 0; i < 15; i++)
+                {
+                    float angle = MyRandom.PlusMinus(MyMath.PI);
+                    float speed = MyRandom.Range(2f, 8f);
+
+                    particles.Add(new Particle(scene)
+                    {
+                        pos = pos + new Vec2f(0, MyRandom.PlusMinus(40f)) * scale,
+                        lifeSpan = MyRandom.Range(40, 70),
+                        imageHndle = ResourceLoader.GetGraph("image_effect/effectleaf" + scenePlay.ResourcesName + ".png"),  //particleSwaying,
+                        vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed) * scale,
+                        force = new Vec2f(0, 0.55f) * scale,
+                        damp = 0.86f,
+                        endScale = 0.3f,
+                        fadeOutTime = 0.8f,
+                        blendMode = DX.DX_BLENDMODE_ADD,
+                        red = 210,
+                        green = 68,
+                        blue = 49,
+                    });
+                }
+            }
+
+            if (scenePlay.ResourcesName == "_3")
+            {
+                for (int i = 0; i < 15; i++)
+                {
+                    float angle = MyRandom.PlusMinus(MyMath.PI);
+                    float speed = MyRandom.Range(2f, 8f);
+
+                    particles.Add(new Particle(scene)
+                    {
+                        pos = pos + new Vec2f(0, MyRandom.PlusMinus(40f)) * scale,
+                        lifeSpan = MyRandom.Range(40, 70),
+                        imageHndle = ResourceLoader.GetGraph("image_effect/effectleaf" + scenePlay.ResourcesName + ".png"),  //particleSwaying,
+                        vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed) * scale,
+                        force = new Vec2f(0, 0.55f) * scale,
+                        damp = 0.86f,
+                        endScale = 0.3f,
+                        fadeOutTime = 0.8f,
+                        blendMode = DX.DX_BLENDMODE_ADD,
+                        red = 119,
+                        green = 74,
+                        blue = 40,
+                    });
+                }
+            }
+
+        }
+
+        //枯れ葉
+        public void Swaying2(ScenePlay scenePlay, Vec2f pos)
+        {
+            if (scenePlay.ResourcesName == "_1")
+            {
+                for (int i = 0; i < 30; i++)
+                {
+                    float angle = MyRandom.PlusMinus(MyMath.PI);
+                    float speed = MyRandom.Range(2f, 8f);
+
+                    particles.Add(new Particle(scene)
+                    {
+                        pos = pos,
+                        lifeSpan = MyRandom.Range(40, 70),
+                        imageHndle = ResourceLoader.GetGraph("image_effect/s_leffecteaf" + scenePlay.ResourcesName + ".png"),
+                        vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed) * scale,
+                        force = new Vec2f(0, 0.55f) * scale,
+                        damp = 0.86f,
+                        endScale = 0.3f,
+                        fadeOutTime = 0.8f,
+                        blendMode = DX.DX_BLENDMODE_ADD,
+                        red =213,
+                        green = 222,
+                        blue = 83,
+                    });
+                }
+            }
+
+            if (scenePlay.ResourcesName == "_2")
+            {
+                for (int i = 0; i < 30; i++)
+                {
+                    float angle = MyRandom.PlusMinus(MyMath.PI);
+                    float speed = MyRandom.Range(2f, 8f);
+
+                    particles.Add(new Particle(scene)
+                    {
+                        pos = pos,
+                        lifeSpan = MyRandom.Range(40, 70),
+                        imageHndle = ResourceLoader.GetGraph("image_effect/s_leffecteaf" + scenePlay.ResourcesName + ".png"),
+                        vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed) * scale,
+                        force = new Vec2f(0, 0.55f) * scale,
+                        damp = 0.86f,
+                        endScale = 0.3f,
+                        fadeOutTime = 0.8f,
+                        blendMode = DX.DX_BLENDMODE_ADD,
+                        red = 213,
+                        green = 222,
+                        blue = 83,
+                    });
+                }
+            }
+
+            if (scenePlay.ResourcesName == "_3")
+            {
+                for (int i = 0; i < 30; i++)
+                {
+                    float angle = MyRandom.PlusMinus(MyMath.PI);
+                    float speed = MyRandom.Range(2f, 8f);
+
+                    particles.Add(new Particle(scene)
+                    {
+                        pos = pos,
+                        lifeSpan = MyRandom.Range(40, 70),
+                        imageHndle = ResourceLoader.GetGraph("image_effect/s_leffecteaf" + scenePlay.ResourcesName + ".png"),
+                        vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed) * scale,
+                        force = new Vec2f(0, 0.55f) * scale,
+                        damp = 0.86f,
+                        endScale = 0.3f,
+                        fadeOutTime = 0.8f,
+                        blendMode = DX.DX_BLENDMODE_ADD,
+                        red = 255,
+                        green = 255,
+                        blue = 255,
+                    });
+                }
+            }
+        }
+
+        //
+        public void Swaying3(ScenePlay scenePlay, Vec2f pos)
+        {
+            for (int i = 0; i < 30; i++)
             {
                 float angle = MyRandom.PlusMinus(MyMath.PI);
                 float speed = MyRandom.Range(2f, 8f);
 
                 particles.Add(new Particle(scene)
                 {
-                    pos = pos,
+                    pos = pos + new Vec2f(0, MyRandom.PlusMinus(40f)) * scale,
                     lifeSpan = MyRandom.Range(40, 70),
-                    imageHndle = particleSwaying,
+                    imageHndle = ResourceLoader.GetGraph("image_effect/effectleaf" + scenePlay.ResourcesName + ".png"),
                     vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed) * scale,
                     force = new Vec2f(0, 0.55f) * scale,
+                    angularDamp=0.98f,
                     damp = 0.86f,
                     endScale = 0.3f,
                     fadeOutTime = 0.8f,
@@ -127,35 +313,7 @@ namespace Giraffe
 
                 });
             }
-               
-        }
 
-        //枯れ葉
-        public void Swaying2(Vec2f pos)
-        {
-            for (int i = 0; i < 30; i++)
-            {
-                float angle = MyRandom.PlusMinus(MyMath.PI);
-                float speed = MyRandom.Range(2f, 8f);
-
-                particles.Add(new Particle(scene)
-                {
-                    pos = pos,
-                    lifeSpan = MyRandom.Range(40, 70),
-                    imageHndle = particleSwaying,
-                    vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed) * scale,
-                    force = new Vec2f(0, 0.55f) * scale,
-                    damp = 0.86f,
-                    endScale = 0.3f,
-                    fadeOutTime = 0.8f,
-                    blendMode = DX.DX_BLENDMODE_ADD,
-                    red = 94,
-                    green = 69,
-                    blue =0,
-
-                });
-            }
-               
         }
 
         //ボーナススコア
