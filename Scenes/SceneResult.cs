@@ -45,7 +45,7 @@ namespace Giraffe
         private int playerOnPositon = 0;
         private const int playerMoveSpeed = 4;
         
-        private int bg = ResourceLoader.GetGraph("play_bg.png");
+        private int bg = ResourceLoader.GetGraph("tree_top_1.png");
         private int result_bg = ResourceLoader.GetGraph("image_result/result_bg.png");
         private int back = ResourceLoader.GetGraph("image_result/r_back.png");
         private int restart = ResourceLoader.GetGraph("image_result/restart.png");
