@@ -33,6 +33,10 @@ namespace Giraffe
         private int[] cursorFixedPosY = new int[] { 450, 550, 650 };
         int[]  bestTime1 =new int[] {0,0,0};
         int bestscore1 = 0;
+        int[] bestTime2 = new int[] { 0,18,0};
+        int bestscore2 = 2000;
+        int[] bestTime3 = new int[] { 0,7,0};
+        int bestscore3 = 1800;
 
         public static bool stageSelect = false;
 
@@ -122,6 +126,82 @@ namespace Giraffe
                     }
                     DX.DrawRotaGraph(200 + fontInterval * leftCounter, 534, 0.2, 0, coron);
                 }
+                if(treebgPos==treeFixedPos[2])
+                {
+                    int digit = 1000;
+                    int leftCounter = 0;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        for (int j = 0; j < 10; j++)
+                        {
+                            if (j == bestscore2 / digit % 10 && bestscore2 / digit != 0)
+                            {
+                                DX.DrawRotaGraph(frameX + fontInterval * leftCounter + 120, 470, fontScale1, 0, ResourceLoader.GetGraph("image_select/mozi_" + j + ".png"));
+                                leftCounter++;
+                            }
+                        }
+                        digit /= 10;
+                    }
+                    digit = 10;
+                    for (int i = 0; i < 2; i++)
+                    {
+                        for (int j = 0; j < 10; j++)
+                        {
+                            if (j == bestTime2[0] / digit % 10 && (bestTime2[0] / digit != 0 || digit == 1))//ベストタイム,分
+                            {
+                                DX.DrawRotaGraph(frameX + fontInterval * leftCounter, 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                                leftCounter++;
+                            }
+                        }
+                        for (int j = 0; j < 10; j++)
+                        {
+                            if (j == bestTime2[1] / digit % 10)
+                            {
+                                DX.DrawRotaGraph(frameX + fontInterval * (2 + leftCounter), 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                            }
+                        }
+                        digit /= 10;
+                    }
+                    DX.DrawRotaGraph(200 + fontInterval * leftCounter, 534, 0.2, 0, coron);
+                }
+                if(treebgPos==treeFixedPos[3])
+                {
+                    int digit = 1000;
+                    int leftCounter = 0;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        for (int j = 0; j < 10; j++)
+                        {
+                            if (j == bestscore3 / digit % 10 && bestscore3 / digit != 0)
+                            {
+                                DX.DrawRotaGraph(frameX + fontInterval * leftCounter + 120, 470, fontScale1, 0, ResourceLoader.GetGraph("image_select/mozi_" + j + ".png"));
+                                leftCounter++;
+                            }
+                        }
+                        digit /= 10;
+                    }
+                    digit = 10;
+                    for (int i = 0; i < 2; i++)
+                    {
+                        for (int j = 0; j < 10; j++)
+                        {
+                            if (j == bestTime3[0] / digit % 10 && (bestTime3[0] / digit != 0 || digit == 1))//ベストタイム,分
+                            {
+                                DX.DrawRotaGraph(frameX + fontInterval * leftCounter, 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                                leftCounter++;
+                            }
+                        }
+                        for (int j = 0; j < 10; j++)
+                        {
+                            if (j == bestTime3[1] / digit % 10)
+                            {
+                                DX.DrawRotaGraph(frameX + fontInterval * (2 + leftCounter), 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + j + ".png"));
+                            }
+                        }
+                        digit /= 10;
+                    }
+                    DX.DrawRotaGraph(200 + fontInterval * leftCounter, 534, 0.2, 0, coron);
+                }
             }
         }
         
@@ -133,6 +213,10 @@ namespace Giraffe
 
             bestTime1 = Game.bestTime;
             bestscore1 = Game.bestScore;
+            //bestTime2 =;
+            //bestscore2 =;
+            //bestTime3 =;
+            //bestscore3 =;
         }
 
         public override void Update()
