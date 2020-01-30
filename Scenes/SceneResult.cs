@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using DxLibDLL;
 using SAGASALib;
 using Giraffe.Saves;
@@ -44,7 +45,10 @@ namespace Giraffe
         private bool playerMove = false;
         private int playerOnPositon = 0;
         private const int playerMoveSpeed = 4;
-        
+
+        private bool nameGet = false;
+        StringBuilder nickname = new StringBuilder("");
+
         private int result_bg = ResourceLoader.GetGraph("image_result/result_bg.png");
         private int back = ResourceLoader.GetGraph("image_result/r_back.png");
         private int restart = ResourceLoader.GetGraph("image_result/restart.png");
@@ -96,12 +100,21 @@ namespace Giraffe
                     break;
                 }
             }
-            if (currentScore > bestScore)
-                Game.hightScore.bestScores["stage" + _scenePlay.ResourcesName] = currentScore;
-            if (currentTime[0] * 60 + currentTime[1] < bestTime[0] * 60 + bestTime[1])
-                Game.hightScore.bestTimes["stage" + _scenePlay.ResourcesName] = currentTime;
 
+            nameGet = false;
+            if (currentScore > bestScore)
+            {
+                Game.hightScore.bestScores["stage" + _scenePlay.ResourcesName] = currentScore;
+                nameGet = true;
+            }
+            if (currentTime[0] * 60 + currentTime[1] < bestTime[0] * 60 + bestTime[1])
+            {
+                Game.hightScore.bestTimes["stage" + _scenePlay.ResourcesName] = currentTime;
+                nameGet = true;
+            }
+            #if !DEBUG
             SaveManager.Save(HIGHTSCORE, Game.hightScore);
+            #endif
         }
 
         public override void Update()
@@ -134,7 +147,7 @@ namespace Giraffe
                     playerPosX -= playerMoveSpeed;
                 }
             }
-            else
+            else if(!Game.fadeAction)
             {
                 if (Input.LEFT.IsPush())
                     dummyPlayer.isDunnyRight = false;
@@ -168,8 +181,24 @@ namespace Giraffe
                 rankExpansionAnimation = false;
             else if (rankAnimationScale < 0.75)
                 rankExpansionAnimation = true;
-            
-            if(!Game.fadeAction)
+
+            if (!Game.fadeAction && nameGet)
+            {
+                //X座標,Y座標,入力可能文字数(全角は2文字扱い),保存する場所,ESCでキャンセルできる(ようにする)か
+                DX.SetFontSize(50);//文字サイズの指定
+                //文字の色を指定
+                DX.SetKeyInputStringColor(DX.GetColor(0, 0, 0),/*入力文字列の色*/
+                                          DX.GetColor(0, 0, 0),/*ＩＭＥ非使用時のカーソルの色*/
+                                          DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の入力文字列の周りの色*/
+                                          DX.GetColor(0, 0, 0),/*ＩＭＥ使用時のカーソルの色*/
+                                          DX.GetColor(0, 0, 0),/*ＩＭＥ使用時の変換文字列の下線*/
+                                          DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の選択対象の変換候補文字列の色*/
+                                          DX.GetColor(0, 0, 0));/*ＩＭＥ使用時の入力モード文字列の色(『全角ひらがな』等)*/
+                DX.KeyInputString(110, Screen.Height / 2-40, 10, nickname, DX.TRUE);
+                nameGet = false;
+            }
+
+            else if(!Game.fadeAction)
             {
                 if (cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
                 {
@@ -223,10 +252,15 @@ namespace Giraffe
         {
             DX.DrawGraph(0, 0, ResourceLoader.GetGraph("tree_top" + _scenePlay.ResourcesName + ".png"));
             DX.DrawGraph(0, 0, result_bg);
-            dummyPlayer.Draw();
-            DX.DrawRotaGraph(cursorPosX, cursorPosY, 1, 0, cursor);
-            DX.DrawRotaGraph(fixedPosX[0], cursorPosY, 1, 0, restart);
-            DX.DrawRotaGraph(fixedPosX[1], cursorPosY, 1, 0, back);
+
+            if (!nameGet)
+            {
+                dummyPlayer.Draw();
+                DX.DrawRotaGraph(cursorPosX, cursorPosY, 1, 0, cursor);
+                DX.DrawRotaGraph(fixedPosX[0], cursorPosY, 1, 0, restart);
+                DX.DrawRotaGraph(fixedPosX[1], cursorPosY, 1, 0, back);
+            }
+            
 
             //testPlayer.Draw();
 
@@ -332,6 +366,12 @@ namespace Giraffe
             //タイムの「new」
             if (blinkMessage && currentTime[0] * 60 + currentTime[1] < bestTime[0] * 60 + bestTime[1])
                 DX.DrawRotaGraph(frameX + 65 + fontInterval * (leftCounter1 + 3), frameY + 98, 1, 0, newImage);
+
+            if(nameGet)
+            {
+                DX.DrawGraph(0, 0, ResourceLoader.GetGraph("image_result/shadow25.png"));
+                DX.DrawRotaGraph(Screen.Width / 2, Screen.Height / 2, 1, 0, ResourceLoader.GetGraph("image_result/name_space.png"));
+            }
         }
 
         public override void OnExit()
