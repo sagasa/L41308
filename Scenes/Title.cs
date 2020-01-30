@@ -315,7 +315,7 @@ namespace Giraffe
                         }
                         else if (treebgPos == treeFixedPos[3])
                         {
-                            Game.SetScene(new ScenePlay(Game, new PlayMap("map_2"), "_3"), new Fade(fadeTime, true, true));
+                            Game.SetScene(new ScenePlay(Game, new PlayMap("map_3"), "_3"), new Fade(fadeTime, true, true));
                         }
                     }
                     if (Input.BACK.IsPush())
