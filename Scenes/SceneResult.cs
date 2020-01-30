@@ -100,6 +100,7 @@ namespace Giraffe
                 Game.hightScore.bestScores["stage" + _scenePlay.ResourcesName] = currentScore;
             if (currentTime[0] * 60 + currentTime[1] < bestTime[0] * 60 + bestTime[1])
                 Game.hightScore.bestTimes["stage" + _scenePlay.ResourcesName] = currentTime;
+
             SaveManager.Save(HIGHTSCORE, Game.hightScore);
         }
 
