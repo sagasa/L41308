@@ -45,7 +45,6 @@ namespace Giraffe
         private int playerOnPositon = 0;
         private const int playerMoveSpeed = 4;
         
-        private int bg = ResourceLoader.GetGraph("play_bg.png");
         private int result_bg = ResourceLoader.GetGraph("image_result/result_bg.png");
         private int back = ResourceLoader.GetGraph("image_result/r_back.png");
         private int restart = ResourceLoader.GetGraph("image_result/restart.png");
@@ -77,9 +76,9 @@ namespace Giraffe
             　
             currentScore = Game.currentScore;
             currentTime = Game.currentTime;
-            bestScore = Game.bestScore;
-            bestTime = Game.bestTime;
-            
+            bestScore = Game.hightScore.bestScores["stage" + _scenePlay.ResourcesName] = currentScore;
+            bestTime = Game.hightScore.bestTimes["stage" + _scenePlay.ResourcesName] = currentTime;
+
             for (int i = 0; i < rankTime.Length; i++)//タイムの評価
             {
                 if (rankTime[i] >= currentTime[0] * 60 + currentTime[1])
@@ -98,14 +97,10 @@ namespace Giraffe
                 }
             }
             if (currentScore > bestScore)
-                Game.bestScore = currentScore;
+                Game.hightScore.bestScores["stage" + _scenePlay.ResourcesName] = currentScore;
             if (currentTime[0] * 60 + currentTime[1] < bestTime[0] * 60 + bestTime[1])
-                Game.bestTime = currentTime;
-#if !DEBUG
-            Game.hightScore.bestScore = Game.bestScore;
-            Game.hightScore.bestTime = Game.bestTime;
+                Game.hightScore.bestTimes["stage" + _scenePlay.ResourcesName] = currentTime;
             SaveManager.Save(HIGHTSCORE, Game.hightScore);
-#endif
         }
 
         public override void Update()
@@ -225,7 +220,7 @@ namespace Giraffe
 
         public override void Draw()
         {
-            DX.DrawGraph(0, 0, bg);
+            DX.DrawGraph(0, 0, ResourceLoader.GetGraph("tree_top" + _scenePlay.ResourcesName + ".png"));
             DX.DrawGraph(0, 0, result_bg);
             dummyPlayer.Draw();
             DX.DrawRotaGraph(cursorPosX, cursorPosY, 1, 0, cursor);
