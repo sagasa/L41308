@@ -211,12 +211,12 @@ namespace Giraffe
             Dummy.pos = new Vec2f(Screen.Width / 2, Screen.Height - 64);
             fadeCounter = 0;
 
-            bestTime1 = Game.bestTime;
-            bestscore1 = Game.bestScore;
-            //bestTime2 =Game.bestTime[2];
-            //bestscore2 =Game.bestTime[2];
-            //bestTime3 =Game.bestTime[3];
-            //bestscore3 =Game.bestTime[3];
+            bestTime1 = Game.hightScore.bestTimes["stage_1"];
+            bestscore1 = Game.hightScore.bestScores["stage_1"];
+            bestTime2 = Game.hightScore.bestTimes["stage_2"];
+            bestscore2 = Game.hightScore.bestScores["stage_2"];
+            bestTime3 = Game.hightScore.bestTimes["stage_3"];
+            bestscore3 = Game.hightScore.bestScores["stage_3"];
         }
 
         public override void Update()
