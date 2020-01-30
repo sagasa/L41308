@@ -213,10 +213,10 @@ namespace Giraffe
 
             bestTime1 = Game.bestTime;
             bestscore1 = Game.bestScore;
-            //bestTime2 =;
-            //bestscore2 =;
-            //bestTime3 =;
-            //bestscore3 =;
+            //bestTime2 =Game.bestTime[2];
+            //bestscore2 =Game.bestTime[2];
+            //bestTime3 =Game.bestTime[3];
+            //bestscore3 =Game.bestTime[3];
         }
 
         public override void Update()
