@@ -93,6 +93,7 @@
     <Compile Include="MyLib\MyMath.cs" />
     <Compile Include="MyLib\MyRandom.cs" />
     <Compile Include="MyLib\Vec2f.cs" />
+    <Compile Include="NumberDraw.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="ParticleManager.cs" />
     <Compile Include="Saves\HightScore.cs" />
