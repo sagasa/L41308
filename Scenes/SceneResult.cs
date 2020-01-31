@@ -23,7 +23,6 @@ namespace Giraffe
         private string timeRank = "d";
         private string scoreRank = "d";
 
-        private bool blinkMessage = true;//点滅表示用
         private int Counter = 0;//wait,fade,blinkのカウンター
         private const int fadeTime = 120;
         //描画用定数
@@ -36,35 +35,31 @@ namespace Giraffe
         private const float rankImageScale = 0.4f;
         private const float rankAnimationSpeed = 0.01f;
 
+        private bool blinkMessage = true;//点滅表示用
         private float rankAnimationScale = 1;//アニメーション用
         private bool rankExpansionAnimation = false;
+        private int playerAnimationTime = 100;
+        private int playerMoveCounter = 0;
         private const int cursorWidth = 220;
         private int cursorPosX;
         private const int cursorPosY = Screen.Height - 200;
         private readonly int[] fixedPosX = new int[] { 170, Screen.Width - 170 };
-        private int playerPosX;
         private bool playerMove = false;
-        private int playerOnPositon = 0;
-        private const int playerMoveSpeed = 4;
+        private bool playerOnRight = true;
+        private DummyPlayer dummyPlayer;
 
         private bool nameGet = false;
         StringBuilder nickname = new StringBuilder("");
 
-        private int result_bg = ResourceLoader.GetGraph("image_result/result_bg.png");
-        private int back = ResourceLoader.GetGraph("image_result/r_back.png");
-        private int restart = ResourceLoader.GetGraph("image_result/restart.png");
         private int cursor = ResourceLoader.GetGraph("image_result/cursor.png");
         private int coron = ResourceLoader.GetGraph("image_result/rcolon.png");
         private int newImage = ResourceLoader.GetGraph("image_result/new.png");
-
-        private DummyPlayer dummyPlayer;
-        private DummyPlayer testPlayer;
+        
 
         public SceneResult(Game game, ScenePlay scenePlay) : base(game)
         {
             _scenePlay = scenePlay;
             dummyPlayer = new DummyPlayer(this);
-            testPlayer = new DummyPlayer(this);
         }
 
         public override void OnLoad()
@@ -75,9 +70,7 @@ namespace Giraffe
             rankExpansionAnimation = false;
 
             cursorPosX = fixedPosX[1];
-            playerPosX = cursorPosX;
             dummyPlayer.pos = new Vec2f(cursorPosX, cursorPosY - 85);
-            testPlayer.pos = new Vec2f(fixedPosX[0], cursorPosY - 85);
 
             currentScore = Game.currentScore;
             currentTime = Game.currentTime;
@@ -113,57 +106,80 @@ namespace Giraffe
                 Game.hightScore.bestTimes["stage" + _scenePlay.ResourcesName] = currentTime;
                 nameGet = true;
             }
-#if !DEBUG
+            #if !DEBUG
             SaveManager.Save(HIGHTSCORE, Game.hightScore);
-#endif
+            #endif
         }
 
         public override void Update()
         {
-            if (!playerMove && playerPosX != cursorPosX)
+            if (!playerMove)
             {
-                playerMove = true;
-                if (playerPosX == fixedPosX[0])
-                    playerOnPositon = fixedPosX[0];
-                else if (playerPosX == fixedPosX[1])
-                    playerOnPositon = fixedPosX[1];
+                if (playerOnRight && cursorPosX == fixedPosX[0])
+                {
+                    playerMove = true;
+                }
+                else if (!playerOnRight && cursorPosX == fixedPosX[1])
+                {
+                    playerMove = true;
+                }
             }
-            else if ((playerOnPositon != fixedPosX[0] && playerPosX == fixedPosX[0]) ||
-                     (playerOnPositon != fixedPosX[1] && playerPosX == fixedPosX[1]))
-                playerMove = false;
-
-            if (playerMove)
-                testPlayer.AnimationManager.Start(Animations.Test);
-
+            else if (playerMove)
+            {
+                if (playerOnRight && cursorPosX == fixedPosX[1])
+                {
+                    playerMove = false;
+                }
+                else if (!playerOnRight && cursorPosX == fixedPosX[0])
+                {
+                    playerMove = false;
+                }
+            }
+            
             if (playerMove)
             {
-                if (playerOnPositon == fixedPosX[0])
+                if (playerOnRight)
+                {
+                    
+                    dummyPlayer.AnimationManager.Start(Animations.Test2);
+                    dummyPlayer.isDunnyRight = false;
+                    playerMoveCounter++;
+                    if (playerMoveCounter == playerAnimationTime)
+                    {
+                        playerOnRight = !playerOnRight;
+                        playerMoveCounter = 0;
+                    }
+                }
+                else
                 {
                     dummyPlayer.isDunnyRight = true;
-                    playerPosX += playerMoveSpeed;
+                    dummyPlayer.AnimationManager.Start(Animations.Test);
+                    playerMoveCounter++;
+                    if (playerMoveCounter == playerAnimationTime)
+                    {
+                        playerOnRight = !playerOnRight;
+                        playerMoveCounter = 0;
+                    }
                 }
-                else if (playerOnPositon == fixedPosX[1])
-                {
-                    dummyPlayer.isDunnyRight = false;
-                    playerPosX -= playerMoveSpeed;
-                }
+                //if (dummyPlayer.pos.X < fixedPosX[0])
+                //{
+                //    dummyPlayer.pos.X
+                //}
             }
+
             else if (!Game.fadeAction)
             {
                 if (Input.LEFT.IsPush())
+                {
                     dummyPlayer.isDunnyRight = false;
+                }
                 else if (Input.RIGHT.IsPush())
+                {
                     dummyPlayer.isDunnyRight = true;
+                }
             }
-
-            if (dummyPlayer.isDunnyRight)
-                dummyPlayer.vel = dummyPlayer.vel.SetX(MyMath.Lerp(dummyPlayer.vel.X, 0.01f, 0.1f));
-            else
-                dummyPlayer.vel = dummyPlayer.vel.SetX(MyMath.Lerp(dummyPlayer.vel.X, -0.01f, 0.1f));
-            dummyPlayer.pos = new Vec2f(playerPosX, dummyPlayer.pos.Y);
+            
             dummyPlayer.Update();
-
-            testPlayer.Update();
 
             Counter++;
             if (Counter < fadeTime + 10)
@@ -260,18 +276,8 @@ namespace Giraffe
         public override void Draw()
         {
             DX.DrawGraph(0, 0, ResourceLoader.GetGraph("tree_top" + _scenePlay.ResourcesName + ".png"));
-            DX.DrawGraph(0, 0, result_bg);
-
-            if (!nameGet)
-            {
-                dummyPlayer.Draw();
-                DX.DrawRotaGraph(cursorPosX, cursorPosY, 1, 0, cursor);
-                DX.DrawRotaGraph(fixedPosX[0], cursorPosY, 1, 0, restart);
-                DX.DrawRotaGraph(fixedPosX[1], cursorPosY, 1, 0, back);
-            }
-
-            //testPlayer.Draw();
-
+            DX.DrawGraph(0, 0, ResourceLoader.GetGraph("image_result/result_bg.png"));
+            
             int scoreLeftCounter = 0;
             int bonusLeftCounter = 0;
             int timeLeftCounter = 0;
@@ -309,6 +315,13 @@ namespace Giraffe
                 DX.DrawRotaGraph(frameX + 65 + fontInterval1 * (timeLeftCounter + 3), 200, 1, 0, newImage);
             }
 
+            if (!nameGet)
+            {
+                dummyPlayer.Draw();
+                DX.DrawRotaGraph(cursorPosX, cursorPosY, 1, 0, cursor);
+                DX.DrawRotaGraph(fixedPosX[0], cursorPosY, 1, 0, ResourceLoader.GetGraph("image_result/restart.png"));
+                DX.DrawRotaGraph(fixedPosX[1], cursorPosY, 1, 0, ResourceLoader.GetGraph("image_result/r_back.png"));
+            }
 
             if (!Game.fadeAction && nameGet)
             {
