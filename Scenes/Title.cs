@@ -10,7 +10,7 @@ namespace Giraffe
 {
     public class Title : Scene
     {
-        private const int frameX = 200;
+        private const int frameX = 285;
         private const int frameY = 100;
         private const int fontInterval = 30;//文字同士の幅
         private const float fontScale1 = 0.18f;//文字の大きさ
@@ -94,41 +94,10 @@ namespace Giraffe
                 {
                     if (treebgPos == treeFixedPos[i])
                     {
-                        int digit = 1000;
-                        int leftCounter = 0;
-                        for (int j = 0; j < 4; j++)
-                        {
-                            for (int k = 0; k < 10; k++)//スコア
-                            {
-                                if (k == bestScores[i] / digit % 10 && bestScores[i] / digit != 0)
-                                {
-                                    DX.DrawRotaGraph(frameX + fontInterval * leftCounter + 120, 470, fontScale1, 0, ResourceLoader.GetGraph("image_select/mozi_" + k + ".png"));
-                                    leftCounter++;
-                                }
-                            }
-                            digit /= 10;
-                        }
-                        digit = 10;
-                        for (int j = 0; j < 2; j++)
-                        {
-                            for (int k = 0; k < 10; k++)
-                            {
-                                if (k == bestTimes[i][0] / digit % 10 && (bestTimes[i][0] / digit != 0 || digit == 1))//タイム,分
-                                {
-                                    DX.DrawRotaGraph(frameX + fontInterval * leftCounter, 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + k + ".png"));
-                                    leftCounter++;
-                                }
-                            }
-                            for (int k = 0; k < 10; k++)//タイム,秒
-                            {
-                                if (k == bestTimes[i][1] / digit % 10)
-                                {
-                                    DX.DrawRotaGraph(frameX + fontInterval * (2 + leftCounter), 534, fontScale1, 0, ResourceLoader.GetGraph("image_result/result_num_" + k + ".png"));
-                                }
-                            }
-                            digit /= 10;
-                        }
-                        DX.DrawRotaGraph(200 + fontInterval * leftCounter, 534, 0.2, 0, coron);
+                        NumberDraw.ScoreDraw(bestScores[i], frameX, 470, fontInterval, fontScale1, "image_select/mozi_");
+                        int timeLeftCounter = 0;
+                        NumberDraw.TimeDraw(bestTimes[i], frameX, 534, fontInterval, fontScale1, "image_result/result_num_", ref timeLeftCounter);
+                        DX.DrawRotaGraph(frameX + fontInterval * timeLeftCounter, 534, 0.2, 0, coron);
                     }
                 }
             }
