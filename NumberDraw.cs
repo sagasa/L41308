@@ -43,8 +43,8 @@ namespace Giraffe
             }
         }
         
-        //レフトカウントにレフトカウンターの値を返す　new等の描画に使うため
-        public static void ScoreDraw(int score, int x, int y, int xInterval, float fontScale, string name, ref int leftCount, bool zeroPadding = false, bool leftPadding = true)
+        //レフトカウンターの値を返す　new等の描画に使うため
+        public static void ScoreDraw(int score, int x, int y, int xInterval, float fontScale, string name, ref int leftCounter, bool zeroPadding = false, bool leftPadding = true)
         {
             //桁数を調べる
             int digit = 0;//桁数
@@ -57,7 +57,7 @@ namespace Giraffe
                 digit = 4;
             }
             //描画
-            int leftCounter = 0;//左詰めに使用
+            leftCounter = 0;//左詰めに使用
             for (int i = 0, unit = (int)Math.Pow(10, digit - 1); i < digit; i++, unit /= 10)
             {
                 for (int j = 0; j < 10; j++)
@@ -75,13 +75,12 @@ namespace Giraffe
                     }
                 }
             }
-            leftCount = leftCounter;//レフトカウンターを返す
         }
 
         //表示するタイム, 1文字目のx座標, y座標, 文字の間隔, 文字の拡縮, 使う画像の数字部分より前までのファイル名, レフトカウンターの値を返す(コロン用), フレーム数を表示するか(省略可), ゼロ埋めするか(省略可), 左詰めするか(省略可)
-        public static void TimeDraw(int[] time, int x, int y, int interval, float fontScale, string name, ref int leftCount, bool fpsDraw = false, bool zeroPadding = false, bool leftPadding = true)
+        public static void TimeDraw(int[] time, int x, int y, int interval, float fontScale, string name, ref int leftCounter, bool fpsDraw = false, bool zeroPadding = false, bool leftPadding = true)
         {
-            int leftCounter = 0;
+            leftCounter = 0;
             for (int i = 0, digit = 2, unit = (int)Math.Pow(10, digit - 1); i < digit; i++, unit /= 10)
             {
                 for (int j = 0; j < 10; j++)//分
@@ -128,7 +127,6 @@ namespace Giraffe
                     }
                 }
             }
-            leftCount = leftCounter;
         }
         
     }
