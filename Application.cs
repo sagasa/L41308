@@ -126,7 +126,7 @@ namespace Giraffe
                         {
                         }
 
-                        Draw();
+                        Draw(waitTicks);
                     }
                     nextFrameTicks += IntervalTicks;
                 }
@@ -135,10 +135,15 @@ namespace Giraffe
             DX.DxLib_End(); // DXライブラリ終了処理
         }
 
-        static void Draw()
+        private static readonly uint _debugColor = DX.GetColor(205, 205, 0);
+        static void Draw(long time = 0)
         {
             DX.ClearDrawScreen(); // 描画先の内容をクリアする
             game.Draw(); // ゲーム描画
+#if DEBUG
+            const float deltaMills = 1000f/TargetFPS;
+            DX.DrawString(5, 5, string.Format("{0:f5}",deltaMills - time / 10000f) + " / "+ deltaMills+" ms", _debugColor);  
+#endif
             DX.ScreenFlip(); // 裏画面と表画面を入れ替える
             skipCount = 0; // フレームスキップのカウントをリセット
         }
