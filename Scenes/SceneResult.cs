@@ -56,7 +56,7 @@ namespace Giraffe
         private int newImage = ResourceLoader.GetGraph("image_result/new.png");
         
 
-        public SceneResult(Game game, ScenePlay scenePlay) : base(game)
+        public SceneResult(Game game, ScenePlay scenePlay, DateTime minValue) : base(game)
         {
             _scenePlay = scenePlay;
             dummyPlayer = new DummyPlayer(this);
