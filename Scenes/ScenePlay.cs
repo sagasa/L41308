@@ -7,9 +7,9 @@ namespace Giraffe
 {
     public class ScenePlay : Scene
     {
-        public static int score = 0;
-        int[] time = new int[] { 0, 0, 0 };//分,秒,フレーム
-
+        public int score = 0;
+        public DateTime time;
+        
         public bool IsGoal { get; private set; } = false;
 
         int goalTimer = 300;
@@ -119,9 +119,9 @@ namespace Giraffe
             ResourcesName = name;
             Map = map;
             Map.SpawnObject(this);
-            MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y);
+            
             player = new Player(this);
-            player.pos = MapPos+new Vec2f(PlayMap.ScreenSize.X/2, PlayMap.ScreenSize.Y / 4*3);
+            
             playerIcon = new playerIcon(this);
 
             treeTop = ResourceLoader.GetGraph("tree_top" + ResourcesName + ".png");
@@ -129,7 +129,13 @@ namespace Giraffe
             treeBottom = ResourceLoader.GetGraph("tree_bottom" + ResourcesName + ".png"); //背景描画treePattern
             stageName = ResourceLoader.GetGraph("image_play/stagename" + ResourcesName + ".png");
     }
-        
+
+        public void Init()
+        {
+            MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y);
+            player.pos = MapPos + new Vec2f(PlayMap.ScreenSize.X / 2, PlayMap.ScreenSize.Y / 4 * 3);
+        }
+
         public override void Draw()
         {
             Vec2f pos = GetScreenPos(Vec2f.ZERO);
@@ -173,16 +179,13 @@ namespace Giraffe
                 digit /= 10;
             }
             //タイム
+            
             digit = 10;
             for (int i = 0; i < 2; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    if (j == time[0] / digit % 10 && (time[0] / digit != 0 || digit == 1))//分
-                        DX.DrawRotaGraph(Screen.Width - 120 + fontInterval * i, 25, fontScale, 0, ResourceLoader.GetGraph("image_effect/time_" + j + ".png"));
-                    if (j == time[1] / digit % 10)//秒
-                        DX.DrawRotaGraph(Screen.Width - 55 + fontInterval * i, 25, fontScale, 0, ResourceLoader.GetGraph("image_effect/time_" + j + ".png"));
-                    if (j >= time[0] / digit % 10 && j >= time[1] / digit % 10)
+               
                         break;
                 }
                 digit /= 10;
@@ -197,9 +200,6 @@ namespace Giraffe
         public override void OnLoad()
         {
             IsGoal = false;
-            time[0] = 0;
-            time[1] = 0;
-            time[2] = 0;
             score = 0;
         }
         public void Goal(Vec2f pos)
@@ -215,18 +215,8 @@ namespace Giraffe
             if (!IsGoal)
             {
                 Game.bgmManager.CrossFade("play", fadeTime);
-                time[2]++;
-                if (time[2] >= 60)
-                {
-                    time[1]++;
-                    time[2] = 0;
-                }
-                if (time[1] >= 60)
-                {
-                    time[0]++;
-                    time[1] = 0;
-                }
-               
+
+                time.Add(TimeSpan.FromMilliseconds(16.666666666f));
             }
 
             gameObjects.ForEach(obj=> player.CalcInteract(obj));
@@ -257,7 +247,6 @@ namespace Giraffe
                 if (!Game.fadeAction && goalTimer <= 0)
                 {
                     Game.currentScore = score;
-                    Game.currentTime = time;
                     Game.bgmManager.currentScene = "play";
                     Game.fadeAction = true;
                     Game.SetScene(new SceneResult(Game,this), new Fade(fadeTime, true, true));

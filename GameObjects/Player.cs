@@ -259,7 +259,7 @@ namespace Giraffe
                 {
                     if (currentLeaf.score != 0)
                     {
-                        ScenePlay.score += currentLeaf.score;
+                        ((ScenePlay)scene).score += currentLeaf.score;
                         currentLeaf.RemoveScore();
                        
                         //パーティクル
