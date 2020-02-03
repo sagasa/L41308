@@ -113,7 +113,7 @@ namespace Giraffe
             #if DEBUG
             Debug.Draw();
             #endif
-
+            NumberDraw.TimeDraw(DateTime.Now, 100,100, "image_result/result_num_",10,0.1f);
 
             //bgmManager.Debug();
         }

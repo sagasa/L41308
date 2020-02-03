@@ -128,6 +128,32 @@ namespace Giraffe
                 }
             }
         }
-        
+
+        public static void TimeDraw(DateTime time, int x, int y,string name, int interval, float fontScale, bool zeroPadding = true)
+        {
+            int pointer = 0;
+
+            void Draw(int num,int digit = -1)
+            {
+                //桁数算出
+                int d = (num == 0) ? 1 : ((int) Math.Log10(num) + 1);
+                //デフォ値orゼロ埋め無しなら上書き
+                digit = digit == -1 || (!zeroPadding&&d<=digit) ? d : digit;
+
+                pointer += interval * digit;
+                //桁数が多いなら上から表示
+                for (int i = 0; i < digit; i++)
+                {
+                    //0パディング
+                    int n = d < i ? 0:num % 10;
+                    num /= 10;
+
+                    DX.DrawRotaGraph(x + pointer - interval * i, y, fontScale, 0, ResourceLoader.GetGraph(name + n + ".png"));
+                }
+            }
+            Draw(time.Minute,2);
+            Draw(time.Second, 2);
+            Draw(time.Millisecond, 4);
+        }
     }
 }

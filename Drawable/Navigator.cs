@@ -7,6 +7,9 @@ namespace Giraffe
     public class Navigator
     {
         private ScenePlay _scene;
+
+        private float _space = 10;
+
         private readonly List<Tuple<Vec2f, int>> _list = new List<Tuple<Vec2f, int>>();
 
         public Navigator(ScenePlay scene)
@@ -24,7 +27,7 @@ namespace Giraffe
             _list.ForEach(entry =>
             {
                 //画面外なら
-                if (_scene.IsInScreen(entry.Item1))
+                if (!_scene.IsInScreen(entry.Item1))
                 {
                     
                 }

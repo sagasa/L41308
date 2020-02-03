@@ -63,5 +63,7 @@ namespace SAGASALib
         {
             return (float) Math.Sqrt((x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1));
         }
+
+        //線分の
     }
 }

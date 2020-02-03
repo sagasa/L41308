@@ -35,6 +35,15 @@ namespace SAGASALib
             return new Vec2f(-Y, X);
         }
 
+        public float Dot(Vec2f vec)
+        {
+            return X * vec.X + Y * vec.Y;
+        }
+
+        public float Cross(Vec2f vec)
+        {
+            return X * vec.Y - Y * vec.X;
+        }
         public static Vec2f operator +(Vec2f a, Vec2f b)
         {
             return new Vec2f(a.X + b.X, a.Y + b.Y);
