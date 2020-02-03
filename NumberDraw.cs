@@ -28,13 +28,13 @@ namespace Giraffe
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    if (leftPadding && j == score / unit % 10 && (zeroPadding || score / unit != 0))//左詰めするとき
+                    if (leftPadding && j == score / unit % 10 && (zeroPadding || score >= unit))//左詰めするとき
                     {
                         DX.DrawRotaGraph(x + interval * leftCounter, y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
                         leftCounter++;
                         break;
                     }
-                    else if (!leftPadding && j == score / unit % 10 && (zeroPadding || score / unit != 0))//左詰めしないとき
+                    else if (!leftPadding && j == score / unit % 10 && (zeroPadding || score >= unit))//左詰めしないとき
                     {
                         DX.DrawRotaGraph(x + interval * i, y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
                         break;
@@ -62,13 +62,13 @@ namespace Giraffe
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    if (leftPadding && j == score / unit % 10 && (zeroPadding || score / unit != 0))//左詰めするとき
+                    if (leftPadding && j == score / unit % 10 && (zeroPadding || score >= unit))//左詰めするとき
                     {
                         DX.DrawRotaGraph(x + xInterval * leftCounter, y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
                         leftCounter++;
                         break;
                     }
-                    else if (!leftPadding && j == score / unit % 10 && (zeroPadding || score / unit != 0))//左詰めしないとき
+                    else if (!leftPadding && j == score / unit % 10 && (zeroPadding || score >= unit))//左詰めしないとき
                     {
                         DX.DrawRotaGraph(x + xInterval * i, y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
                         break;
@@ -85,13 +85,13 @@ namespace Giraffe
             {
                 for (int j = 0; j < 10; j++)//分
                 {
-                    if (leftPadding && j == time[0] / unit % 10 && (zeroPadding || unit == 1 || time[0] / unit != 0))
+                    if (leftPadding && j == time[0] / unit % 10 && (zeroPadding || unit == 1 || time[0] >= unit))
                     {
                         DX.DrawRotaGraph(x + interval * leftCounter, y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
                         leftCounter++;
                         break;
                     }
-                    else if (!leftPadding && j == time[0] / unit % 10 && (zeroPadding || unit == 1 || time[0] / unit != 0))
+                    if (!leftPadding && j == time[0] / unit % 10 && (zeroPadding || unit == 1 || time[0] >= unit))
                     {
                         DX.DrawRotaGraph(x + interval * i, y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
                         break;
@@ -99,29 +99,29 @@ namespace Giraffe
                 }
                 for (int j = 0; j < 10; j++)//秒
                 {
-                    if (leftPadding && j == time[1] / digit % 10)
+                    if (leftPadding && j == time[1] / unit % 10)
                     {
                         DX.DrawRotaGraph(x + interval * (2 + leftCounter), y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
                         break;
                     }
-                    else if (!leftPadding && j == time[1] / digit % 10)
+                    else if (!leftPadding && j == time[1] / unit % 10)
                     {
-                        DX.DrawRotaGraph(x + interval * (2 + i), y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
+                        DX.DrawRotaGraph(x + interval * (3 + i), y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
                         break;
                     }
                 }
-                if(fpsDraw)//フレーム数
+                if (fpsDraw)//フレーム数
                 {
                     for (int j = 0; j < 10; j++)
                     {
-                        if (leftPadding && j == time[2] / digit % 10)
+                        if (leftPadding && j == time[2] / unit % 10)
                         {
                             DX.DrawRotaGraph(x + interval * (5 + leftCounter), y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
                             break;
                         }
-                        else if (!leftPadding && j == time[2] / digit % 10)
+                        else if (!leftPadding && j == time[2] / unit % 10)
                         {
-                            DX.DrawRotaGraph(x + interval * (5 + i), y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
+                            DX.DrawRotaGraph(x + interval * (6 + i), y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
                             break;
                         }
                     }
