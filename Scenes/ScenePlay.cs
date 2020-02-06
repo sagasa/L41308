@@ -119,8 +119,12 @@ namespace Giraffe
             ResourcesName = name;
             Map = map;
             Map.SpawnObject(this);
-            
+
             player = new Player(this);
+
+            // TODO: プレイヤーとマップが恐らくnullで返されたせいでエラーが出ていたので追加
+            MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y);
+            player.pos = MapPos + new Vec2f(PlayMap.ScreenSize.X / 2, PlayMap.ScreenSize.Y / 4 * 3);
             
             playerIcon = new playerIcon(this);
 
