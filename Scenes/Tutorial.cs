@@ -551,7 +551,7 @@ namespace Giraffe
                             Game.bgmManager.currentScene = "tutorial";
                             Game.SetScene(new Title(Game),new Fade(fadeTime, true, true));
                             cursorPosY = cursorFixedPosY[0];
-                            Title.stageSelect = true;
+                            Title.isStageSelect = true;
                         }
                     }
                 }
