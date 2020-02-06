@@ -26,7 +26,7 @@ namespace Giraffe
         private bool messageIndicate = false;
 
         private const float fontScale = 0.8f;
-        private int shadow = ResourceLoader.GetGraph("option/dark25.png");
+        private int shadow = ResourceLoader.GetGraph("bg/shadow25.png");
         private int cursor = ResourceLoader.GetGraph("option/cursor.png");
 
         public SceneOption(Game game) : base(game)
