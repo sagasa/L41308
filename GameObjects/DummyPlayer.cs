@@ -13,6 +13,7 @@ namespace Giraffe
         int WalkSETime =60;
         private bool WalkSEFlag=false;
         public bool isDunnyRight = false;
+        public bool isDummyNeck = false;
 
 
         public DummyPlayer(Scene scene):base(scene)
@@ -41,6 +42,24 @@ namespace Giraffe
         }
         public override void Update()
         {
+            if (!isDummyNeck)
+            {
+                AnimationManager.Start(Animations.DefaultAngle);
+                Render.NeckExt =+ 0.8f;
+                if (Input.UP.IsHold()&& Render.NeckExt < 7.5f)
+                {
+                    Render.NeckExt =+ 2.85f;
+                    if (!Sound.CheckPlaySound("neck_up_SE.mp3"))
+                        Sound.Play("neck_up_SE.mp3");
+                }
+
+                if (Input.DOWN.IsHold() && 1.8f < Render.NeckExt)
+                {
+                    Render.NeckExt =-2.85f;
+                    if (!Sound.CheckPlaySound("neck_down_SE.mp3"))
+                        Sound.Play("neck_down_SE.mp3");
+                }
+            }
             //if (Input.LEFT.IsPush() || Input.RIGHT.IsPush())
             //{
             //    Sound.Play("step_SE.mp3");

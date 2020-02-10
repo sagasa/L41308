@@ -20,6 +20,7 @@ namespace Giraffe
         private const int selectCount = 3;
 
         private DummyPlayer Dummy;
+        private DummyPlayer NeckDummy;
         private const int fadeTime = 90;
         private const int shortFadeTime = 60;
         private int fadeCounter = 0;
@@ -44,6 +45,8 @@ namespace Giraffe
             stagePointer = 0;
             selectCursor = 1;
             stageWaitTime = 60;
+            BackgroundFixPosition = 0;
+
         }
         public void TreeFixedPos()
         {
@@ -98,6 +101,7 @@ namespace Giraffe
         public Title(Game game) : base(game)
         {
             Dummy = new DummyPlayer(this);
+            NeckDummy = new DummyPlayer(this);
         }
 
         public override void Draw()
@@ -109,6 +113,7 @@ namespace Giraffe
                 DX.DrawGraph(135,450, ResourceLoader.GetGraph("select_" + 0 + ".png"));
                 DX.DrawGraph(90, 550, ResourceLoader.GetGraph("select_" + 1 + ".png"));
                 DX.DrawGraph(135, 650, ResourceLoader.GetGraph("select_" + 2 + ".png"));
+                NeckDummy.Draw();
             }
             if (isStageSelect)//ステージセレクト
             {
@@ -127,11 +132,13 @@ namespace Giraffe
         {
             selectCursor =1;
             Dummy.pos = new Vec2f(Screen.Width / 2, Screen.Height - 64);
+            NeckDummy.pos = new Vec2f(Screen.Width/8, Screen.Height-64);
             fadeCounter = 0;
         }
 
         public override void Update()
         {
+            Dummy.isDummyNeck = true;
             fadeCounter++;
             if (fadeCounter < fadeTime + 10)//BGMのフェード
             {
@@ -151,10 +158,12 @@ namespace Giraffe
                 if (!isStageSelect)//タイトル画面
                 {
                     selectPos();
+                    NeckDummy.Update();
                     if (Input.ACTION.IsPush() && selectCursor == 1)
                     {
                         Sound.Play("decision_SE.mp3");
                         isStageSelect = true;
+                        Dummy.isDummyNeck = false;
                     }
                     else if (Input.ACTION.IsPush() && selectCursor == 2)
                     {
@@ -174,6 +183,7 @@ namespace Giraffe
                 }
                 else if (isStageSelect)//ステージセレクト
                 {
+                   
                     stageWaitTime--;
                     Dummy.Update();
 
