@@ -102,11 +102,7 @@ namespace Giraffe
                 //Game.hightScore.bestScores["stage" + _scenePlay.ResourcesName] = currentScore;
                 nameGet = true;
             }
-            if (currentTime[0] * 60 + currentTime[1] < bestTime[0] * 60 + bestTime[1])
-            {
-                //Game.hightScore.bestTimes["stage" + _scenePlay.ResourcesName] = currentTime;
-                nameGet = true;
-            }
+
             #if !DEBUG
             SaveManager.Save(HIGHTSCORE, Game.hightScore);
             #endif
@@ -217,11 +213,10 @@ namespace Giraffe
                                           DX.GetColor(255, 255, 255),/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の色*/
                                           DX.GetColor(255, 255, 255));/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の縁の色*/
                 DX.KeyInputString(110, Screen.Height / 2 - 40, 8, nickname, DX.TRUE);
-                
+
                 string aaa = nickname.ToString();
                 nameGet = false;
             }
-
             else if (!Game.fadeAction)
             {
                 if (cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ

@@ -228,7 +228,7 @@ namespace Giraffe
                 {
                     Game.currentScore = score;
                     Game.fadeAction = true;
-                    Game.bgmManager.Set(fadeTime - 10);
+                    Game.bgmManager.Set(60);
                     Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.FadeIn);
                     Game.SetScene(new SceneResult(Game,this), new Fade(fadeTime, true, true));
                 }

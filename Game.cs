@@ -41,7 +41,7 @@ namespace Giraffe
                 hightScore.RankingInit();
             }
             //BGMの再生
-            bgmManager.Load();
+            bgmManager.Init();
             bgmManager.update = new BgmManager.Update(bgmManager.FadeIn);
 
             DX.SetBackgroundColor(200, 200, 200);
@@ -123,7 +123,7 @@ namespace Giraffe
             #endif
             NumberDraw.TimeDraw(DateTime.Now, 100,100, "image_result/result_num_",10,0.1f);
 
-            //bgmManager.Debug();
+            bgmManager.Debug();
         }
     }
 }

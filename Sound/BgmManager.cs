@@ -24,7 +24,7 @@ namespace Giraffe
         string newScene = "title";
         int fadeTime = 60;
 
-        public void Load()
+        public void Init()
         {
             ListenerPos = DX.VGet(0, 1, 0);//リスナーの位置
             ListenerDir = DX.VGet(0, -1, 0);//リスナーの向き
@@ -71,7 +71,7 @@ namespace Giraffe
                 update = Delegate.Remove(update, new Update(CrossFade)) as Update;
             }
         }
-
+        
         public void FadeIn()
         {
             if (!CheckPlayBgm(newScene))//初期化
@@ -101,7 +101,7 @@ namespace Giraffe
                 update = Delegate.Remove(update, new Update(FadeOut)) as Update;
             }
         }
-        
+
         void PlayBgm(string name)
         {
             if (!CheckPlayBgm(name))
