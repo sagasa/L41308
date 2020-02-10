@@ -50,18 +50,7 @@ namespace SAGASALib
             {
                 int distance = 300;//距離
                 int height = 50;//高さ
-                                //int speed = 3;//初速？
-
                 render.Target.pos += new Vec2f(animation.Delta * distance, animation.Delta * (animation.Progress - 0.495f) * (height * 0.495f) * (height * 0.495f));
-
-                //if (animation.Progress < 0.5f)
-                //{
-                //    render.Target.pos += new Vec2f(animation.Delta * distance, (animation.Progress - 0.495f) * (animation.Delta * distance) * (animation.Delta * distance));
-                //}
-                //else
-                //{
-                //    render.Target.pos += new Vec2f(animation.Delta * distance, (animation.Progress - 0.495f) * (animation.Delta * distance) * (animation.Delta * distance));
-                //}
             }, null);
 
         public static AnimationEntry<PlayerRender> Test2 = new AnimationEntry<PlayerRender>(100,

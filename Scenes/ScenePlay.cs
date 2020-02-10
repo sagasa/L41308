@@ -9,11 +9,11 @@ namespace Giraffe
     {
         public int score = 0;
         public DateTime time;
-        
+
         public bool IsGoal { get; private set; } = false;
 
         int goalTimer = 300;
-        int fadeTime = 180;
+        private const int fadeTime = 180;
 
         //ビューポートの座標を移動
         public void Scroll(Vec2f vec)
@@ -43,8 +43,8 @@ namespace Giraffe
             //スクリーンの中心
             Vec2f screenCenter = MapPos + PlayMap.ScreenSize / 2;
             //スクリーンの中心の反対側のMap座標
-            Vec2f inversionPos = Map.MapSize.X / 2 < screenCenter.X ? 
-                screenCenter.SetX(screenCenter.X - Map.MapSize.X / 2):
+            Vec2f inversionPos = Map.MapSize.X / 2 < screenCenter.X ?
+                screenCenter.SetX(screenCenter.X - Map.MapSize.X / 2) :
                 screenCenter.SetX(screenCenter.X + Map.MapSize.X / 2);
 
             //補完部分
@@ -53,7 +53,7 @@ namespace Giraffe
                 //スクリーンの中心がMap座標の中央より左側
                 //補完対象なら補完
                 if (inversionPos.X < mapPos.X)
-                    mapPos = mapPos.SetX(mapPos.X-Map.MapSize.X);
+                    mapPos = mapPos.SetX(mapPos.X - Map.MapSize.X);
             }
             else
             {
@@ -75,11 +75,11 @@ namespace Giraffe
             return pos;
         }
 
-        public bool IsInScreen(Vec2f pos,float ext = 0)
+        public bool IsInScreen(Vec2f pos, float ext = 0)
         {
             if (ext != 0)
             {
-                Vec2f extVec = new Vec2f(ext,ext);
+                Vec2f extVec = new Vec2f(ext, ext);
                 return GetScreenPos(pos).IsInBetween(Vec2f.ZERO - extVec, Screen.Size + extVec);
             }
             return GetScreenPos(pos).IsInBetween(Vec2f.ZERO, Screen.Size);
@@ -102,21 +102,23 @@ namespace Giraffe
 
         private int fontInterval = 25;
         private float fontScale = 1.0f;
-        
+
         public PlayMap Map { get; private set; }
-         
+
         //表示中の領域の左上のMap座標 常にMap座標の範囲内
         public Vec2f MapPos { get; private set; }
 
 
 
-        public List<GameObject> gameObjects=new List<GameObject>();
+        public List<GameObject> gameObjects = new List<GameObject>();
 
         public readonly string ResourcesName;
+        public readonly int StageNum;
 
-        public ScenePlay(Game game, PlayMap map,string name) : base(game)
+        public ScenePlay(Game game, PlayMap map, string name, int num) : base(game)
         {
             ResourcesName = name;
+            StageNum = num;
             Map = map;
             Map.SpawnObject(this);
 
@@ -125,14 +127,14 @@ namespace Giraffe
             // TODO: プレイヤーとマップが恐らくnullで返されたせいでエラーが出ていたので追加
             MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y);
             player.pos = MapPos + new Vec2f(PlayMap.ScreenSize.X / 2, PlayMap.ScreenSize.Y / 4 * 3);
-            
+
             playerIcon = new playerIcon(this);
 
             treeTop = ResourceLoader.GetGraph("tree_top" + ResourcesName + ".png");
             treeMiddle = ResourceLoader.GetGraph("tree_middle" + ResourcesName + ".png");
             treeBottom = ResourceLoader.GetGraph("tree_bottom" + ResourcesName + ".png"); //背景描画treePattern
             stageName = ResourceLoader.GetGraph("image_play/stagename" + ResourcesName + ".png");
-    }
+        }
 
         public void Init()
         {
@@ -145,18 +147,18 @@ namespace Giraffe
             Vec2f pos = GetScreenPos(Vec2f.ZERO);
             DX.DrawGraph(0, 0, treeMiddle);
             DX.DrawExtendGraphF(BackGroundOffset.X * -1, BackGroundOffset.Y * -1, BackGroundOffset.X * -1 + Screen.Width * 2, BackGroundOffset.Y * -1 + Screen.Height * 2, treePattern);
-            DX.DrawGraph(0, (int) pos.Y - 985, treeTop);
+            DX.DrawGraph(0, (int)pos.Y - 985, treeTop);
             pos = GetScreenPos(Map.MapSize);
             DX.DrawGraph(0, (int)pos.Y - 90, treeBottom);
 
             ParticleManagerBottom.Draw();
             gameObjects.ForEach(obj =>
             {
-                if(IsInScreen(obj.pos,100))
+                if (IsInScreen(obj.pos, 100))
                     obj.Draw();
             });
             player.Draw();
-            
+
             ParticleManagerTop.Draw();
 
             DX.DrawGraph(550, 200, bar);
@@ -168,32 +170,11 @@ namespace Giraffe
             DX.DrawRotaGraph(Screen.Width - 155, 25, 0.55, 0, watch);
             DX.DrawRotaGraph(Screen.Width - 75, 25, 0.7, 0, colon);
 
+            int a = 0;
             //スコア
-            int digit = 10000;
-            for (int i = 0; i < 5; i++)
-            {
-                for (int j = 0; j < 10; j++)
-                {
-                    if (j == score / digit % 10 && (score / digit != 0 || digit == 1))//無駄な0を表示しない
-                    {
-                        DX.DrawRotaGraph(Screen.Width / 2 - 10 + fontInterval * i, 25, fontScale, 0, ResourceLoader.GetGraph("image_effect/time_" + j + ".png"));
-                        break;
-                    }
-                }
-                digit /= 10;
-            }
+            NumberDraw.ScoreDraw(score, Screen.Width / 2 - 10, 25, fontInterval, fontScale, "image_effect/time_", false, false);
             //タイム
-            
-            digit = 10;
-            for (int i = 0; i < 2; i++)
-            {
-                for (int j = 0; j < 10; j++)
-                {
-               
-                        break;
-                }
-                digit /= 10;
-            }
+            NumberDraw.TimeDraw(time, Screen.Width - 150, 25, "image_effect/time_", fontInterval, fontScale, true);
         }
 
         public override void OnExit()
@@ -208,7 +189,7 @@ namespace Giraffe
         }
         public void Goal(Vec2f pos)
         {
-            player.Goal(pos/0.705f);
+            player.Goal(pos / 0.705f);
 
             IsGoal = true;
 
@@ -218,12 +199,10 @@ namespace Giraffe
         {
             if (!IsGoal)
             {
-                Game.bgmManager.CrossFade("play", fadeTime);
-
                 time.Add(TimeSpan.FromMilliseconds(16.666666666f));
             }
 
-            gameObjects.ForEach(obj=> player.CalcInteract(obj));
+            gameObjects.ForEach(obj => player.CalcInteract(obj));
             player.Update();
             playerIcon.Update();
             playerIcon.IconPos = (29 - player.Y) * 10.5f;
@@ -237,26 +216,23 @@ namespace Giraffe
                 //player.pos = player.oldPos;
                 //player.velAngle = 0;
                 //player.angle -= 20;
-               
-                if (goalTimer > 240)
-                {
-                    Game.bgmManager.FadeOut("play", 30);
-                }
 
                 if (goalTimer == 300)
                 {
+                    Game.bgmManager.Set(30, "result", "play");
+                    Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.FadeOut);
                     Sound.Play("goal_jingle.mp3");
                 }
                 goalTimer--;
                 if (!Game.fadeAction && goalTimer <= 0)
                 {
-                    Game.currentScore = score;
-                    Game.bgmManager.currentScene = "play";
                     Game.fadeAction = true;
-                    Game.SetScene(new SceneResult(Game,this), new Fade(fadeTime, true, true));
+                    Game.bgmManager.Set(60);
+                    Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.FadeIn);
+                    Game.SetScene(new SceneResult(Game, this, score, time), new Fade(fadeTime, true, true));
                 }
             }
-            
+
         }
     }
 }

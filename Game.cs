@@ -39,7 +39,7 @@ namespace Giraffe
                 hightScore = new HightScore();
 
             DX.SetBackgroundColor(200, 200, 200);
-            bgmManager.Load();
+            bgmManager.Init();
             SetScene(new Title(this));
             for (int i = 0; i < 1; i++)
             {

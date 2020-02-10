@@ -2,13 +2,12 @@
 using DxLibDLL;
 using SAGASALib;
 using Giraffe.Saves;
-
 namespace Giraffe
 {
     public class SceneOption : Scene
     {
         private const string SETTINGS = "settings";
-        
+
         private readonly int[] cursorFixedPosX = new int[] { 320, 520 };
         private readonly int[] cursorFixedPosY = new int[] { 250, 350, 450, 575 };
         private int cursorPosX = 0;
@@ -17,23 +16,20 @@ namespace Giraffe
         private int sePlay = 0;
         private const int on = 0;
         private const int off = 1;
-
         private readonly int[] messageFixedPosX = new int[] { Screen.Width / 2 - 125, Screen.Width / 2 + 125, Screen.Width / 2 };
         private int messageCursorPosX = 0;
-        private const int messageCursorPosY =450;
+        private const int messageCursorPosY = 450;
         private readonly string[] messages = new string[] { "save", "save_done", "reset", "reset_done" };
         private string displayMessage;
         private bool messageIndicate = false;
-
         private const float fontScale = 0.8f;
         private int shadow = ResourceLoader.GetGraph("bg/shadow25.png");
         private int cursor = ResourceLoader.GetGraph("option/cursor.png");
-
         public SceneOption(Game game) : base(game)
         { }
-
         public override void OnLoad()
         {
+            Game.bgmManager.Set(60);
             cursorPosX = cursorFixedPosX[0];
             cursorPosY = cursorFixedPosY[0];
             if (Game.bgmManager.playOn)
@@ -45,13 +41,8 @@ namespace Giraffe
             else
                 sePlay = off;
         }
-
         public override void Update()
         {
-            //BGMの再生
-            if (Game.bgmManager.playOn)
-                Game.bgmManager.FadeIn(Game.bgmManager.currentScene, 30);
-
             if (!Game.fadeAction && !messageIndicate)
             {
                 if (cursorPosX != cursorFixedPosX[0] && Input.LEFT.IsPush())
@@ -129,6 +120,7 @@ namespace Giraffe
                                 Sound.Play("decision_SE.mp3");
                                 bgmPlay = on;
                                 Game.bgmManager.playOn = true;
+                                Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.FadeIn);
                             }
                             else if (Game.bgmManager.playOn && cursorPosX == cursorFixedPosX[1])
                             {
@@ -230,15 +222,12 @@ namespace Giraffe
                 }
             }
         }
-
         public override void Draw()
         {
             DX.DrawGraph(0, 0, ResourceLoader.GetGraph("title_bg.png"));
             DX.DrawGraph(0, 0, shadow);
-
             if (!messageIndicate)
                 DX.DrawRotaGraph(cursorPosX, cursorPosY, fontScale, 0, cursor);
-
             DX.DrawRotaGraph(120, cursorFixedPosY[0], fontScale, 0, ResourceLoader.GetGraph("option/bgm_image.png"));
             DX.DrawRotaGraph(120, cursorFixedPosY[1], fontScale, 0, ResourceLoader.GetGraph("option/se_image.png"));
             DX.DrawRotaGraph(120, cursorFixedPosY[2], fontScale, 0, ResourceLoader.GetGraph("option/setup.png"));
@@ -249,7 +238,6 @@ namespace Giraffe
             DX.DrawRotaGraph(cursorFixedPosX[0], cursorFixedPosY[2], 0.6f, 0, ResourceLoader.GetGraph("option/save.png"));
             DX.DrawRotaGraph(cursorFixedPosX[1], cursorFixedPosY[2], 0.6f, 0, ResourceLoader.GetGraph("option/reset.png"));
             DX.DrawRotaGraph(cursorFixedPosX[0], cursorFixedPosY[cursorFixedPosY.Length - 1], fontScale, 0, ResourceLoader.GetGraph("option/back.png"));
-
             if (messageIndicate)
             {
                 DX.DrawGraph(0, 0, shadow);
@@ -266,7 +254,6 @@ namespace Giraffe
                 }
             }
         }
-
         public override void OnExit()
         {
             Game.fadeAction = false;
