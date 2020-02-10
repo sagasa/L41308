@@ -48,7 +48,7 @@ namespace Giraffe.Saves
                 }
             }
         }
-
+        //ソート
         public void RankingSort(Entry entry, int stageNum)
         {
             //10番を追加、データ代入
@@ -78,7 +78,7 @@ namespace Giraffe.Saves
             scoreRankings[stageNum].RemoveAt(10);
             timeRankings[stageNum].RemoveAt(10);
         }
-
+        //順位を返す
         public void RankingSort(Entry entry, int stageNum, ref int scoreRank, ref int timeRank)
         {
             //10番を追加、データ代入
@@ -113,6 +113,15 @@ namespace Giraffe.Saves
             //10番を削除
             scoreRankings[stageNum].RemoveAt(10);
             timeRankings[stageNum].RemoveAt(10);
+        }
+
+        public bool BreakRecord(Entry entry, int stageNum)
+        {
+            if (entry.score >= scoreRankings[stageNum][10].score)
+                return true;
+            if (DateTime.FromBinary(entry.timeBinary) <= DateTime.FromBinary(timeRankings[stageNum][10].timeBinary))
+                return true;
+            return false;
         }
     }
 }

@@ -10,22 +10,20 @@ namespace Giraffe
     {
         private ScenePlay _scenePlay;
         private const string HIGHTSCORE = "hightscore";
-        StringBuilder nickname = new StringBuilder("");
-        HightScore.Entry entry;
-
-
-        private string[] ranks = new string[] { "a", "b", "c" };
-        private int[] evalScores = new int[] { 1100, 700, 400 };//スコア評価用,数値は仮
-        private DateTime[] evalTimes = new DateTime[] { };//タイム評価用
+        
+        private int[] evalScores = new int[] { 1100, 700, 400 };//評価用
+        private DateTime[] evalTimes = new DateTime[] { new DateTime(0, 0, 0, 0, 1, 0), new DateTime(0, 0, 0, 0, 2, 0), new DateTime(0, 0, 0, 0, 3, 0) };
         private int[] timeBonus = new int[] { 1000, 500, 200 };//タイムボーナス用
-        private string timeEval = null;//評価用
-        private string scoreEval = null;
 
+        HightScore.Entry entry;
+        private int scoreEval;//自分の評価
+        private int timeEval;
         int scoreRank = 10;//自分の順位
         int timeRank = 10;
+        private bool nameGet = false;
+        StringBuilder nickname = new StringBuilder("");//名前受け取り用
 
-
-        private int Counter = 0;//wait,fade,blinkのカウンター
+        private int counter = 0;//wait,fade,blinkのカウンター
         private const int fadeTime = 120;
         //描画用定数
         private const int frameX = 240;
@@ -50,10 +48,7 @@ namespace Giraffe
         private bool playerMove = false;
         private bool playerOnRight = true;
         private DummyPlayer dummyPlayer;
-
-        private bool nameGet = false;
-
-
+        
         private int cursor = ResourceLoader.GetGraph("image_result/cursor.png");
         private int coron = ResourceLoader.GetGraph("image_result/rcolon.png");
         private int newImage = ResourceLoader.GetGraph("image_result/new.png");
@@ -69,49 +64,41 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-            Game.hightScore.RankingSort(entry, _scenePlay.StageNum, ref scoreRank, ref timeRank);
-            nameGet = false;
-            if (scoreRank < 10 || timeRank < 10)
-                nameGet = true;
-
-
-
-
-
-            blinkMessage = true;
-            Counter = 0;
-            rankAnimationScale = 1;
-            rankExpansionAnimation = false;
-
-            cursorPosX = fixedPosX[1];
-            dummyPlayer.pos = new Vec2f(cursorPosX, cursorPosY - 85);
-
-
+            nameGet = Game.hightScore.BreakRecord(entry, _scenePlay.StageNum);//記録を更新してるか
 
             for (int i = 0; i < evalScores.Length; i++)//スコアの評価
             {
                 if (evalScores[i] <= entry.score)
                 {
-                    scoreEval = ranks[i];
+                    scoreEval = i;
                     break;
                 }
+                if (i == evalScores.Length - 1)
+                    scoreEval = 100;
             }
-            for (int i = 0; i < timeRank; i++)
+            for (int i = 0; i < evalTimes.Length; i++)//タイムの評価
             {
                 if (evalTimes[i] >= DateTime.FromBinary(entry.timeBinary))
                 {
-                    timeEval = ranks[i];
+                    timeEval = i;
                     break;
                 }
+                if (i == evalTimes.Length - 1)
+                    timeEval = 100;
             }
 
-#if !DEBUG
-            SaveManager.Save(HIGHTSCORE, Game.hightScore);
-#endif
+            blinkMessage = true;
+            counter = 0;
+            rankAnimationScale = 1;
+            rankExpansionAnimation = false;
+
+            cursorPosX = fixedPosX[1];
+            dummyPlayer.pos = new Vec2f(cursorPosX, cursorPosY - 85);
         }
 
         public override void Update()
         {
+            /*
             if (!playerMove)
             {
                 if (playerOnRight && cursorPosX == fixedPosX[0])
@@ -178,11 +165,12 @@ namespace Giraffe
             }
 
             dummyPlayer.Update();
+            */
 
-            Counter++;
-            if (Counter % 60 == 0)
+            counter++;
+            if (counter % 60 == 0)
                 blinkMessage = true;
-            else if (Counter % 60 == 40)
+            else if (counter % 60 == 40)
                 blinkMessage = false;
             //ランクのアニメーションに使用
             if (rankExpansionAnimation)
@@ -193,6 +181,7 @@ namespace Giraffe
                 rankExpansionAnimation = false;
             else if (rankAnimationScale < 0.75)
                 rankExpansionAnimation = true;
+
             //名前入力
             if (!Game.fadeAction && nameGet)
             {
@@ -215,13 +204,27 @@ namespace Giraffe
                                           DX.GetColor(255, 255, 255),/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の色*/
                                           DX.GetColor(255, 255, 255));/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の縁の色*/
                 DX.KeyInputString(110, Screen.Height / 2 - 40, 8, nickname, DX.TRUE);
-
-
-
+                entry.name = nickname.ToString();
+                entry.dateBinary = DateTime.Now.ToBinary();
+                Game.hightScore.RankingSort(entry, _scenePlay.StageNum, ref scoreRank, ref timeRank);
+                #if !DEBUG
+                SaveManager.Save(HIGHTSCORE, Game.hightScore);
+                #endif
                 nameGet = false;
             }
             else if (!Game.fadeAction)
             {
+                /*メモ
+                ランキングを強制表示 
+
+                 */
+                
+
+
+
+
+
+
                 if (cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
                 {
                     Sound.Play("cursor_SE.mp3");
@@ -316,6 +319,9 @@ namespace Giraffe
 
             if (!nameGet)
             {
+                DX.
+
+
                 dummyPlayer.Draw();
                 DX.DrawRotaGraph(cursorPosX, cursorPosY, 1, 0, cursor);
                 DX.DrawRotaGraph(fixedPosX[0], cursorPosY, 1, 0, ResourceLoader.GetGraph("image_result/restart.png"));

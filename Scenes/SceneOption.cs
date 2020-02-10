@@ -195,8 +195,6 @@ namespace Giraffe
                             Game.settings.sePlayOn = true;
                             bgmPlay = on;
                             sePlay = on;
-                            //リセットでセーブいる？
-                            //SaveManager.Save(SETTINGS, Game.settings);
                             displayMessage = messages[3];
                             messageCursorPosX = messageFixedPosX[2];
                         }

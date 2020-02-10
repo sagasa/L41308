@@ -272,13 +272,13 @@
     <Content Include="Resources\Images\image_result\new.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Images\image_result\rank_c.png">
+    <Content Include="Resources\Images\image_result\rank_2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Images\image_result\rank_b.png">
+    <Content Include="Resources\Images\image_result\rank_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Images\image_result\rank_a.png">
+    <Content Include="Resources\Images\image_result\rank_0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Images\image_result\rcolon.png">
@@ -290,10 +290,10 @@
     <Content Include="Resources\Images\image_result\result_bg.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Images\image_result\brackets1.png">
+    <Content Include="Resources\Images\image_result\brackets%28.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Images\image_result\brackets2.png">
+    <Content Include="Resources\Images\image_result\brackets%29.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Images\image_result\result_num_0.png">
@@ -329,7 +329,7 @@
     <Content Include="Resources\Images\image_result\plus.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Images\image_result\r_back.png">
+    <Content Include="Resources\Images\image_result\back.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Images\image_select\mozi2_0.png">
