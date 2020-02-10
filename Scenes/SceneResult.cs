@@ -319,8 +319,6 @@ namespace Giraffe
 
             if (!nameGet)
             {
-                DX.
-
 
                 dummyPlayer.Draw();
                 DX.DrawRotaGraph(cursorPosX, cursorPosY, 1, 0, cursor);
