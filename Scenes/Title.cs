@@ -28,6 +28,7 @@ namespace Giraffe
         public float BackgroundFixPosition = 0;
         public float tree = 0;
         const int StageCount = 3;
+        public float CursorPos = 502;
         
         public static bool isStageSelect = false;//タイトルと選択画面の移行フラグ
         public static bool isTreeRight =false;
@@ -72,10 +73,25 @@ namespace Giraffe
             }
             else if(tree>=BackgroundFixPosition&&Input.RIGHT.IsPush()||Input.LEFT.IsPush())
             {
-
+                
             }
         }
-       
+       public void selectPos()
+        {
+            if (Input.UP.IsPush() && selectCursor > 1)//カーソルが一番上以外の時に↑が押されたら、カーソルを一つ上へ
+            {
+                Sound.Play("cursor_SE.mp3");
+                selectCursor -= 1;
+            }
+            else if (Input.DOWN.IsPush() && selectCursor < 3)//カーソルが一番下以外の時下を押されたら、カーソルが一つ下へ
+            {
+                Sound.Play("cursor_SE.mp3");
+                selectCursor += 1;
+            }
+            DX.DrawGraphF(0 + CursorPos, 0, icon);
+            
+        }
+
         public int stagePointer=0;//ステージのかうんと」てきな
         
         
@@ -134,31 +150,21 @@ namespace Giraffe
             {
                 if (!isStageSelect)//タイトル画面
                 {
-                    if (Input.UP.IsPush() && selectCursor>1)//カーソルが一番上以外の時に↑が押されたら、カーソルを一つ上へ
-                    {
-                        Sound.Play("cursor_SE.mp3");
-                        selectCursor -= 1;
-                    }
-                    else if (Input.DOWN.IsPush()&&selectCursor<3)//カーソルが一番下以外の時下を押されたら、カーソルが一つ下へ
-                    {
-                        Sound.Play("cursor_SE.mp3");
-                        selectCursor += 1;
-                    }
-                
-                    if (Input.ACTION.IsPush()&&selectCursor==1)
+                    selectPos();
+                    if (Input.ACTION.IsPush() && selectCursor == 1)
                     {
                         Sound.Play("decision_SE.mp3");
                         isStageSelect = true;
                     }
-                    else if (Input.ACTION.IsPush()&&selectCursor==2)
+                    else if (Input.ACTION.IsPush() && selectCursor == 2)
                     {
                         Sound.Play("decision_SE.mp3");
                         Game.bgmManager.currentScene = "title";
                         Game.fadeAction = true;
-                        Game.SetScene(new Tutolal(Game,new PlayMap("map_0"),"_0"), new Fade(shortFadeTime, true, true));
+                        Game.SetScene(new Tutolal(Game, new PlayMap("map_0"), "_0"), new Fade(shortFadeTime, true, true));
                         Tutolal.Tutorialcount += 1;
                     }
-                    else if (Input.ACTION.IsPush()&&selectCursor==3)
+                    else if (Input.ACTION.IsPush() && selectCursor == 3)
                     {
                         Sound.Play("decision_SE.mp3");
                         Game.bgmManager.currentScene = "title";
@@ -168,10 +174,9 @@ namespace Giraffe
                 }
                 else if (isStageSelect)//ステージセレクト
                 {
-                    
                     stageWaitTime--;
                     Dummy.Update();
-                    
+
                     if (Input.RIGHT.IsPush())
                     {
                         isTreeRight = true;
@@ -182,53 +187,53 @@ namespace Giraffe
                         isTreeRight = false;
                         Dummy.isDunnyRight = false;
                     }
-                    if(Dummy.isDunnyRight)
+                    if (Dummy.isDunnyRight)
                     {
                         Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, 0.01f, 0.1f));
                     }
-                    else if(!Dummy.isDunnyRight)
+                    else if (!Dummy.isDunnyRight)
                     {
                         Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, -0.01f, 0.1f));
                     }
 
-                    if (Input.RIGHT.IsPush() && stagePointer <3)//一番右側以外にいるとき、→が押されたら右へ
+                    if (Input.RIGHT.IsPush() && stagePointer < 3)//一番右側以外にいるとき、→が押されたら右へ
                     {
                         if (!Sound.CheckPlaySound("step_SE.mp3"))
-                         Sound.Loop("step_SE.mp3");
-                         stagePointer += 1;
+                            Sound.Loop("step_SE.mp3");
+                        stagePointer += 1;
                     }
                     else if (Input.LEFT.IsPush() && stagePointer > 0)//一番左側以外にいるとき、←が押されたら左へ
                     {
                         if (!Sound.CheckPlaySound("step_SE.mp3"))
                             Sound.Loop("step_SE.mp3");
-                            stagePointer -= 1;
+                        stagePointer -= 1;
                     }
                     //画面の位置がステージの間にあるならtreeMoveをtrue
-                  
+
                     if (!isStageSelect)
                         Sound.Stop("step_SE.mp3");
-                    
+
                     if (Input.ACTION.IsPush() && stageWaitTime <= 0 && Tutolal.Tutorialcount == 0)
                     {
-                                Sound.Play("decision_SE.mp3");
-                                Game.fadeAction = true;
-                                Game.bgmManager.currentScene = "title";
-                       
+                        Sound.Play("decision_SE.mp3");
+                        Game.fadeAction = true;
+                        Game.bgmManager.currentScene = "title";
+
                         //固有のもの
-                        if (stagePointer==0)//チュートリアル
+                        if (stagePointer == 0)//チュートリアル
                         {
                             Tutolal.Tutorialcount += 99;
-                            Game.SetScene(new Tutolal(Game,new PlayMap("map_0"),"_0"), new Fade(fadeTime, true, true));
+                            Game.SetScene(new Tutolal(Game, new PlayMap("map_0"), "_0"), new Fade(fadeTime, true, true));
                         }
-                        else if (stagePointer==1)//ステージ1
+                        else if (stagePointer == 1)//ステージ1
                         {
-                            Game.SetScene(new ScenePlay(Game, new PlayMap( "map_1"), "_1"), new Fade(fadeTime, true, true));
+                            Game.SetScene(new ScenePlay(Game, new PlayMap("map_1"), "_1"), new Fade(fadeTime, true, true));
                         }
-                        else if (stagePointer==2)
+                        else if (stagePointer == 2)
                         {
                             Game.SetScene(new ScenePlay(Game, new PlayMap("map_2"), "_2"), new Fade(fadeTime, true, true));
                         }
-                        else if (stagePointer==3)
+                        else if (stagePointer == 3)
                         {
                             Game.SetScene(new ScenePlay(Game, new PlayMap("map_3"), "_3"), new Fade(fadeTime, true, true));
                         }
