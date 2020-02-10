@@ -67,7 +67,7 @@ namespace Giraffe.Saves
                     scoreRankings[stageNum][10] = w;
                 }
                 //タイム
-                if (DateTime.FromBinary(timeRankings[stageNum][i].timeBinary) <= DateTime.FromBinary(scoreRankings[stageNum][10].timeBinary))
+                if (DateTime.FromBinary(timeRankings[stageNum][i].timeBinary) >= DateTime.FromBinary(scoreRankings[stageNum][10].timeBinary))
                 {
                     Entry w = timeRankings[stageNum][i];
                     timeRankings[stageNum][i] = scoreRankings[stageNum][10];
@@ -101,7 +101,7 @@ namespace Giraffe.Saves
                     scoreRankings[stageNum][10] = w;
                 }
                 //タイム
-                if (DateTime.FromBinary(timeRankings[stageNum][i].timeBinary) <= DateTime.FromBinary(scoreRankings[stageNum][10].timeBinary))
+                if (DateTime.FromBinary(timeRankings[stageNum][i].timeBinary) >= DateTime.FromBinary(scoreRankings[stageNum][10].timeBinary))
                 {
                     if (timeRank == 10)
                         timeRank = i;
