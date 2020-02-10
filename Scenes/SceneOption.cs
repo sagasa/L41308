@@ -34,6 +34,8 @@ namespace Giraffe
 
         public override void OnLoad()
         {
+            Game.bgmManager.Set(60);
+
             cursorPosX = cursorFixedPosX[0];
             cursorPosY = cursorFixedPosY[0];
             if (Game.bgmManager.playOn)
@@ -48,10 +50,6 @@ namespace Giraffe
 
         public override void Update()
         {
-            //BGMの再生
-            if (Game.bgmManager.playOn)
-                Game.bgmManager.FadeIn(Game.bgmManager.currentScene, 30);
-
             if (!Game.fadeAction && !messageIndicate)
             {
                 if (cursorPosX != cursorFixedPosX[0] && Input.LEFT.IsPush())
@@ -129,6 +127,7 @@ namespace Giraffe
                                 Sound.Play("decision_SE.mp3");
                                 bgmPlay = on;
                                 Game.bgmManager.playOn = true;
+                                Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.FadeIn);
                             }
                             else if (Game.bgmManager.playOn && cursorPosX == cursorFixedPosX[1])
                             {

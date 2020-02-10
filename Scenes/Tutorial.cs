@@ -38,7 +38,6 @@ namespace Giraffe
 
         private const int fadeTime = 90;
         private const int shortFadeTime = 30;
-        private int fadeCounter = 0;
         
         private int titlebg = ResourceLoader.GetGraph("title_bg.png");
         private int select1 = ResourceLoader.GetGraph("select_3.png");
@@ -93,7 +92,7 @@ namespace Giraffe
         };
 
 
-        public Tutolal(Game game,PlayMap map, string name):base(game,new PlayMap( "map_0"),"_0")
+        public Tutolal(Game game,PlayMap map, string name):base(game,new PlayMap( "map_0"),"_0",0)
         {
             Map = map;
             Map.SpawnObject(this);
@@ -336,16 +335,11 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-            fadeCounter = 0;
             cursorPosY = cursorFixedPosY[0];
         }
 
         public override void Update()
         {
-            fadeCounter++;
-            if (fadeCounter < fadeTime + 10)
-                Game.bgmManager.CrossFade("tutorial",fadeTime);
-
             if (!Game.fadeAction)
             {
                 if (Tutorialcount >= 0)
@@ -354,8 +348,9 @@ namespace Giraffe
                     if (Input.BACK.IsPush())
                     {
                         Sound.Play("cancel_SE.mp3");
-                        Game.bgmManager.currentScene = "tutorial";
                         Game.fadeAction = true;
+                        Game.bgmManager.Set(shortFadeTime, "title", "tutorial");
+                        Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
                         Game.SetScene(new Title(Game), new Fade(shortFadeTime, true, true));
                     }
                 }
@@ -427,8 +422,9 @@ namespace Giraffe
 
                 if (Tutorialcount == 8 && Input.ACTION.IsPush())
                 {
-                    Game.bgmManager.currentScene = "tutorial";
-                    Game.SetScene(new Title(Game));
+                    Game.bgmManager.Set(shortFadeTime, "title", "tutorial");
+                    Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
+                    Game.SetScene(new Title(Game), new Fade(shortFadeTime, true, true));
                     Sound.Play("decision_SE.mp3");
                     Tutorialcount = 0;
 
@@ -548,7 +544,8 @@ namespace Giraffe
                         CommentTime--;
                         if (CommentTime <= 0)
                         {
-                            Game.bgmManager.currentScene = "tutorial";
+                            Game.bgmManager.Set(fadeTime, "title", "tutorial");
+                            Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
                             Game.SetScene(new Title(Game),new Fade(fadeTime, true, true));
                             cursorPosY = cursorFixedPosY[0];
                             Title.isStageSelect = true;

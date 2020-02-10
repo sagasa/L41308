@@ -13,7 +13,7 @@ namespace Giraffe
         public bool IsGoal { get; private set; } = false;
 
         int goalTimer = 300;
-        int fadeTime = 180;
+        private const int fadeTime = 180;
 
         //ビューポートの座標を移動
         public void Scroll(Vec2f vec)
@@ -113,10 +113,12 @@ namespace Giraffe
         public List<GameObject> gameObjects=new List<GameObject>();
 
         public readonly string ResourcesName;
+        public readonly int StageNum;
 
-        public ScenePlay(Game game, PlayMap map,string name) : base(game)
+        public ScenePlay(Game game, PlayMap map, string name,int num) : base(game)
         {
             ResourcesName = name;
+            StageNum = num;
             Map = map;
             Map.SpawnObject(this);
 
@@ -125,14 +127,14 @@ namespace Giraffe
             // TODO: プレイヤーとマップが恐らくnullで返されたせいでエラーが出ていたので追加
             MapPos = new Vec2f(0, Map.MapSize.Y - PlayMap.ScreenSize.Y);
             player.pos = MapPos + new Vec2f(PlayMap.ScreenSize.X / 2, PlayMap.ScreenSize.Y / 4 * 3);
-            
+
             playerIcon = new playerIcon(this);
 
             treeTop = ResourceLoader.GetGraph("tree_top" + ResourcesName + ".png");
             treeMiddle = ResourceLoader.GetGraph("tree_middle" + ResourcesName + ".png");
             treeBottom = ResourceLoader.GetGraph("tree_bottom" + ResourcesName + ".png"); //背景描画treePattern
             stageName = ResourceLoader.GetGraph("image_play/stagename" + ResourcesName + ".png");
-    }
+        }
 
         public void Init()
         {
@@ -168,32 +170,11 @@ namespace Giraffe
             DX.DrawRotaGraph(Screen.Width - 155, 25, 0.55, 0, watch);
             DX.DrawRotaGraph(Screen.Width - 75, 25, 0.7, 0, colon);
 
+            int a=0;
             //スコア
-            int digit = 10000;
-            for (int i = 0; i < 5; i++)
-            {
-                for (int j = 0; j < 10; j++)
-                {
-                    if (j == score / digit % 10 && (score / digit != 0 || digit == 1))//無駄な0を表示しない
-                    {
-                        DX.DrawRotaGraph(Screen.Width / 2 - 10 + fontInterval * i, 25, fontScale, 0, ResourceLoader.GetGraph("image_effect/time_" + j + ".png"));
-                        break;
-                    }
-                }
-                digit /= 10;
-            }
+            NumberDraw.ScoreDraw(score, Screen.Width / 2 - 10, 25, fontInterval, fontScale, "image_effect/time_", false, false);
             //タイム
-            
-            digit = 10;
-            for (int i = 0; i < 2; i++)
-            {
-                for (int j = 0; j < 10; j++)
-                {
-               
-                        break;
-                }
-                digit /= 10;
-            }
+            NumberDraw.TimeDraw(time, Screen.Width - 150, 25, "image_effect/time_", fontInterval, fontScale, true);
         }
 
         public override void OnExit()
@@ -218,8 +199,6 @@ namespace Giraffe
         {
             if (!IsGoal)
             {
-                Game.bgmManager.CrossFade("play", fadeTime);
-
                 time.Add(TimeSpan.FromMilliseconds(16.666666666f));
             }
 
@@ -238,21 +217,19 @@ namespace Giraffe
                 //player.velAngle = 0;
                 //player.angle -= 20;
                
-                if (goalTimer > 240)
-                {
-                    Game.bgmManager.FadeOut("play", 30);
-                }
-
                 if (goalTimer == 300)
                 {
+                    Game.bgmManager.Set(30, "result", "play");
+                    Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.FadeOut);
                     Sound.Play("goal_jingle.mp3");
                 }
                 goalTimer--;
                 if (!Game.fadeAction && goalTimer <= 0)
                 {
                     Game.currentScore = score;
-                    Game.bgmManager.currentScene = "play";
                     Game.fadeAction = true;
+                    Game.bgmManager.Set(fadeTime - 10);
+                    Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.FadeIn);
                     Game.SetScene(new SceneResult(Game,this), new Fade(fadeTime, true, true));
                 }
             }

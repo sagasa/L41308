@@ -13,7 +13,7 @@ namespace Giraffe
         List<StaticMapObject> objList = new List<StaticMapObject>();
 
         public BgmManager bgmManager = new BgmManager();
-        public static bool fadeAction = true;
+        public static bool fadeAction = false;
 
         public static bool ShowCollision = true;
         
@@ -36,16 +36,22 @@ namespace Giraffe
             //ハイスコアとベストタイムの読み込み
             hightScore = SaveManager.Load<HightScore>(HIGHTSCORE);
             if (hightScore == null)
+            {
                 hightScore = new HightScore();
+                hightScore.RankingInit();
+            }
+            //BGMの再生
+            bgmManager.Load();
+            bgmManager.update = new BgmManager.Update(bgmManager.FadeIn);
 
             DX.SetBackgroundColor(200, 200, 200);
-            bgmManager.Load();
+            
             SetScene(new Title(this));
-            for (int i = 0; i < 1; i++)
-            {
-                //これ消せばクルクル消えます
-                //objList.Add(new StaticMapObject( i, 0 ));
-            }
+            //for (int i = 0; i < 1; i++)
+            //{
+            //    //これ消せばクルクル消えます
+            //    objList.Add(new StaticMapObject( i, 0 ));
+            //}
             Vec2f vec2 = new Vec2f(1,1);
             Vec2f test = vec2 * 2;
         }
@@ -77,7 +83,7 @@ namespace Giraffe
 
             CurrentScene.Update();
             //シーン切り替え関連
-            if (0<_changer.Count)
+            if (0 < _changer.Count)
             {
                 _oldScene.Update();
                 for (var i = _changer.Count - 1; i >= 0; i--)
@@ -89,8 +95,10 @@ namespace Giraffe
                         if (_changer.Count == 0)
                             _oldScene.OnExit();
                     }
-                }               
-            }            
+                }
+            }
+            if (bgmManager.playOn && bgmManager.update != null)
+                bgmManager.update();
         }
 
         public void Draw()
