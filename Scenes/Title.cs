@@ -29,14 +29,14 @@ namespace Giraffe
         public float tree = 0;
         const int StageCount = 3;
         public float CursorPos = 502;
-        
+
         public static bool isStageSelect = false;//タイトルと選択画面の移行フラグ
-        public static bool isTreeRight =false;
+        public static bool isTreeRight = false;
 
         private int titlebg = ResourceLoader.GetGraph("title_bg.png");
         private int icon = ResourceLoader.GetGraph("キリンアイコン.png");
         private int treebg = ResourceLoader.GetGraph("image_select/select_bg.png");
-        private int stagename=ResourceLoader.GetGraph("image_select/select_UI.png");
+        private int stagename = ResourceLoader.GetGraph("image_select/select_UI.png");
         private int coron = ResourceLoader.GetGraph("image_result/rcolon.png");
 
         void Reset()
@@ -62,23 +62,23 @@ namespace Giraffe
                     BackgroundFixPosition += Screen.Width / 80;
                 }
             }
-            else if(stageCounter%1==0&&!isTreeRight)
+            else if (stageCounter % 1 == 0 && !isTreeRight)
             {
-                if (tree == BackgroundFixPosition||BackgroundFixPosition<0)
+                if (tree == BackgroundFixPosition || BackgroundFixPosition < 0)
                 {
-                  
+
                 }
                 else
                 {
                     BackgroundFixPosition -= Screen.Width / 80;
                 }
             }
-            else if(tree>=BackgroundFixPosition&&Input.RIGHT.IsPush()||Input.LEFT.IsPush())
+            else if (tree >= BackgroundFixPosition && Input.RIGHT.IsPush() || Input.LEFT.IsPush())
             {
-                
+
             }
         }
-       public void selectPos()
+        public void selectPos()
         {
             if (Input.UP.IsPush() && selectCursor > 1)//カーソルが一番上以外の時に↑が押されたら、カーソルを一つ上へ
             {
@@ -91,12 +91,12 @@ namespace Giraffe
                 selectCursor += 1;
             }
             DX.DrawGraphF(0 + CursorPos, 0, icon);
-            
+
         }
 
-        public int stagePointer=0;//ステージのかうんと」てきな
-        
-        
+        public int stagePointer = 0;//ステージのかうんと」てきな
+
+
         public Title(Game game) : base(game)
         {
             Dummy = new DummyPlayer(this);
@@ -107,9 +107,9 @@ namespace Giraffe
         {
             if (!isStageSelect)//タイトル画面
             {
-                
+
                 DX.DrawGraph(0, 0, titlebg);
-                DX.DrawGraph(135,450, ResourceLoader.GetGraph("select_" + 0 + ".png"));
+                DX.DrawGraph(135, 450, ResourceLoader.GetGraph("select_" + 0 + ".png"));
                 DX.DrawGraph(90, 550, ResourceLoader.GetGraph("select_" + 1 + ".png"));
                 DX.DrawGraph(135, 650, ResourceLoader.GetGraph("select_" + 2 + ".png"));
                 NeckDummy.Draw();
@@ -117,8 +117,8 @@ namespace Giraffe
             if (isStageSelect)//ステージセレクト
             {
                 TreeFixedPos();
-                DX.DrawGraphF(0-BackgroundFixPosition,0, treebg);
-                DX.DrawGraphF(0-BackgroundFixPosition,0, stagename);
+                DX.DrawGraphF(0 - BackgroundFixPosition, 0, treebg);
+                DX.DrawGraphF(0 - BackgroundFixPosition, 0, stagename);
                 Dummy.Draw();
             }
             DX.DrawString(500, 50, "" + stagePointer, DX.GetColor(0, 0, 0));
@@ -126,66 +126,47 @@ namespace Giraffe
             DX.DrawString(500, 150, "" + BackgroundFixPosition, DX.GetColor(0, 0, 0));
             DX.DrawString(500, 200, "" + tree, DX.GetColor(0, 0, 0));
         }
-        
+
         public override void OnLoad()
         {
-            selectCursor =1;
+            selectCursor = 1;
             Dummy.pos = new Vec2f(Screen.Width / 2, Screen.Height - 64);
-<<<<<<< HEAD
-            NeckDummy.pos = new Vec2f(Screen.Width/8, Screen.Height-64);
-            fadeCounter = 0;
-=======
->>>>>>> f88cdf9ee24a0745b0d1330a09906c12a8502813
+
+            NeckDummy.pos = new Vec2f(Screen.Width / 8, Screen.Height - 64);
+
         }
 
         public override void Update()
         {
-<<<<<<< HEAD
+
             Dummy.isDummyNeck = true;
-            fadeCounter++;
-            if (fadeCounter < fadeTime + 10)//BGMのフェード
+
+            if (!isStageSelect)//タイトル画面
             {
-                if (Game.bgmManager.currentScene == "title") { }//何もしない
-                else if (Game.bgmManager.currentScene == "none")
+                selectPos();
+
+                NeckDummy.Update();
+                if (Input.ACTION.IsPush() && selectCursor == 1)
                 {
-                    Game.bgmManager.FadeIn("title", fadeTime);
-                    if (fadeCounter == fadeTime)
-                        Game.fadeAction = false;
+                    Sound.Play("decision_SE.mp3");
+                    isStageSelect = true;
+                    Dummy.isDummyNeck = false;
                 }
-                else
-                    Game.bgmManager.CrossFade("title", fadeTime);
-            }
-            
-=======
->>>>>>> f88cdf9ee24a0745b0d1330a09906c12a8502813
-            if (!Game.fadeAction)
-            {
-                if (!isStageSelect)//タイトル画面
+                else if (Input.ACTION.IsPush() && selectCursor == 2)
                 {
-                    selectPos();
-<<<<<<< HEAD
-                    NeckDummy.Update();
-                    if (Input.ACTION.IsPush() && selectCursor == 1)
-                    {
-                        Sound.Play("decision_SE.mp3");
-                        isStageSelect = true;
-                        Dummy.isDummyNeck = false;
-                    }
-                    else if (Input.ACTION.IsPush() && selectCursor == 2)
-                    {
-                        Sound.Play("decision_SE.mp3");
-                        Game.bgmManager.currentScene = "title";
-                        Game.fadeAction = true;
-                        Game.SetScene(new Tutolal(Game, new PlayMap("map_0"), "_0"), new Fade(shortFadeTime, true, true));
-                        Tutolal.Tutorialcount += 1;
-                    }
-                    else if (Input.ACTION.IsPush() && selectCursor == 3)
-                    {
-                        Sound.Play("decision_SE.mp3");
-                        Game.bgmManager.currentScene = "title";
-                        Game.fadeAction = true;
-                        Game.SetScene(new SceneOption(Game), new Fade(shortFadeTime, true, true));
-=======
+                    Sound.Play("decision_SE.mp3");
+                    Game.bgmManager.set(shortFadeTime, "tutorial", "title");
+                    Game.bgmManager.update = new BgmManager.update(Game.bgmManager.CrossFade);
+                    
+                    Game.SetScene(new Tutolal(Game, new PlayMap("map_0"), "_0"),new Fade(shortFadeTime,true,true));
+                    Tutolal.Tutorialcount += 1;
+                }
+                else if (Input.ACTION.IsPush() && selectCursor == 3)
+                {
+                    Sound.Play("decision_SE.mp3");
+                   
+                    Game.SetScene(new SceneOption(Game),new Fade(shortFadeTime,true,true));
+
                     if (Input.ACTION.IsPush())
                     {
                         if (selectCursor == 1)
@@ -199,91 +180,93 @@ namespace Giraffe
                             Game.fadeAction = true;
                             if (selectCursor == 2)
                             {
-                                Game.bgmManager.Set(shortFadeTime, "tutorial", "title");
-                                Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                                Game.SetScene(new Tutolal(Game, new PlayMap("map_0"), "_0"), new Fade(shortFadeTime, true, true));
+
+                                Game.SetScene(new Tutolal(Game, new PlayMap("map_0"), "_0"));
                                 Tutolal.Tutorialcount += 1;
                             }
                             else if (selectCursor == 3)
                             {
-                                Game.SetScene(new SceneOption(Game), new Fade(shortFadeTime, true, true));
+                                Game.SetScene(new SceneOption(Game));
                             }
                         }
->>>>>>> f88cdf9ee24a0745b0d1330a09906c12a8502813
-                    }
-                }
-                else if (isStageSelect)//ステージセレクト
-                {
-                   
-                    stageWaitTime--;
-                    Dummy.Update();
-
-                    if (Input.RIGHT.IsPush())
-                    {
-                        isTreeRight = true;
-                        Dummy.isDunnyRight = true;
-                    }
-                    else if (Input.LEFT.IsPush())
-                    {
-                        isTreeRight = false;
-                        Dummy.isDunnyRight = false;
-                    }
-                    if (Dummy.isDunnyRight)
-                    {
-                        Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, 0.01f, 0.1f));
-                    }
-                    else if (!Dummy.isDunnyRight)
-                    {
-                        Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, -0.01f, 0.1f));
-                    }
-
-                    if (Input.RIGHT.IsPush() && stagePointer < 3)//一番右側以外にいるとき、→が押されたら右へ
-                    {
-                        if (!Sound.CheckPlaySound("step_SE.mp3"))
-                            Sound.Loop("step_SE.mp3");
-                        stagePointer += 1;
-                    }
-                    else if (Input.LEFT.IsPush() && stagePointer > 0)//一番左側以外にいるとき、←が押されたら左へ
-                    {
-                        if (!Sound.CheckPlaySound("step_SE.mp3"))
-                            Sound.Loop("step_SE.mp3");
-                        stagePointer -= 1;
-                    }
-                    //画面の位置がステージの間にあるならtreeMoveをtrue
-
-                    if (!isStageSelect)
-                        Sound.Stop("step_SE.mp3");
-
-                    if (Input.ACTION.IsPush() && stageWaitTime <= 0 && Tutolal.Tutorialcount == 0)
-                    {
-                        Sound.Play("decision_SE.mp3");
-                        Game.fadeAction = true;
-
-                        //固有のもの
-                        if (stagePointer == 0)//チュートリアル
-                        {
-                            Tutolal.Tutorialcount += 99;
-                            Game.bgmManager.Set(fadeTime, "tutorial", "title");
-                            Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                            Game.SetScene(new Tutolal(Game, new PlayMap("map_0"), "_0"), new Fade(fadeTime, true, true));
-                        }
-                        else//プレイシーン
-                        {
-                            Game.bgmManager.Set(fadeTime, "play", "title");
-                            Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                            Game.SetScene(new ScenePlay(Game, new PlayMap("map_" + stagePointer), "_" + stagePointer, stagePointer), new Fade(fadeTime, true, true));
-                        }
-                    }
-                    if (Input.BACK.IsPush())
-                    {
-                        isStageSelect = false;
-                        Reset();
-                        Sound.Play("cancel_SE.mp3");
                     }
                 }
             }
+            else if (isStageSelect)//ステージセレクト
+            {
+
+                Dummy.Update();
+
+                if (Input.RIGHT.IsPush())
+                {
+                    isTreeRight = true;
+                    Dummy.isDunnyRight = true;
+                }
+                else if (Input.LEFT.IsPush())
+                {
+                    isTreeRight = false;
+                    Dummy.isDunnyRight = false;
+                }
+                if (Dummy.isDunnyRight)
+                {
+                    Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, 0.01f, 0.1f));
+                }
+                else if (!Dummy.isDunnyRight)
+                {
+                    Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, -0.01f, 0.1f));
+                }
+                if (Input.RIGHT.IsPush() && stagePointer < 3)//一番右側以外にいるとき、→が押されたら右へ
+                {
+                    if (!Sound.CheckPlaySound("step_SE.mp3"))
+                        Sound.Loop("step_SE.mp3");
+                    stagePointer += 1;
+                }
+                else if (Input.LEFT.IsPush() && stagePointer > 0)//一番左側以外にいるとき、←が押されたら左へ
+                {
+                    if (!Sound.CheckPlaySound("step_SE.mp3"))
+                        Sound.Loop("step_SE.mp3");
+                    stagePointer -= 1;
+                }
+
+
+                //画面の位置がステージの間にあるならtreeMoveをtrue
+
+                if (!isStageSelect)
+                {
+                    Sound.Stop("step_SE.mp3");
+                }
+                if (Input.ACTION.IsPush() && BackgroundFixPosition == tree && Tutolal.Tutorialcount == 0)
+                {
+                    Sound.Play("decision_SE.mp3");
+                   
+                    if (stagePointer == 0)//チュートリアル
+                    {
+                        Tutolal.Tutorialcount += 99;
+                        Game.bgmManager.set(fadeTime, "tutorial", "title");
+                        Game.bgmManager.CrossFade("title", 60);
+                        Game.SetScene(new Tutolal(Game, new PlayMap("map_0"), "_0"),new Fade(fadeTime,true,true));
+                    }
+                    else//プレイシーン
+                    {
+                        Game.bgmManager.set(fadeTime, "play", "title");
+                        Game.bgmManager.update = new BgmManager.update(Game.bgmManager.CrossFade);
+                        Game.SetScene(new ScenePlay(Game, new PlayMap("map_" + stagePointer), "_" + stagePointer),new Fade(fadeTime,true,true));
+                    }
+                }
+                if (Input.BACK.IsPush())
+                {
+                    isStageSelect = false;
+                    Reset();
+                    Sound.Play("cancel_SE.mp3");
+                }
+
+            }
         }
-        
+    
+    
+
+
+            
         public override void OnExit()
         {
             Game.fadeAction = false;
