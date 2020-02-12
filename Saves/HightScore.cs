@@ -39,12 +39,12 @@ namespace Giraffe.Saves
                     timeRankings[i].Add(new Entry());
                     scoreRankings[i][j].name = "No_data";
                     scoreRankings[i][j].score = 0;
-                    scoreRankings[i][j].timeBinary = DateTime.MaxValue.ToFileTime();
-                    scoreRankings[i][j].dateBinary = DateTime.MaxValue.ToFileTime();
+                    scoreRankings[i][j].timeBinary = DateTime.MinValue.ToBinary();
+                    scoreRankings[i][j].dateBinary = DateTime.MinValue.ToBinary();
                     timeRankings[i][j].name = "No_data";
                     timeRankings[i][j].score = 0;
-                    timeRankings[i][j].timeBinary = DateTime.MaxValue.ToFileTime();
-                    timeRankings[i][j].dateBinary = DateTime.MaxValue.ToFileTime();
+                    timeRankings[i][j].timeBinary = DateTime.MinValue.ToBinary();
+                    timeRankings[i][j].dateBinary = DateTime.MinValue.ToBinary();
                 }
             }
         }

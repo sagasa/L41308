@@ -20,8 +20,9 @@ namespace Giraffe
         private int timeEval;
         int scoreRank = 10;//自分の順位
         int timeRank = 10;
-        private bool nameGet = false;
-        StringBuilder nickname = new StringBuilder("");//名前受け取り用
+
+        private bool nameGet;//名前入力するか
+        StringBuilder nickname = new StringBuilder(null);//名前受け取り用
 
         private int counter = 0;//wait,fade,blinkのカウンター
         private const int fadeTime = 120;
@@ -55,13 +56,13 @@ namespace Giraffe
 
         enum State
         {
-            nameGet,
-
+            NameGet,
+            Sort,
+            Ranking,
+            Result
         }
-
-
-
-
+        State state;
+        
         public SceneResult(Game game, ScenePlay scenePlay, int score, DateTime time) : base(game)
         {
             _scenePlay = scenePlay;
@@ -72,7 +73,18 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-            nameGet = Game.hightScore.BreakRecord(entry, _scenePlay.StageNum);//記録を更新してるか
+            if(Game.hightScore.BreakRecord(entry, _scenePlay.StageNum))//記録を更新してるか
+            {
+                state = State.NameGet;
+                if (nickname == null)
+                    nameGet = true;
+                else
+                    nameGet = false;
+            }
+            else
+            {
+                state = State.Ranking;
+            }
 
             for (int i = 0; i < evalScores.Length; i++)//スコアの評価
             {
@@ -95,17 +107,53 @@ namespace Giraffe
                     timeEval = 100;
             }
 
+            //描画系の初期化　しなくてよいかも
             blinkMessage = true;
             counter = 0;
             rankAnimationScale = 1;
             rankExpansionAnimation = false;
 
+            //カーソルとダミープレイヤーの位置の初期化
             cursorPosX = fixedPosX[1];
             dummyPlayer.pos = new Vec2f(cursorPosX, cursorPosY - 85);
         }
 
         public override void Update()
         {
+            if (!Game.fadeAction)
+            {
+                if (state == State.NameGet)
+                {
+                    //名前入力
+                    if (nameGet)
+                    {
+                        //X座標,Y座標,入力可能文字数(全角は2文字扱い),保存する場所,ESCでキャンセルできる(ようにする)か
+                        DX.SetFontSize(50);//文字サイズの指定
+                                           //文字の色を指定
+                        DX.SetKeyInputStringColor(DX.GetColor(63, 42, 11),/*入力文字列の色*/
+                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ非使用時のカーソルの色*/
+                                                  DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の入力文字列の周りの色*/
+                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ使用時のカーソルの色*/
+                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の変換文字列の下線*/
+                                                  DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の選択対象の変換候補文字列の色*/
+                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の入力モード文字列の色(『全角ひらがな』等)*/
+                                                  DX.GetColor(255, 255, 255),/*入力文字列の縁の色*/
+                                                  DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の選択対象の変換候補文字列の縁の色*/
+                                                  DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の入力モード文字列の縁の色*/
+                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の変換ウインドウの縁の色*/
+                                                  DX.GetColor(255, 246, 170),/*ＩＭＥ使用時の変換ウインドウの下地の色*/
+                                                  DX.GetColor(255, 255, 255),/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の周りの色*/
+                                                  DX.GetColor(255, 255, 255),/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の色*/
+                                                  DX.GetColor(255, 255, 255));/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の縁の色*/
+                        DX.KeyInputString(110, Screen.Height / 2 - 40, 8, nickname, DX.TRUE);
+                        entry.name = nickname.ToString();
+                        entry.dateBinary = DateTime.Now.ToBinary();
+                        nameGet = false;
+                    }
+                }
+            }
+
+
             /*
             if (!playerMove)
             {
@@ -190,36 +238,7 @@ namespace Giraffe
             else if (rankAnimationScale < 0.75)
                 rankExpansionAnimation = true;
 
-            //名前入力
-            if (!Game.fadeAction && nameGet)
-            {
-                //X座標,Y座標,入力可能文字数(全角は2文字扱い),保存する場所,ESCでキャンセルできる(ようにする)か
-                DX.SetFontSize(50);//文字サイズの指定
-                //文字の色を指定
-                DX.SetKeyInputStringColor(DX.GetColor(63, 42, 11),/*入力文字列の色*/
-                                          DX.GetColor(63, 42, 11),/*ＩＭＥ非使用時のカーソルの色*/
-                                          DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の入力文字列の周りの色*/
-                                          DX.GetColor(63, 42, 11),/*ＩＭＥ使用時のカーソルの色*/
-                                          DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の変換文字列の下線*/
-                                          DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の選択対象の変換候補文字列の色*/
-                                          DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の入力モード文字列の色(『全角ひらがな』等)*/
-                                          DX.GetColor(255, 255, 255),/*入力文字列の縁の色*/
-                                          DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の選択対象の変換候補文字列の縁の色*/
-                                          DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の入力モード文字列の縁の色*/
-                                          DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の変換ウインドウの縁の色*/
-                                          DX.GetColor(255, 246, 170),/*ＩＭＥ使用時の変換ウインドウの下地の色*/
-                                          DX.GetColor(255, 255, 255),/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の周りの色*/
-                                          DX.GetColor(255, 255, 255),/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の色*/
-                                          DX.GetColor(255, 255, 255));/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の縁の色*/
-                DX.KeyInputString(110, Screen.Height / 2 - 40, 8, nickname, DX.TRUE);
-                entry.name = nickname.ToString();
-                entry.dateBinary = DateTime.Now.ToBinary();
-                Game.hightScore.RankingSort(entry, _scenePlay.StageNum, ref scoreRank, ref timeRank);
-                #if !DEBUG
-                SaveManager.Save(HIGHTSCORE, Game.hightScore);
-                #endif
-                nameGet = false;
-            }
+            
             else if (!Game.fadeAction)
             {
 
