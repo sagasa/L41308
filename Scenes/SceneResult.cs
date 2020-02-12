@@ -24,6 +24,22 @@ namespace Giraffe
         private bool nameGet;//名前入力するか
         StringBuilder nickname = new StringBuilder(null);//名前受け取り用
 
+        //カーソル
+        private int cursorPosX;
+        private int[] nameGetCursorFixdPos = new int[] { 170, Screen.Width - 170 };
+
+        private const int nameGetCursorPosY = Screen.Height - 200;//位置調整中
+        private const int rankingCursorPosY = Screen.Height - 200;//位置調整中
+        private const int resultCursorPosY = Screen.Height - 200;
+        
+        
+       
+        
+
+        
+
+
+
         private int counter = 0;//wait,fade,blinkのカウンター
         private const int fadeTime = 120;
         //描画用定数
@@ -42,9 +58,7 @@ namespace Giraffe
         private int playerAnimationTime = 100;
         private int playerMoveCounter = 0;
         private const int cursorWidth = 220;
-        private int cursorPosX;
-        private const int cursorPosY = Screen.Height - 200;
-        private int namegetCursorPosX;
+        
         private readonly int[] fixedPosX = new int[] { 170, Screen.Width - 170 };
         private bool playerMove = false;
         private bool playerOnRight = true;
@@ -57,7 +71,6 @@ namespace Giraffe
         enum State
         {
             NameGet,
-            Sort,
             Ranking,
             Result
         }
@@ -69,6 +82,7 @@ namespace Giraffe
             dummyPlayer = new DummyPlayer(this);
             entry.score = score;
             entry.timeBinary = time.ToBinary();
+            entry.dateBinary = DateTime.Now.ToBinary();
         }
 
         public override void OnLoad()
@@ -79,7 +93,10 @@ namespace Giraffe
                 if (nickname == null)
                     nameGet = true;
                 else
+                {
                     nameGet = false;
+                    cursorPosX = nameGetCursorFixdPos[0];
+                }
             }
             else
             {
@@ -114,12 +131,27 @@ namespace Giraffe
             rankExpansionAnimation = false;
 
             //カーソルとダミープレイヤーの位置の初期化
-            cursorPosX = fixedPosX[1];
-            dummyPlayer.pos = new Vec2f(cursorPosX, cursorPosY - 85);
+            dummyPlayer.pos = new Vec2f(cursorPosX, resultCursorPosY - 85);
         }
 
         public override void Update()
         {
+            counter++;
+            //newの描画に使用
+            if (counter % 60 == 0)
+                blinkMessage = true;
+            else if (counter % 60 == 40)
+                blinkMessage = false;
+            //ランクの描画に使用
+            if (rankExpansionAnimation)
+                rankAnimationScale += rankAnimationSpeed;
+            else if (!rankExpansionAnimation)
+                rankAnimationScale -= rankAnimationSpeed;
+            if (rankAnimationScale > 1)
+                rankExpansionAnimation = false;
+            else if (rankAnimationScale < 0.75)
+                rankExpansionAnimation = true;
+
             if (!Game.fadeAction)
             {
                 if (state == State.NameGet)
@@ -146,10 +178,44 @@ namespace Giraffe
                                                   DX.GetColor(255, 255, 255),/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の色*/
                                                   DX.GetColor(255, 255, 255));/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の縁の色*/
                         DX.KeyInputString(110, Screen.Height / 2 - 40, 8, nickname, DX.TRUE);
-                        entry.name = nickname.ToString();
-                        entry.dateBinary = DateTime.Now.ToBinary();
+                        
+                        cursorPosX = nameGetCursorFixdPos[1];//カーソルを決定に合わせる
+
                         nameGet = false;
                     }
+                    else if (cursorPosX != nameGetCursorFixdPos[0] && Input.RIGHT.IsPush())//カーソルの移動
+                    {
+                        cursorPosX = nameGetCursorFixdPos[0];
+                    }
+                    else if (cursorPosX != nameGetCursorFixdPos[1] && Input.LEFT.IsPush())//カーソルの移動
+                    {
+                        cursorPosX = nameGetCursorFixdPos[1];
+                    }
+                    else if (cursorPosX == nameGetCursorFixdPos[0] && Input.ACTION.IsPush())//カーソルが変更のとき
+                    {
+                        nameGet = true;
+                    }
+                    else if (cursorPosX == nameGetCursorFixdPos[1] && Input.ACTION.IsPush())//カーソルが決定のとき
+                    {
+                        entry.name = nickname.ToString();
+                        Game.hightScore.RankingSort(entry, _scenePlay.StageNum, ref scoreRank, ref timeRank);
+                        state = State.Ranking;
+                    }
+                }
+                else if (state == State.Ranking)
+                {
+                    //画面スクロール
+
+                    //ランキングが表示しきれなかったら横スクロール出来るようにする
+
+                    if (Input.ACTION.IsPush())//画面スクロールが終わっているときにスペースキー
+                    {
+                        state = State.Result;
+                    }
+                }
+                else if (state == State.Result)
+                {
+
                 }
             }
 
@@ -223,23 +289,10 @@ namespace Giraffe
             dummyPlayer.Update();
             */
 
-            counter++;
-            if (counter % 60 == 0)
-                blinkMessage = true;
-            else if (counter % 60 == 40)
-                blinkMessage = false;
-            //ランクのアニメーションに使用
-            if (rankExpansionAnimation)
-                rankAnimationScale += rankAnimationSpeed;
-            else if (!rankExpansionAnimation)
-                rankAnimationScale -= rankAnimationSpeed;
-            if (rankAnimationScale > 1)
-                rankExpansionAnimation = false;
-            else if (rankAnimationScale < 0.75)
-                rankExpansionAnimation = true;
+            
 
             
-            else if (!Game.fadeAction)
+            if (!Game.fadeAction)
             {
 
                 if (cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
@@ -287,7 +340,7 @@ namespace Giraffe
                     Game.fadeAction = true;
                     Game.bgmManager.Set(fadeTime, "title", "result");
                     Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                    Game.SetScene(new Title(Game), new Fade(fadeTime, true, true));
+                    Game.SetScene(new Title(Game, 1), new Fade(fadeTime, true, true));
                 }
             }
         }
@@ -338,9 +391,9 @@ namespace Giraffe
             {
 
                 dummyPlayer.Draw();
-                DX.DrawRotaGraph(cursorPosX, cursorPosY, 1, 0, cursor);
-                DX.DrawRotaGraph(fixedPosX[0], cursorPosY, 1, 0, ResourceLoader.GetGraph("image_result/restart.png"));
-                DX.DrawRotaGraph(fixedPosX[1], cursorPosY, 1, 0, ResourceLoader.GetGraph("image_result/r_back.png"));
+                DX.DrawRotaGraph(cursorPosX, resultCursorPosY, 1, 0, cursor);
+                DX.DrawRotaGraph(fixedPosX[0], resultCursorPosY, 1, 0, ResourceLoader.GetGraph("image_result/restart.png"));
+                DX.DrawRotaGraph(fixedPosX[1], resultCursorPosY, 1, 0, ResourceLoader.GetGraph("image_result/r_back.png"));
             }
 
             if (!Game.fadeAction && nameGet)
