@@ -42,7 +42,7 @@ namespace Giraffe
         }
         public override void Update()
         {
-            if (!isDummyNeck)
+            if (isDummyNeck==true)
             {
                 AnimationManager.Start(Animations.DefaultAngle);
              

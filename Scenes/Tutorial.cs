@@ -33,7 +33,7 @@ namespace Giraffe
         private AnimationManager<PlayerRender> _animation;
         private const int fadeTime = 90;
         private const int shortFadeTime = 30;
-
+        
         private int titlebg = ResourceLoader.GetGraph("title_bg.png");
         private int select1 = ResourceLoader.GetGraph("select_3.png");
         private int select2 = ResourceLoader.GetGraph("select_4.png");
@@ -326,7 +326,7 @@ namespace Giraffe
                         Game.fadeAction = true;
                         Game.bgmManager.Set(shortFadeTime, "title", "tutorial");
                         Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                        Game.SetScene(new Title(Game), new Fade(shortFadeTime, true, true));
+                        Game.SetScene(new Title(Game,0), new Fade(shortFadeTime, true, true));
                     }
                 }
                 if (Tutorialcount >= 1 && Tutorialcount <= 8)
@@ -396,7 +396,7 @@ namespace Giraffe
                 {
                     Game.bgmManager.Set(shortFadeTime, "title", "tutorial");
                     Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                    Game.SetScene(new Title(Game), new Fade(shortFadeTime, true, true));
+                    Game.SetScene(new Title(Game,0), new Fade(shortFadeTime, true, true));
                     Sound.Play("decision_SE.mp3");
                     Tutorialcount = 0;
                 }
@@ -511,9 +511,9 @@ namespace Giraffe
                         {
                             Game.bgmManager.Set(fadeTime, "title", "tutorial");
                             Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                            Game.SetScene(new Title(Game), new Fade(fadeTime, true, true));
+                            Game.SetScene(new Title(Game,1), new Fade(fadeTime, true, true));
+                            
                             cursorPosY = cursorFixedPosY[0];
-                            Title.isStageSelect = true;
                         }
                     }
                 }
