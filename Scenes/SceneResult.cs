@@ -10,36 +10,38 @@ namespace Giraffe
     {
         private ScenePlay _scenePlay;
         private const string HIGHTSCORE = "hightscore";
-        
+
         private int[] evalScores = new int[] { 1100, 700, 400 };//評価用
-        private DateTime[] evalTimes = new DateTime[] { new DateTime(0, 0, 0, 0, 1, 0), new DateTime(0, 0, 0, 0, 2, 0), new DateTime(0, 0, 0, 0, 3, 0) };
+        private DateTime[] evalTimes = new DateTime[] { new DateTime(1, 1, 1, 0, 1, 0), new DateTime(1, 1, 1, 0, 2, 0), new DateTime(1, 1, 1, 0, 3, 0) };
         private int[] timeBonus = new int[] { 1000, 500, 200 };//タイムボーナス用
 
-        HightScore.Entry entry;
+        HightScore.Entry entry = new HightScore.Entry();
         private int scoreEval;//自分の評価
         private int timeEval;
         int scoreRank = 10;//自分の順位
         int timeRank = 10;
 
         private bool nameGet;//名前入力するか
-        StringBuilder nickname = new StringBuilder(null);//名前受け取り用
-
+        
         //カーソル
-        private int cursorPosX;
-        private int[] nameGetCursorFixdPos = new int[] { 170, Screen.Width - 170 };
+        //名前入力時に使用
+        private enum NameGet_XNum { Change, Decision }
+        private NameGet_XNum nameGet_XNum;
+        private readonly int[] nameGet_X = new int[] { 170, Screen.Width - 170 };
+        private const int nameGet_Y = Screen.Height - 200;//位置調整中
+        //
+        private const int ranking_X = Screen.Width / 2;
+        private const int ranking_Y = Screen.Height - 50;
 
-        private const int nameGetCursorPosY = Screen.Height - 200;//位置調整中
-        private const int rankingCursorPosY = Screen.Height - 200;//位置調整中
-        private const int resultCursorPosY = Screen.Height - 200;
+        private enum Result_XNum { Restart, Ranking, Back }
+        private Result_XNum result_XNum;
+        private readonly int[] result_X = new int[] { 100, Screen.Width / 2, Screen.Width - 100 };//位置調整中
+        private const int result_Y = Screen.Height - 200;
+
+
+
+
         
-        
-       
-        
-
-        
-
-
-
         private int counter = 0;//wait,fade,blinkのカウンター
         private const int fadeTime = 120;
         //描画用定数
@@ -58,12 +60,13 @@ namespace Giraffe
         private int playerAnimationTime = 100;
         private int playerMoveCounter = 0;
         private const int cursorWidth = 220;
-        
-        private readonly int[] fixedPosX = new int[] { 170, Screen.Width - 170 };
+
+
         private bool playerMove = false;
         private bool playerOnRight = true;
         private DummyPlayer dummyPlayer;
-        
+
+        private int shadow = ResourceLoader.GetGraph("image_result/shadow25.png");
         private int cursor = ResourceLoader.GetGraph("image_result/cursor.png");
         private int coron = ResourceLoader.GetGraph("image_result/rcolon.png");
         private int newImage = ResourceLoader.GetGraph("image_result/new.png");
@@ -75,11 +78,12 @@ namespace Giraffe
             Result
         }
         State state;
-        
+
         public SceneResult(Game game, ScenePlay scenePlay, int score, DateTime time) : base(game)
         {
             _scenePlay = scenePlay;
             dummyPlayer = new DummyPlayer(this);
+            entry.name = Game.settings.nickname;
             entry.score = score;
             entry.timeBinary = time.ToBinary();
             entry.dateBinary = DateTime.Now.ToBinary();
@@ -87,15 +91,37 @@ namespace Giraffe
 
         public override void OnLoad()
         {
-            if(Game.hightScore.BreakRecord(entry, _scenePlay.StageNum))//記録を更新してるか
+            DX.SetFontSize(50);//文字サイズの指定
+                               //文字とか枠とかの色の指定
+            DX.SetKeyInputStringColor(DX.GetColor(63, 42, 11),/*入力文字列の色*/
+                                      DX.GetColor(63, 42, 11),/*ＩＭＥ非使用時のカーソルの色*/
+                                      DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の入力文字列の周りの色*/
+                                      DX.GetColor(63, 42, 11),/*ＩＭＥ使用時のカーソルの色*/
+                                      DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の変換文字列の下線*/
+                                      DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の選択対象の変換候補文字列の色*/
+                                      DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の入力モード文字列の色(『全角ひらがな』等)*/
+                                      DX.GetColor(255, 255, 255),/*入力文字列の縁の色*/
+                                      DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の選択対象の変換候補文字列の縁の色*/
+                                      DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の入力モード文字列の縁の色*/
+                                      DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の変換ウインドウの縁の色*/
+                                      DX.GetColor(255, 246, 170),/*ＩＭＥ使用時の変換ウインドウの下地の色*/
+                                      DX.GetColor(255, 255, 255),/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の周りの色*/
+                                      DX.GetColor(255, 255, 255),/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の色*/
+                                      DX.GetColor(255, 255, 255));/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の縁の色*/
+
+            if (Game.hightScore.BreakRecord(entry, _scenePlay.StageNum))//記録を更新してるか
             {
                 state = State.NameGet;
-                if (nickname == null)
-                    nameGet = true;
-                else
+                if (Game.hightScore.BreakRecord(entry, _scenePlay.StageNum))
                 {
-                    nameGet = false;
-                    cursorPosX = nameGetCursorFixdPos[0];
+                    state = State.NameGet;
+                    if (entry.name == null)
+                        nameGet = true;
+                    else
+                    {
+                        nameGet = false;
+                        nameGet_XNum = NameGet_XNum.Change;
+                    }
                 }
             }
             else
@@ -131,7 +157,7 @@ namespace Giraffe
             rankExpansionAnimation = false;
 
             //カーソルとダミープレイヤーの位置の初期化
-            dummyPlayer.pos = new Vec2f(cursorPosX, resultCursorPosY - 85);
+            //dummyPlayer.pos = new Vec2f(cursorPosX, result_Y - 85);
         }
 
         public override void Update()
@@ -156,48 +182,37 @@ namespace Giraffe
             {
                 if (state == State.NameGet)
                 {
-                    //名前入力
                     if (nameGet)
                     {
-                        //X座標,Y座標,入力可能文字数(全角は2文字扱い),保存する場所,ESCでキャンセルできる(ようにする)か
-                        DX.SetFontSize(50);//文字サイズの指定
-                                           //文字の色を指定
-                        DX.SetKeyInputStringColor(DX.GetColor(63, 42, 11),/*入力文字列の色*/
-                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ非使用時のカーソルの色*/
-                                                  DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の入力文字列の周りの色*/
-                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ使用時のカーソルの色*/
-                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の変換文字列の下線*/
-                                                  DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の選択対象の変換候補文字列の色*/
-                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の入力モード文字列の色(『全角ひらがな』等)*/
-                                                  DX.GetColor(255, 255, 255),/*入力文字列の縁の色*/
-                                                  DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の選択対象の変換候補文字列の縁の色*/
-                                                  DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の入力モード文字列の縁の色*/
-                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の変換ウインドウの縁の色*/
-                                                  DX.GetColor(255, 246, 170),/*ＩＭＥ使用時の変換ウインドウの下地の色*/
-                                                  DX.GetColor(255, 255, 255),/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の周りの色*/
-                                                  DX.GetColor(255, 255, 255),/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の色*/
-                                                  DX.GetColor(255, 255, 255));/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の縁の色*/
-                        DX.KeyInputString(110, Screen.Height / 2 - 40, 8, nickname, DX.TRUE);
-                        
-                        cursorPosX = nameGetCursorFixdPos[1];//カーソルを決定に合わせる
-
+                        StringBuilder nickname_ = new StringBuilder();
+                        //X座標,Y座標,入力可能文字数,保存する場所,ESCでキャンセルできる(ようにする)か
+                        if (DX.KeyInputString(110, Screen.Height / 2 - 40, 8, nickname_, DX.TRUE) == DX.TRUE)
+                            entry.name = nickname_.ToString();
+                        if (entry.name == null)
+                            nameGet_XNum = NameGet_XNum.Change;
+                        else
+                            nameGet_XNum = NameGet_XNum.Decision;
                         nameGet = false;
                     }
-                    else if (cursorPosX != nameGetCursorFixdPos[0] && Input.RIGHT.IsPush())//カーソルの移動
+                    else if (nameGet_XNum != NameGet_XNum.Decision && Input.RIGHT.IsPush())//カーソルの移動
                     {
-                        cursorPosX = nameGetCursorFixdPos[0];
+                        Sound.Play("cursor_SE.mp3");
+                        nameGet_XNum++;
                     }
-                    else if (cursorPosX != nameGetCursorFixdPos[1] && Input.LEFT.IsPush())//カーソルの移動
+                    else if (nameGet_XNum != NameGet_XNum.Change && Input.LEFT.IsPush())
                     {
-                        cursorPosX = nameGetCursorFixdPos[1];
+                        Sound.Play("cursor_SE.mp3");
+                        nameGet_XNum--;
                     }
-                    else if (cursorPosX == nameGetCursorFixdPos[0] && Input.ACTION.IsPush())//カーソルが変更のとき
+                    else if (nameGet_XNum == NameGet_XNum.Change && Input.ACTION.IsPush())//カーソルが変更のとき
                     {
+                        Sound.Play("decision_SE.mp3");
                         nameGet = true;
                     }
-                    else if (cursorPosX == nameGetCursorFixdPos[1] && Input.ACTION.IsPush())//カーソルが決定のとき
+                    else if (nameGet_XNum == NameGet_XNum.Decision && Input.ACTION.IsPush())//カーソルが決定のとき
                     {
-                        entry.name = nickname.ToString();
+                        Sound.Play("decision_SE.mp3");
+                        Game.settings.nickname = entry.name;
                         Game.hightScore.RankingSort(entry, _scenePlay.StageNum, ref scoreRank, ref timeRank);
                         state = State.Ranking;
                     }
@@ -211,11 +226,43 @@ namespace Giraffe
                     if (Input.ACTION.IsPush())//画面スクロールが終わっているときにスペースキー
                     {
                         state = State.Result;
+                        result_XNum = Result_XNum.Ranking;
+                        //ダミープレイヤーの位置の初期化
                     }
                 }
                 else if (state == State.Result)
                 {
-
+                    if (result_XNum != Result_XNum.Back && Input.RIGHT.IsPush())
+                    {
+                        Sound.Play("cursor_SE.mp3");
+                        result_XNum++;
+                    }
+                    else if (result_XNum != Result_XNum.Restart && Input.LEFT.IsPush())
+                    {
+                        Sound.Play("cursor_SE.mp3");
+                        result_XNum--;
+                    }
+                    else if (result_XNum == Result_XNum.Restart && Input.ACTION.IsPush())
+                    {
+                        Sound.Play("decision_SE.mp3");
+                        Game.fadeAction = true;
+                        Game.bgmManager.Set(fadeTime, "play", "result");
+                        Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
+                        Game.SetScene(new ScenePlay(Game, _scenePlay.Map, _scenePlay.ResourcesName, _scenePlay.StageNum), new Fade(fadeTime, true, true));
+                    }
+                    else if (result_XNum == Result_XNum.Ranking && Input.ACTION.IsPush())
+                    {
+                        Sound.Play("decision_SE.mp3");
+                        state = State.Ranking;
+                    }
+                    else if (result_XNum == Result_XNum.Back && Input.ACTION.IsPush())
+                    {
+                        Sound.Play("decision_SE.mp3");
+                        Game.fadeAction = true;
+                        Game.bgmManager.Set(fadeTime, "title", "result");
+                        Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
+                        Game.SetScene(new Title(Game, 1), new Fade(fadeTime, true, true));
+                    }
                 }
             }
 
@@ -287,68 +334,64 @@ namespace Giraffe
             }
 
             dummyPlayer.Update();
-            */
-
             
-
-            
-            if (!Game.fadeAction)
+            if (cursorPosX == result_X[result_X.Length - 1] && (Input.RIGHT.IsPush() || Input.RIGHT.IsHold()))
             {
-
-                if (cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
+                if (playerMove)
                 {
-                    Sound.Play("cursor_SE.mp3");
-                    for (int i = 0; i < fixedPosX.Length; i++)
-                    {
-                        if (cursorPosX == fixedPosX[i])
-                        {
-                            cursorPosX = fixedPosX[i - 1];
-                            break;
-                        }
-                    }
-                }
-                if (cursorPosX == fixedPosX[fixedPosX.Length - 1] && (Input.RIGHT.IsPush() || Input.RIGHT.IsHold()))
-                {
-                    if (playerMove)
-                    {
-                        dummyPlayer.isDunnyRight = true;
-                    }
-                }
-                else if (cursorPosX != fixedPosX[fixedPosX.Length - 1] && Input.RIGHT.IsPush())//カーソルが一番右以外の時→を押されたら、カーソルを一つ右へ
-                {
-                    Sound.Play("cursor_SE.mp3");
-                    for (int i = 0; i < fixedPosX.Length; i++)
-                    {
-                        if (cursorPosX == fixedPosX[i])
-                        {
-                            cursorPosX = fixedPosX[i + 1];
-                            break;
-                        }
-                    }
-                }
-                if (cursorPosX == fixedPosX[0] && Input.ACTION.IsPush())
-                {
-                    Sound.Play("decision_SE.mp3");
-                    Game.fadeAction = true;
-                    Game.bgmManager.Set(fadeTime, "play", "result");
-                    Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                    Game.SetScene(new ScenePlay(Game, _scenePlay.Map, _scenePlay.ResourcesName, _scenePlay.StageNum), new Fade(fadeTime, true, true));
-                }
-                else if (cursorPosX == fixedPosX[1] && Input.ACTION.IsPush())
-                {
-                    Sound.Play("decision_SE.mp3");
-                    Game.fadeAction = true;
-                    Game.bgmManager.Set(fadeTime, "title", "result");
-                    Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                    Game.SetScene(new Title(Game, 1), new Fade(fadeTime, true, true));
+                    dummyPlayer.isDunnyRight = true;
                 }
             }
+            */
+
         }
 
         public override void Draw()
         {
             DX.DrawGraph(0, 0, ResourceLoader.GetGraph("tree_top" + _scenePlay.ResourcesName + ".png"));
             DX.DrawGraph(0, 0, ResourceLoader.GetGraph("image_result/result_bg.png"));
+
+            //タイムとスコアはずっと表示
+
+
+            if (state == State.NameGet)
+            {
+                DX.DrawGraph(0, 0, shadow);
+                if (!nameGet)
+                {
+                    DX.DrawRotaGraph(nameGet_X[(int)nameGet_XNum], nameGet_Y, 1, 0, cursor);
+                }
+                else
+                {
+                    //ネームスペース用のカーソル
+                }
+                DX.DrawGraph(0, 0, ResourceLoader.GetGraph("image_result/nameget_message.png"));
+                DX.DrawRotaGraph(Screen.Width / 2, Screen.Height / 2, 1, 0, ResourceLoader.GetGraph("image_result/name_space.png"));
+                if (!nameGet)//入力した名前を表示
+                    DX.DrawString(110, Screen.Height / 2 - 40, entry.name, DX.GetColor(63, 42, 11));
+                DX.DrawRotaGraph(nameGet_X[0], nameGet_Y, 1, 0, ResourceLoader.GetGraph("image_result/change.png"));
+                DX.DrawRotaGraph(nameGet_X[1], nameGet_Y, 1, 0, ResourceLoader.GetGraph("image_result/decision.png"));
+            }
+            else if (state == State.Ranking)
+            {
+                DX.DrawGraph(0, 0, shadow);
+                DX.DrawRotaGraph(ranking_X, ranking_Y, 1, 0, cursor);
+                DX.DrawGraph(0, -50, ResourceLoader.GetGraph("image_result/ranking_bg.png"));
+                DX.DrawRotaGraph(ranking_X, ranking_Y, 1, 0, ResourceLoader.GetGraph("image_result/back.png"));
+
+                //ランキングの表示
+
+            }
+            else if (state == State.Result)
+            {
+                dummyPlayer.Draw();
+                DX.DrawRotaGraph(result_X[(int)result_XNum], result_Y, 1, 0, cursor);
+                DX.DrawRotaGraph(result_X[0], result_Y, 1, 0, ResourceLoader.GetGraph("image_result/restart.png"));
+                //ランキングのボタン
+                DX.DrawRotaGraph(result_X[2], result_Y, 1, 0, ResourceLoader.GetGraph("image_result/back.png"));
+            }
+
+
 
             int scoreLeftCounter = 0;
             int bonusLeftCounter = 0;
@@ -387,23 +430,7 @@ namespace Giraffe
             //    DX.DrawRotaGraph(frameX + 65 + fontInterval1 * (timeLeftCounter + 3), 200, 1, 0, newImage);
             //}
 
-            if (!nameGet)
-            {
-
-                dummyPlayer.Draw();
-                DX.DrawRotaGraph(cursorPosX, resultCursorPosY, 1, 0, cursor);
-                DX.DrawRotaGraph(fixedPosX[0], resultCursorPosY, 1, 0, ResourceLoader.GetGraph("image_result/restart.png"));
-                DX.DrawRotaGraph(fixedPosX[1], resultCursorPosY, 1, 0, ResourceLoader.GetGraph("image_result/r_back.png"));
-            }
-
-            if (!Game.fadeAction && nameGet)
-            {
-                DX.DrawGraph(0, 0, ResourceLoader.GetGraph("image_result/shadow25.png"));
-                DX.DrawGraph(0, 0, ResourceLoader.GetGraph("image_result/nameget_message.png"));
-                //DX.DrawRotaGraph();
-                //DX.DrawRotaGraph();
-                DX.DrawRotaGraph(Screen.Width / 2, Screen.Height / 2, 1, 0, ResourceLoader.GetGraph("image_result/name_space.png"));
-            }
+            
         }
 
         public override void OnExit()

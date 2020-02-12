@@ -4,5 +4,6 @@
     {
         public bool bgmPlayOn = true;
         public bool sePlayOn = true;
+        public string nickname = null;
     }
 }

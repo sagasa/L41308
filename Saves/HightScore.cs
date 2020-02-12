@@ -117,9 +117,9 @@ namespace Giraffe.Saves
 
         public bool BreakRecord(Entry entry, int stageNum)
         {
-            if (entry.score >= scoreRankings[stageNum][10].score)
+            if (entry.score >= scoreRankings[stageNum][9].score)
                 return true;
-            if (DateTime.FromBinary(entry.timeBinary) <= DateTime.FromBinary(timeRankings[stageNum][10].timeBinary))
+            if (DateTime.FromBinary(entry.timeBinary) <= DateTime.FromBinary(timeRankings[stageNum][9].timeBinary))
                 return true;
             return false;
         }
