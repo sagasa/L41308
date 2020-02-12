@@ -44,6 +44,7 @@ namespace Giraffe
             stagePointer = 0;
             selectCursor = 1;
             stageWaitTime = 60;
+            BackgroundFixPosition = 0;
         }
         public void TreeFixedPos()
         {
@@ -109,6 +110,7 @@ namespace Giraffe
                 DX.DrawGraph(135, 450, ResourceLoader.GetGraph("select_" + 0 + ".png"));
                 DX.DrawGraph(90, 550, ResourceLoader.GetGraph("select_" + 1 + ".png"));
                 DX.DrawGraph(135, 650, ResourceLoader.GetGraph("select_" + 2 + ".png"));
+                NeckDummy.Draw();
             }
             if (isStageSelect)//ステージセレクト
             {
@@ -132,13 +134,10 @@ namespace Giraffe
 
         public override void Update()
         {
-            Dummy.isDummyNeck = true;
-
-            if (!Game.fadeAction)
-            {
-                if (!isStageSelect)//タイトル画面
+            if (!isStageSelect)//タイトル画面
                 {
                     selectPos();
+                    Dummy.isDummyNeck = true;
                     NeckDummy.Update();
                     if (Input.ACTION.IsPush())
                     {
@@ -227,8 +226,7 @@ namespace Giraffe
                         Sound.Play("cancel_SE.mp3");
                     }
                 }
-            }
-
+            
             if (!isStageSelect && Sound.CheckPlaySound("step_SE.mp3"))
                 Sound.Stop("step_SE.mp3");
         }
