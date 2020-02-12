@@ -5,7 +5,7 @@ namespace Giraffe
 {
     public static class Sound
     {
-        public static bool playOn = true;
+        public static bool playOn;
 
         public static void Play(string handle)
         {

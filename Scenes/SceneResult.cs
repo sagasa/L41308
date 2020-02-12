@@ -222,12 +222,6 @@ namespace Giraffe
             }
             else if (!Game.fadeAction)
             {
-                
-
-
-
-
-
 
                 if (cursorPosX != fixedPosX[0] && Input.LEFT.IsPush())//カーソルが一番左以外の時に←が押されたら、カーソルを一つ左へ
                 {

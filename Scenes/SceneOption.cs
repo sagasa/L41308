@@ -12,7 +12,7 @@ namespace Giraffe
         private readonly int[] cursorFixedPosY = new int[] { 250, 350, 450, 575 };
         private int cursorPosX = 0;
         private int cursorPosY = 0;
-        private int bgmPlay = 0;
+        private int bgmPlay = 0;//描画用
         private int sePlay = 0;
         private const int on = 0;
         private const int off = 1;

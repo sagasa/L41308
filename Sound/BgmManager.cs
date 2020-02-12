@@ -7,7 +7,7 @@ namespace Giraffe
 {
     public class BgmManager
     {
-        public bool playOn = true;
+        public bool playOn;
 
         DX.VECTOR ListenerPos;
         DX.VECTOR ListenerDir;
@@ -51,59 +51,68 @@ namespace Giraffe
 
         public void CrossFade()
         {
-            if (!CheckPlayBgm(newScene))//初期化
+            if (playOn)
             {
-                bgmPos[newScene] = DX.VGet(interval, 0, 0);
-                PlayBgm(newScene);
-            }
+                if (!CheckPlayBgm(newScene))//初期化
+                {
+                    bgmPos[newScene] = DX.VGet(interval, 0, 0);
+                    PlayBgm(newScene);
+                }
 
-            bgmPos[newScene] = DX.VAdd(bgmPos[newScene], DX.VGet((float)-interval / fadeTime, 0, 0));
-            bgmPos[oldScene] = DX.VAdd(bgmPos[oldScene], DX.VGet((float)-interval / fadeTime, 0, 0));
+                bgmPos[newScene] = DX.VAdd(bgmPos[newScene], DX.VGet((float)-interval / fadeTime, 0, 0));
+                bgmPos[oldScene] = DX.VAdd(bgmPos[oldScene], DX.VGet((float)-interval / fadeTime, 0, 0));
 
-            DX.Set3DPositionSoundMem(bgmPos[newScene], bgmMap[newScene]);
-            DX.Set3DPositionSoundMem(bgmPos[oldScene], bgmMap[oldScene]);
-
-            if (bgmPos[newScene].x <= ListenerPos.x + 1 && bgmPos[oldScene].x <= ListenerPos.x - bgmRange + 1)
-            {
-                bgmPos[newScene] = DX.VGet(0, 0, 0);
                 DX.Set3DPositionSoundMem(bgmPos[newScene], bgmMap[newScene]);
-                Remove(oldScene);
-                update = Delegate.Remove(update, new Update(CrossFade)) as Update;
+                DX.Set3DPositionSoundMem(bgmPos[oldScene], bgmMap[oldScene]);
+
+                if (bgmPos[newScene].x <= ListenerPos.x + 1 && bgmPos[oldScene].x <= ListenerPos.x - bgmRange + 1)
+                {
+                    bgmPos[newScene] = DX.VGet(0, 0, 0);
+                    DX.Set3DPositionSoundMem(bgmPos[newScene], bgmMap[newScene]);
+                    Remove(oldScene);
+                    update = Delegate.Remove(update, new Update(CrossFade)) as Update;
+                }
             }
-            if (!CheckPlayBgm(newScene) && !CheckPlayBgm(oldScene))
+            else if (!playOn)
                 update = Delegate.Remove(update, new Update(CrossFade)) as Update;
         }
 
         public void FadeIn()
         {
-            if (!CheckPlayBgm(newScene))//初期化
+            if (playOn)
             {
-                bgmPos[newScene] = DX.VGet(bgmRange, 0, 0);
-                PlayBgm(newScene);
-            }
-            bgmPos[newScene] = DX.VAdd(bgmPos[newScene], DX.VGet((float)-bgmRange / fadeTime, 0, 0));
-            DX.Set3DPositionSoundMem(bgmPos[newScene], bgmMap[newScene]);
-
-            if (bgmPos[newScene].x <= ListenerPos.x + 1)
-            {
-                bgmPos[newScene] = DX.VGet(0, 0, 0);
+                if (!CheckPlayBgm(newScene))//初期化
+                {
+                    bgmPos[newScene] = DX.VGet(bgmRange, 0, 0);
+                    PlayBgm(newScene);
+                }
+                bgmPos[newScene] = DX.VAdd(bgmPos[newScene], DX.VGet((float)-bgmRange / fadeTime, 0, 0));
                 DX.Set3DPositionSoundMem(bgmPos[newScene], bgmMap[newScene]);
-                update = Delegate.Remove(update, new Update(FadeIn)) as Update;
+
+                if (bgmPos[newScene].x <= ListenerPos.x + 1)
+                {
+                    bgmPos[newScene] = DX.VGet(0, 0, 0);
+                    DX.Set3DPositionSoundMem(bgmPos[newScene], bgmMap[newScene]);
+                    update = Delegate.Remove(update, new Update(FadeIn)) as Update;
+                }
             }
-            if (!CheckPlayBgm(newScene))
+            else if (!playOn)
                 update = Delegate.Remove(update, new Update(FadeIn)) as Update;
         }
 
         public void FadeOut()
         {
-            bgmPos[oldScene] = DX.VAdd(bgmPos[oldScene], DX.VGet((float)-bgmRange / fadeTime, 0, 0));
-            DX.Set3DPositionSoundMem(bgmPos[oldScene], bgmMap[oldScene]);
-            if (bgmPos[oldScene].x <= ListenerPos.x - bgmRange + 1)
+            if (playOn)
             {
-                Remove(oldScene);
-                update = Delegate.Remove(update, new Update(FadeOut)) as Update;
+                bgmPos[oldScene] = DX.VAdd(bgmPos[oldScene], DX.VGet((float)-bgmRange / fadeTime, 0, 0));
+                DX.Set3DPositionSoundMem(bgmPos[oldScene], bgmMap[oldScene]);
+                if (bgmPos[oldScene].x <= ListenerPos.x - bgmRange + 1)
+                {
+                    Remove(oldScene);
+                    update = Delegate.Remove(update, new Update(FadeOut)) as Update;
+                }
             }
-            if (!CheckPlayBgm(oldScene))
+            else if (!playOn)
                 update = Delegate.Remove(update, new Update(FadeOut)) as Update;
         }
 
