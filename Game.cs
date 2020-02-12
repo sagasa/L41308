@@ -13,7 +13,7 @@ namespace Giraffe
         List<StaticMapObject> objList = new List<StaticMapObject>();
 
         public BgmManager bgmManager = new BgmManager();
-        public static bool fadeAction = true;
+        public static bool fadeAction = false;
 
         public static bool ShowCollision = true;
         
