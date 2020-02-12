@@ -53,6 +53,14 @@ namespace Giraffe
         private int coron = ResourceLoader.GetGraph("image_result/rcolon.png");
         private int newImage = ResourceLoader.GetGraph("image_result/new.png");
 
+        enum State
+        {
+            nameGet,
+
+        }
+
+
+
 
         public SceneResult(Game game, ScenePlay scenePlay, int score, DateTime time) : base(game)
         {
@@ -214,10 +222,6 @@ namespace Giraffe
             }
             else if (!Game.fadeAction)
             {
-                /*メモ
-                ランキングを強制表示 
-
-                 */
                 
 
 
