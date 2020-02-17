@@ -233,7 +233,7 @@ namespace Giraffe
                     }
                 }
 
-                if (TitleCount==0|| Sound.CheckPlaySound("step_SE.mp3"))
+                if (TitleCount == 0 && Sound.CheckPlaySound("step_SE.mp3"))
                 {
                     Sound.Stop("step_SE.mp3");
                 }

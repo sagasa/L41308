@@ -32,11 +32,27 @@ namespace Giraffe
             Sound.playOn = settings.sePlayOn;
             //ハイスコアとベストタイムの読み込み
             hightScore = SaveManager.Load<HightScore>(HIGHTSCORE);
-            if (hightScore == null)
+            try
+            {
+                int a = hightScore.scoreRankings[1][0].score;
+            }
+            catch
             {
                 hightScore = new HightScore();
                 hightScore.RankingInit();
+                SaveManager.Save(HIGHTSCORE, hightScore);
             }
+            //if (hightScore == null)
+            //{
+            //    hightScore = new HightScore();
+            //    hightScore.RankingInit();
+            //}
+            
+            ////セーブデータリセット
+            //hightScore = new HightScore();
+            //hightScore.RankingInit();
+            //SaveManager.Save(HIGHTSCORE, hightScore);
+
             //BGMの再生
             bgmManager.Init();
             bgmManager.update = new BgmManager.Update(bgmManager.FadeIn);
