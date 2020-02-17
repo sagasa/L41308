@@ -101,10 +101,18 @@ namespace Giraffe
             if (Dummy.isDunnyRight)
             {
                 Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, 0.01f, 0.1f));
+                if(BackgroundFixPosition==tree)
+                {
+                    Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(0f, 0.01f, 0f));
+                }
             }
             else if (!Dummy.isDunnyRight)
             {
                 Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, -0.01f, 0.1f));
+                if(BackgroundFixPosition==tree)
+                {
+                    Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(0f, -0.01f, 0));
+                }
             }
         }
 
