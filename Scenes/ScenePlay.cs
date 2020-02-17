@@ -15,6 +15,8 @@ namespace Giraffe
         int goalTimer = 300;
         private const int fadeTime = 180;
 
+        public readonly Navigator Navi;
+
         //ビューポートの座標を移動
         public void Scroll(Vec2f vec)
         {
@@ -121,7 +123,7 @@ namespace Giraffe
             StageNum = num;
             Map = map;
             Map.SpawnObject(this);
-
+            Navi = new Navigator(this);
             player = new Player(this);
 
             // TODO: プレイヤーとマップが恐らくnullで返されたせいでエラーが出ていたので追加
@@ -158,6 +160,8 @@ namespace Giraffe
                     obj.Draw();
             });
             player.Draw();
+
+            Navi.Draw();
 
             ParticleManagerTop.Draw();
 
@@ -201,6 +205,8 @@ namespace Giraffe
             {
                 time.Add(TimeSpan.FromMilliseconds(16.666666666f));
             }
+
+            Navi.Update();
 
             gameObjects.ForEach(obj => player.CalcInteract(obj));
             player.Update();

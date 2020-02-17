@@ -30,11 +30,21 @@ namespace SAGASALib
         public static void DrawVec2(Vec2f pos, Vec2f vec, string name = "", uint color = 4294902015)
         {
 #if DEBUG
+            vec += pos;
             draw.Enqueue(() => {
                 DrawUtil.DrawThickBox(pos,vec,color);
                 DrawUtil.DrawThickBox(pos + vec, vec.Rotate(MyMath.Deg2Rad * 140).Normal() * 15, color);
                 DrawUtil.DrawThickBox(pos + vec, vec.Rotate(MyMath.Deg2Rad * -140).Normal() * 15, color);
                 DX.DrawStringToHandle((int)(vec+pos).X, (int)(vec + pos).Y + 2, name + "(" + vec.X + "," + vec.Y + ")", black, Handle, white);
+            });
+#endif
+        }
+        public static void DrawLine(Vec2f pos, Vec2f vec, string name = "", uint color = 4294902015)
+        {
+#if DEBUG
+            draw.Enqueue(() => {
+                DrawUtil.DrawThickBox(pos, vec, color);
+                DX.DrawStringToHandle((int)(vec + pos).X, (int)(vec + pos).Y + 2, name + "(" + vec.X + "," + vec.Y + ")", black, Handle, white);
             });
 #endif
         }

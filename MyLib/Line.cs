@@ -11,10 +11,6 @@
             End = end;
         }
 
-        public Vec2f GetCrossPos(Line line)
-        {
-
-            return null;
-        }
+       
     }
 }

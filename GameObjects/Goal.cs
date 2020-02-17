@@ -18,7 +18,9 @@ namespace Giraffe
             image = ResourceLoader.GetGraph("goal" + scene.ResourcesName + ".png");
             pos = vecsf;
         }
-        private CircleCollision[] collisions = new CircleCollision[] { new CircleCollision(new Vec2f(2f, 1.8f), 1.3f) };
+
+        private static readonly Vec2f Offset = new Vec2f(2f, 1.8f);
+        private CircleCollision[] collisions = new CircleCollision[] { new CircleCollision(Offset, 1.3f) };
         public override void Draw()
         {
             Vec2f screenPos = scene.GetScreenPos(pos);
@@ -29,6 +31,7 @@ namespace Giraffe
         {
             return collisions;
         }
+        private static readonly int marker = ResourceLoader.GetGraph("marker.png");
         public override void Update()
         {
 #if DEBUG
@@ -37,6 +40,7 @@ namespace Giraffe
                 ((ScenePlay)scene).Goal(pos);
             }
 #endif
+            ((ScenePlay)scene).Navi.AddTarget(pos+ Offset, marker);
             base.Update();
         }
 

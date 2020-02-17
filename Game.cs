@@ -92,8 +92,7 @@ namespace Giraffe
         public void Update()
         {
             Input.Update();
-
-            CurrentScene.Update();
+             CurrentScene.Update();
             //シーン切り替え関連
             if (0 < _changer.Count)
             {

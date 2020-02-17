@@ -64,6 +64,24 @@ namespace SAGASALib
             return (float) Math.Sqrt((x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1));
         }
 
-        //線分の
+        //線分の交点
+        public static Vec2f GetCrossPos(Vec2f p0, Vec2f p1, Vec2f p2, Vec2f p3)
+        {
+            Vec2f a = p1 - p0;
+            Vec2f c = p2 - p0;
+            Vec2f b = p3 - p2;
+
+            float ab = a.Cross(b);
+            float t1 = c.Cross(a) / ab;
+            float t2 = c.Cross(b) / ab;
+
+            if ((0 < t1 && t1 < 1) && (0 < t2 && t2 < 1))
+            {
+                Console.WriteLine("calc "+ p0+" "+a+" "+t2);
+                return p0 +  a* t2;
+            }
+            else
+                return null;
+        }
     }
 }
