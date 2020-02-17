@@ -10,6 +10,12 @@ namespace Giraffe
 {
     public static class NumberDraw
     {
+
+        public static void testScoreDraw()
+        {
+
+        }
+
         //表示するスコア, 1文字目のx座標, y座標, 文字の間隔, 文字の拡縮, 使う画像の数字部分より前までのファイル名, ゼロ埋めするか(省略可), 左詰めするか(省略可)
         public static void ScoreDraw(int score, int x, int y, int interval, float fontScale, string name, bool zeroPadding = false, bool leftPadding = true)
         {
@@ -154,6 +160,11 @@ namespace Giraffe
             Draw(time.Minute,2);
             Draw(time.Second, 2);
             Draw(time.Millisecond, 4);
+        }
+
+        public static void DateDraw()
+        {
+
         }
     }
 }

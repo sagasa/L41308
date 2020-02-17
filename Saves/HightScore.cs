@@ -1,21 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using DxLibDLL;
+using SAGASALib;
 
 namespace Giraffe.Saves
 {
     public class HightScore
     {
-        //後で削除
-        //public Dictionary<string, int[]> bestTimes = new Dictionary<string, int[]>
-        //{
-        //    {"stage_1",new int[3]{1,00,0 } },{"stage_2",new int[3]{1,30,0 } },{"stage_3",new int[3]{2,00,0 } }
-        //};
-        //public Dictionary<string, int> bestScores = new Dictionary<string, int>
-        //{
-        //    {"stage_1",1000 },{"stage_2",1000 },{"stage_3",1000}
-        //};
-
         public class Entry
         {
             public string name;
@@ -115,6 +106,7 @@ namespace Giraffe.Saves
             timeRankings[stageNum].RemoveAt(10);
         }
 
+        //記録更新を確認
         public bool BreakRecord(Entry entry, int stageNum)
         {
             if (entry.score >= scoreRankings[stageNum][9].score)
@@ -122,6 +114,26 @@ namespace Giraffe.Saves
             if (DateTime.FromBinary(entry.timeBinary) <= DateTime.FromBinary(timeRankings[stageNum][9].timeBinary))
                 return true;
             return false;
+        }
+
+        public void RankingDraw()
+        {
+            int flameX = 90;
+            float fontScale = 0.18f;
+            int heightInterval = 50;
+            int widthInterval = 10;
+            for (int i = 1; i <= 10; i++)
+            {
+                if (i == 10)
+                {
+                    DX.DrawRotaGraph(flameX - widthInterval, 100 + heightInterval * (i - 1), fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + 1 + ".png"));
+                    DX.DrawRotaGraph(flameX, 100 + heightInterval * (i - 1), fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + 0 + ".png"));
+                }
+                else
+                {
+                    DX.DrawRotaGraph(flameX, 100 + heightInterval * (i - 1), fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + i + ".png"));
+                }
+            }
         }
     }
 }

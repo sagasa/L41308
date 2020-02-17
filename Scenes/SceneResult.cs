@@ -9,30 +9,30 @@ namespace Giraffe
     public class SceneResult : Scene
     {
         private ScenePlay _scenePlay;
+
         private const string HIGHTSCORE = "hightscore";
-
-        private int[] evalScores = new int[] { 1100, 700, 400 };//評価用
-        private DateTime[] evalTimes = new DateTime[] { new DateTime(1, 1, 1, 0, 1, 0), new DateTime(1, 1, 1, 0, 2, 0), new DateTime(1, 1, 1, 0, 3, 0) };
-        private int[] timeBonus = new int[] { 1000, 500, 200 };//タイムボーナス用
-
         HightScore.Entry entry = new HightScore.Entry();
-        private int scoreEval;//自分の評価
-        private int timeEval;
         int scoreRank = 10;//自分の順位
         int timeRank = 10;
-
         private bool nameGet;//名前入力するか
+
+        private enum Eval { a, b, c, none }//評価
+        private Eval scoreEval;
+        private Eval timeEval;
+        private int[] evalScores = new int[] { 1100, 700, 400 };
+        private DateTime[] evalTimes = new DateTime[] { new DateTime(1, 1, 1, 0, 1, 0), new DateTime(1, 1, 1, 0, 2, 0), new DateTime(1, 1, 1, 0, 3, 0) };
+        private int[] timeBonus = new int[] { 1000, 500, 200 };//タイムボーナス用
         
         //カーソル
-        //名前入力時に使用
+        //名前入力で使用
         private enum NameGet_XNum { Change, Decision }
         private NameGet_XNum nameGet_XNum;
         private readonly int[] nameGet_X = new int[] { 170, Screen.Width - 170 };
         private const int nameGet_Y = Screen.Height - 200;//位置調整中
-        //
+        //ランキングで使用
         private const int ranking_X = Screen.Width / 2;
         private const int ranking_Y = Screen.Height - 50;
-
+        //リザルトで使用
         private enum Result_XNum { Restart, Ranking, Back }
         private Result_XNum result_XNum;
         private readonly int[] result_X = new int[] { 100, Screen.Width / 2, Screen.Width - 100 };//位置調整中
@@ -109,6 +109,28 @@ namespace Giraffe
                                       DX.GetColor(255, 255, 255),/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の色*/
                                       DX.GetColor(255, 255, 255));/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の縁の色*/
 
+            for (int i = 0; i < evalTimes.Length; i++)//タイムの評価
+            {
+                if (evalTimes[i] >= DateTime.FromBinary(entry.timeBinary))
+                {
+                    timeEval = (Eval)i;
+                    entry.score += timeBonus[i];
+                    break;
+                }
+                if (i == evalTimes.Length - 1)
+                    timeEval = Eval.none;
+            }
+            for (int i = 0; i < evalScores.Length; i++)//スコアの評価
+            {
+                if (evalScores[i] <= entry.score)
+                {
+                    scoreEval = (Eval)i;
+                    break;
+                }
+                if (i == evalScores.Length - 1)
+                    scoreEval = Eval.none;
+            }
+
             if (Game.hightScore.BreakRecord(entry, _scenePlay.StageNum))//記録を更新してるか
             {
                 state = State.NameGet;
@@ -128,27 +150,8 @@ namespace Giraffe
             {
                 state = State.Ranking;
             }
-
-            for (int i = 0; i < evalScores.Length; i++)//スコアの評価
-            {
-                if (evalScores[i] <= entry.score)
-                {
-                    scoreEval = i;
-                    break;
-                }
-                if (i == evalScores.Length - 1)
-                    scoreEval = 100;
-            }
-            for (int i = 0; i < evalTimes.Length; i++)//タイムの評価
-            {
-                if (evalTimes[i] >= DateTime.FromBinary(entry.timeBinary))
-                {
-                    timeEval = i;
-                    break;
-                }
-                if (i == evalTimes.Length - 1)
-                    timeEval = 100;
-            }
+            
+            
 
             //描画系の初期化　しなくてよいかも
             blinkMessage = true;
@@ -348,11 +351,25 @@ namespace Giraffe
 
         public override void Draw()
         {
-            DX.DrawGraph(0, 0, ResourceLoader.GetGraph("tree_top" + _scenePlay.ResourcesName + ".png"));
+            DX.DrawGraph(0, 0, ResourceLoader.GetGraph("tree_top_" + _scenePlay.StageNum + ".png"));
             DX.DrawGraph(0, 0, ResourceLoader.GetGraph("image_result/result_bg.png"));
 
             //タイムとスコアはずっと表示
+            NumberDraw.ScoreDraw(0, frameX, frameY, fontInterval1, fontScale1, "image_result/result_num_");
 
+            
+            if (scoreEval != Eval.none)//スコアの評価
+            {
+                DX.DrawRotaGraph(70, 95, rankImageScale * rankAnimationScale, 0, ResourceLoader.GetGraph("image_result/rank_" + (int)scoreEval + ".png"));
+            }
+            if (timeEval != Eval.none)//タイムの評価
+            {
+                DX.DrawRotaGraph(70, 190, rankImageScale * rankAnimationScale, 0, ResourceLoader.GetGraph("image_result/rank_" + (int)timeEval + ".png"));
+                //()と+
+                //DX.DrawRotaGraph(frameX + fontInterval1 * scoreLeftCounter - fontInterval1 / 3, frameY + 5, fontScale2, 0, ResourceLoader.GetGraph("image_result/brackets1.png"));
+                //DX.DrawRotaGraph(frameX + fontInterval1 * scoreLeftCounter, frameY + 5, fontScale2, 0, ResourceLoader.GetGraph("image_result/plus.png"));
+                //DX.DrawRotaGraph(frameX + fontInterval1 * scoreLeftCounter + fontInterval2 * (bonusLeftCounter + 1), frameY + 5, fontScale2, 0, ResourceLoader.GetGraph("image_result/brackets2.png"));
+            }
 
             if (state == State.NameGet)
             {
@@ -380,6 +397,7 @@ namespace Giraffe
                 DX.DrawRotaGraph(ranking_X, ranking_Y, 1, 0, ResourceLoader.GetGraph("image_result/back.png"));
 
                 //ランキングの表示
+                Game.hightScore.RankingDraw();
 
             }
             else if (state == State.Result)
@@ -387,12 +405,11 @@ namespace Giraffe
                 dummyPlayer.Draw();
                 DX.DrawRotaGraph(result_X[(int)result_XNum], result_Y, 1, 0, cursor);
                 DX.DrawRotaGraph(result_X[0], result_Y, 1, 0, ResourceLoader.GetGraph("image_result/restart.png"));
-                //ランキングのボタン
+                DX.DrawRotaGraph(result_X[1], result_Y, 1, 0, ResourceLoader.GetGraph("image_result/ranking.png"));
                 DX.DrawRotaGraph(result_X[2], result_Y, 1, 0, ResourceLoader.GetGraph("image_result/back.png"));
             }
 
-
-
+            
             int scoreLeftCounter = 0;
             int bonusLeftCounter = 0;
             int timeLeftCounter = 0;
@@ -411,16 +428,8 @@ namespace Giraffe
             //    {   //タイムボーナス
             //        NumberDraw.ScoreDraw(timeBonus[i], frameX + fontInterval2 + fontInterval1 * scoreLeftCounter, frameY + 5,
             //            fontInterval2, fontScale2, "image_result/result_num_", ref bonusLeftCounter);
-            //        // ()と+
-            //        DX.DrawRotaGraph(frameX + fontInterval1 * scoreLeftCounter - fontInterval1 / 3, frameY + 5, fontScale2, 0, ResourceLoader.GetGraph("image_result/brackets1.png"));
-            //        DX.DrawRotaGraph(frameX + fontInterval1 * scoreLeftCounter, frameY + 5, fontScale2, 0, ResourceLoader.GetGraph("image_result/plus.png"));
-            //        DX.DrawRotaGraph(frameX + fontInterval1 * scoreLeftCounter + fontInterval2 * (bonusLeftCounter + 1), frameY + 5, fontScale2, 0, ResourceLoader.GetGraph("image_result/brackets2.png"));
-            //        //タイム評価
-            //        DX.DrawRotaGraph(70, 190, rankImageScale * rankAnimationScale, 0, ResourceLoader.GetGraph("image_result/rank_" + ranks[i] + ".png"));
             //    }
             //}
-            ////スコアの評価
-            //DX.DrawRotaGraph(70, 95, rankImageScale * rankAnimationScale, 0, ResourceLoader.GetGraph("image_result/rank_" + scoreEval + ".png"));
             //if (blinkMessage && currentScore > bestScore)
             //{//スコアの「new」
             //    DX.DrawRotaGraph(frameX + 65 + fontInterval1 * (scoreLeftCounter + 1) + fontInterval1 / 2 * bonusLeftCounter, frameY, 1, 0, newImage);
@@ -429,8 +438,6 @@ namespace Giraffe
             //{//タイムの「new」
             //    DX.DrawRotaGraph(frameX + 65 + fontInterval1 * (timeLeftCounter + 3), 200, 1, 0, newImage);
             //}
-
-            
         }
 
         public override void OnExit()
