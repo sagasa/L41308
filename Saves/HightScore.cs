@@ -20,7 +20,7 @@ namespace Giraffe.Saves
 
         public void RankingInit()
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 1; i < 3; i++)
             {
                 scoreRankings[i] = new List<Entry> { };
                 timeRankings[i] = new List<Entry> { };
@@ -118,7 +118,7 @@ namespace Giraffe.Saves
 
         public void RankingDraw()
         {
-            int flameX = 90;
+            int flameX = 50;
             float fontScale = 0.18f;
             int heightInterval = 50;
             int widthInterval = 10;
