@@ -19,16 +19,15 @@ namespace Giraffe
         private const int fontInterval = 30;//文字同士の幅
         private const float fontScale1 = 0.18f;//文字の大きさ
         private const float fontScale2 = 0.1f;//タイムボーナス用
-
+        
         private int selectCursor;
         private const int selectCount = 3;
        
-
         private DummyPlayer Dummy;//ステージセレクト画面用ダミー
         private DummyPlayer NeckDummy;//タイトル画面用のダミー
         private const int fadeTime = 90;
         private const int shortFadeTime = 60;
-        private int stageCounter = 0;
+        private int TreeFixedCount = 0;
         public float BackgroundFixPosition = 0;//ステージセレクト画面の背景の座標
         public float tree = 0;
         const int StageCount = 3;
@@ -52,11 +51,10 @@ namespace Giraffe
         }
         public void TreeFixedPos()//ステージセレクト画面の背景の処理
         {
-            stageCounter++;
             tree = Screen.Width * stagePointer;
             if (tree == BackgroundFixPosition || BackgroundFixPosition < 0) {}
 
-            if (stageCounter % 1 == 0 && isTreeRight)//⇨押したら右移動
+            if (TreeFixedCount % 1 == 0 && isTreeRight)//⇨押したら右移動
             {
                 if (tree == BackgroundFixPosition) { }
                 else
@@ -64,7 +62,7 @@ namespace Giraffe
                     BackgroundFixPosition += Screen.Width / 80;
                 }
             }
-            else if (stageCounter % 1 == 0 && !isTreeRight)//⇦押したら左移動
+            else if (TreeFixedCount % 1 == 0 && !isTreeRight)//⇦押したら左移動
             {
                 if (tree == BackgroundFixPosition || BackgroundFixPosition < 0) { }
                 else
@@ -117,17 +115,18 @@ namespace Giraffe
         {
             Dummy = new DummyPlayer(this);
             NeckDummy = new DummyPlayer(this);
+            NeckDummy.Render.NeckExt = 7.5f;
             TitleCount =TitleStage;
         }
-
+        
         public override void Draw()
         {
             if (TitleCount==0)//タイトル画面
             {
-                DX.DrawGraph(0, 0, titlebg);
-                DX.DrawGraph(135, 450, ResourceLoader.GetGraph("select_" + 0 + ".png"));
-                DX.DrawGraph(90, 550, ResourceLoader.GetGraph("select_" + 1 + ".png"));
-                DX.DrawGraph(135, 650, ResourceLoader.GetGraph("select_" + 2 + ".png"));
+                DX.DrawGraph(0, 0, titlebg);//背景
+                DX.DrawGraph(135, 450, ResourceLoader.GetGraph("select_" + 0 + ".png"));//ステージセレクト画面の画像
+                DX.DrawGraph(90, 550, ResourceLoader.GetGraph("select_" + 1 + ".png"));//画面説明画面の画像
+                DX.DrawGraph(135, 650, ResourceLoader.GetGraph("select_" + 2 + ".png"));//設定画面の画像
                 NeckDummy.Draw();
             }
             if (TitleCount==1)//ステージセレクト
@@ -141,6 +140,7 @@ namespace Giraffe
             DX.DrawString(500, 100, "" + selectCursor, DX.GetColor(0, 0, 0));//確認用
             DX.DrawString(500, 150, "" + BackgroundFixPosition, DX.GetColor(0, 0, 0));//確認用
             DX.DrawString(500, 200, "" + tree, DX.GetColor(0, 0, 0));//確認用
+            DX.DrawString(500, 250, "" + Dummy.Render.NeckExt, DX.GetColor(0, 0, 0));
         }
 
         public override void OnLoad()
@@ -159,7 +159,7 @@ namespace Giraffe
                     selectPos();
                     NeckDummy.Update();
                     NeckDummy.isDummyNeck = true;
-                    if (Input.ACTION.IsPush())
+                    if (Input.ACTION.IsPush())//タイトル画面で決定ボタンが押されたら
                     {
                         Sound.Play("decision_SE.mp3");
                         if (selectCursor == 1)//ステージセレクト画面へ
@@ -225,8 +225,10 @@ namespace Giraffe
                     }
                 }
 
-                if (TitleCount==0&& Sound.CheckPlaySound("step_SE.mp3"))
+                if (BackgroundFixPosition<tree|| Sound.CheckPlaySound("step_SE.mp3"))
+                {
                     Sound.Stop("step_SE.mp3");
+                }
             }
         }
 

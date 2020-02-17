@@ -45,17 +45,18 @@ namespace Giraffe
             if (isDummyNeck==true)
             {
                 AnimationManager.Start(Animations.DefaultAngle);
-             
-                if (Input.UP.IsHold()&& Render.NeckExt < 7.5f)
+
+                
+                if (Input.UP.IsPush()&& Render.NeckExt < 7.5f)
                 {
-                    Render.NeckExt +=0.1f;
+                    Render.NeckExt +=2.85f;
                     if (!Sound.CheckPlaySound("neck_up_SE.mp3"))
                         Sound.Play("neck_up_SE.mp3");
                 }
 
-                if (Input.DOWN.IsHold() && 1.8f < Render.NeckExt)
+                if (Input.DOWN.IsPush() && 2.0f <=Render.NeckExt)
                 {
-                    Render.NeckExt -=0.1f;
+                    Render.NeckExt -=2.85f;
                     if (!Sound.CheckPlaySound("neck_down_SE.mp3"))
                         Sound.Play("neck_down_SE.mp3");
                 }
