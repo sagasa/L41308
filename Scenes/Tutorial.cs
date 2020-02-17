@@ -27,13 +27,9 @@ namespace Giraffe
         int Sounsa;
         readonly int[] cursorFixedPosY = new int[] { 502, 617 };
         int cursorPosY;//キリンの頭の座標
-        private readonly Vec2f giraffePos;
-        private int neckPos = 632;
-        private float neckSize = 4.6f;
-        private AnimationManager<PlayerRender> _animation;
         private const int fadeTime = 90;
         private const int shortFadeTime = 30;
-        
+
         private int titlebg = ResourceLoader.GetGraph("title_bg.png");
         private int select1 = ResourceLoader.GetGraph("select_3.png");
         private int select2 = ResourceLoader.GetGraph("select_4.png");
@@ -83,6 +79,11 @@ namespace Giraffe
             "それでは木に噛みついてみましょう",//23
             "では首を伸ばしてリ縮めたりしてみましょう",//24
         };
+
+        uint white = DX.GetColor(255, 255, 255);//白
+        uint black = DX.GetColor(0, 0, 0);//黒
+        uint green = DX.GetColor(0, 200, 0);//ほんと微妙に薄い緑
+        uint red = DX.GetColor(255, 0, 0);//赤
         public Tutolal(Game game, PlayMap map, string name) : base(game, new PlayMap("map_0"), "_0", 0)
         {
             Map = map;
@@ -92,10 +93,36 @@ namespace Giraffe
             player = new Player(this);
             player.pos = MapPos + new Vec2f(2, 2);
         }
-        uint white = DX.GetColor(255, 255, 255);//白
-        uint black = DX.GetColor(0, 0, 0);//黒
-        uint green = DX.GetColor(0, 200, 0);//ほんと微妙に薄い緑
-        uint red = DX.GetColor(255, 0, 0);//赤
+        public void ScreenTutorial()//画面説明の操作
+        {
+            if (Tutorialcount >= 1 && Tutorialcount <= 8)
+            {
+                if (Input.DOWN.IsPush())
+                {
+                    if (Tutorialcount >= 8)
+                    {
+                        Sound.Play("cancel_SE.mp3");
+                    }
+                    else
+                    {
+                        Tutorialcount += 1;
+                        Sound.Play("cursor_SE.mp3");
+                    }
+                }
+                else if (Input.UP.IsPush())
+                {
+                    if (Tutorialcount <= 1)
+                    {
+                        Sound.Play("cancel_SE.mp3");
+                    }
+                    else
+                    {
+                        Tutorialcount -= 1;
+                        Sound.Play("cursor_SE.mp3");
+                    }
+                }
+            }
+        }
         public override void Draw()
         {
             Sounsa = SousaCount;
@@ -114,7 +141,7 @@ namespace Giraffe
                 DX.DrawGraph(0, 30, setumei);
                 DX.DrawGraph(-150, 615, window);
                 DX.DrawGraph(390, 30, waku);
-                DX.DrawBox(0, 0, 640, 30, white, DX.TRUE);
+                DX.DrawBox(0, 0, 640, 30,white, DX.TRUE);
                 DX.DrawString(420, 75, Gamennamae[0], white);
                 DX.DrawString(400, 145, Gamennamae[1], white);
                 DX.DrawString(400, 210, Gamennamae[2], white);
@@ -317,45 +344,18 @@ namespace Giraffe
         {
             if (!Game.fadeAction)
             {
-                if (Tutorialcount >= 0)
-                {
+                ScreenTutorial();//操作画面の操作
 
-                    if (Input.BACK.IsPush())
-                    {
-                        Sound.Play("cancel_SE.mp3");
-                        Game.fadeAction = true;
-                        Game.bgmManager.Set(shortFadeTime, "title", "tutorial");
-                        Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                        Game.SetScene(new Title(Game,0), new Fade(shortFadeTime, true, true));
-                    }
-                }
-                if (Tutorialcount >= 1 && Tutorialcount <= 8)
+                if (Input.BACK.IsPush())
                 {
-                    if (Input.DOWN.IsPush())
-                    {
-                        if (Tutorialcount >= 8)
-                        {
-                            Sound.Play("cancel_SE.mp3");
-                        }
-                        else
-                        {
-                            Tutorialcount += 1;
-                            Sound.Play("cursor_SE.mp3");
-                        }
-                    }
-                    else if (Input.UP.IsPush())
-                    {
-                        if (Tutorialcount <= 1)
-                        {
-                            Sound.Play("cancel_SE.mp3");
-                        }
-                        else
-                        {
-                            Tutorialcount -= 1;
-                            Sound.Play("cursor_SE.mp3");
-                        }
-                    }
+                    Sound.Play("cancel_SE.mp3");
+                    Game.fadeAction = true;
+                    Game.bgmManager.Set(shortFadeTime, "title", "tutorial");
+                    Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
+                    Game.SetScene(new Title(Game, 0), new Fade(shortFadeTime, true, true));
                 }
+
+                
                 if (cursorPosY == 0 && Input.DOWN.IsPush())
                 {
                     if (Tutorialcount >= 99)

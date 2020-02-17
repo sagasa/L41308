@@ -28,7 +28,7 @@ namespace Giraffe
         private const int fadeTime = 90;
         private const int shortFadeTime = 60;
         private int TreeFixedCount = 0;
-        public float BackgroundFixPosition = 0;//ステージセレクト画面の背景の座標
+        public float BackgroundFixPosition = 640;//ステージセレクト画面の背景の座標
         public float tree = 0;
         public float treeMaxPos = 1920;//移動の最大値
         public float treeMinPos = 0;//移動の最小値
@@ -126,7 +126,7 @@ namespace Giraffe
             }
         }
 
-        public int stagePointer = 0;//ステージのかうんと」てきな
+        public int stagePointer = 1;//ステージのかうんと」てきな
 
 
         public Title(Game game,int TitleStage) : base(game)
