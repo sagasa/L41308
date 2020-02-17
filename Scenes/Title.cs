@@ -103,7 +103,7 @@ namespace Giraffe
                 Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, 0.01f, 0.1f));
                 if(BackgroundFixPosition==tree)
                 {
-                    Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, 0.01f, 0f));
+                    Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(0,0.01f, 0.1f));
                 }
             }
             else if (!Dummy.isDunnyRight)
@@ -111,7 +111,7 @@ namespace Giraffe
                 Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, -0.01f, 0.1f));
                 if(BackgroundFixPosition==tree)
                 {
-                    Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(Dummy.vel.X, -0.01f, 0));
+                    Dummy.vel = Dummy.vel.SetX(MyMath.Lerp(0, -0.01f, 0.1f));
                 }
             }
         }
