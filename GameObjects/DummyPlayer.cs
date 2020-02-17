@@ -45,8 +45,6 @@ namespace Giraffe
         {
             if (isDummyNeck==true)
             {
-                AnimationManager.Start(Animations.DefaultAngle);
-                
                 if (Input.UP.IsPush()&& Render.NeckExt < 7.5f)
                 {
                     Render.NeckExt +=2.85f;
