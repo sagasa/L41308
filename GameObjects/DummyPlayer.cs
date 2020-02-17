@@ -57,6 +57,7 @@ namespace Giraffe
                     Render.NeckExt -=2.85f;
                 }
             }
+            base.Update();
             //if (Input.LEFT.IsPush() || Input.RIGHT.IsPush())
             //{
             //    Sound.Play("step_SE.mp3");
