@@ -30,6 +30,8 @@ namespace Giraffe
         private int TreeFixedCount = 0;
         public float BackgroundFixPosition = 0;//ステージセレクト画面の背景の座標
         public float tree = 0;
+        public float treeMaxPos = 1920;//移動の最大値
+        public float treeMinPos = 0;//移動の最小値
         const int StageCount = 3;
         public float CursorPos = 502;
 
@@ -52,22 +54,30 @@ namespace Giraffe
         public void TreeFixedPos()//ステージセレクト画面の背景の処理
         {
             tree = Screen.Width * stagePointer;
-            if (tree == BackgroundFixPosition || BackgroundFixPosition < 0) {}
+            if (tree == BackgroundFixPosition || BackgroundFixPosition < treeMinPos) {}
 
             if (TreeFixedCount % 1 == 0 && isTreeRight)//⇨押したら右移動
             {
-                if (tree == BackgroundFixPosition) { }
-                else
+                if (tree == BackgroundFixPosition) {}
+                else if(BackgroundFixPosition<treeMaxPos)
                 {
                     BackgroundFixPosition += Screen.Width / 80;
+                }
+                else if(BackgroundFixPosition==treeMaxPos)
+                {
+                    stagePointer = 3;
                 }
             }
             else if (TreeFixedCount % 1 == 0 && !isTreeRight)//⇦押したら左移動
             {
-                if (tree == BackgroundFixPosition || BackgroundFixPosition < 0) { }
-                else
+                if (tree == BackgroundFixPosition){}
+                else if(BackgroundFixPosition>treeMinPos)
                 {
                     BackgroundFixPosition -= Screen.Width / 80;
+                }
+                else if(BackgroundFixPosition==treeMinPos)
+                {
+                    stagePointer = 0;
                 }
             }
             else if (tree >= BackgroundFixPosition && Input.RIGHT.IsPush() || Input.LEFT.IsPush()) {}
@@ -144,11 +154,10 @@ namespace Giraffe
                 DX.DrawGraphF(0 - BackgroundFixPosition, 0, stagename);
                 Dummy.Draw();
             }
-            DX.DrawString(500, 50, "" + stagePointer, DX.GetColor(0, 0, 0));//確認用
-            DX.DrawString(500, 100, "" + selectCursor, DX.GetColor(0, 0, 0));//確認用
-            DX.DrawString(500, 150, "" + BackgroundFixPosition, DX.GetColor(0, 0, 0));//確認用
-            DX.DrawString(500, 200, "" + tree, DX.GetColor(0, 0, 0));//確認用
-            DX.DrawString(500, 250, "" + Dummy.Render.NeckExt, DX.GetColor(0, 0, 0));
+            DX.DrawString(400, 400, "ステージセレクト:" + stagePointer, DX.GetColor(0, 0, 0));//確認用
+            DX.DrawString(400, 450, "タイトル画面:" + selectCursor, DX.GetColor(0, 0, 0));//確認用
+            DX.DrawString(400, 500, "背景の座標:" + BackgroundFixPosition, DX.GetColor(0, 0, 0));//確認用
+            DX.DrawString(400, 550, "移動座標:" + tree, DX.GetColor(0, 0, 0));//確認用
         }
 
         public override void OnLoad()
