@@ -2,6 +2,7 @@
 using System.Text;
 using DxLibDLL;
 using SAGASALib;
+using KUMALib;
 using Giraffe.Saves;
 
 namespace Giraffe
@@ -92,7 +93,7 @@ namespace Giraffe
         public override void OnLoad()
         {
             DX.SetFontSize(50);//文字サイズの指定
-                               //文字とか枠とかの色の指定
+            //文字とか枠とかの色の指定
             DX.SetKeyInputStringColor(DX.GetColor(63, 42, 11),/*入力文字列の色*/
                                       DX.GetColor(63, 42, 11),/*ＩＭＥ非使用時のカーソルの色*/
                                       DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の入力文字列の周りの色*/
@@ -187,6 +188,23 @@ namespace Giraffe
                 {
                     if (nameGet)
                     {
+                        DX.SetFontSize(50);//文字サイズの指定
+                        //文字とか枠とかの色の指定
+                        DX.SetKeyInputStringColor(DX.GetColor(63, 42, 11),/*入力文字列の色*/
+                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ非使用時のカーソルの色*/
+                                                  DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の入力文字列の周りの色*/
+                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ使用時のカーソルの色*/
+                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の変換文字列の下線*/
+                                                  DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の選択対象の変換候補文字列の色*/
+                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の入力モード文字列の色(『全角ひらがな』等)*/
+                                                  DX.GetColor(255, 255, 255),/*入力文字列の縁の色*/
+                                                  DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の選択対象の変換候補文字列の縁の色*/
+                                                  DX.GetColor(255, 255, 255),/*ＩＭＥ使用時の入力モード文字列の縁の色*/
+                                                  DX.GetColor(63, 42, 11),/*ＩＭＥ使用時の変換ウインドウの縁の色*/
+                                                  DX.GetColor(255, 246, 170),/*ＩＭＥ使用時の変換ウインドウの下地の色*/
+                                                  DX.GetColor(255, 255, 255),/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の周りの色*/
+                                                  DX.GetColor(255, 255, 255),/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の色*/
+                                                  DX.GetColor(255, 255, 255));/*入力文字列の選択部分(SHIFTキーを押しながら左右キーで選択)の縁の色*/
                         StringBuilder nickname_ = new StringBuilder();
                         //X座標,Y座標,入力可能文字数,保存する場所,ESCでキャンセルできる(ようにする)か
                         if (DX.KeyInputString(110, Screen.Height / 2 - 40, 8, nickname_, DX.TRUE) == DX.TRUE)
@@ -397,7 +415,7 @@ namespace Giraffe
                 DX.DrawRotaGraph(ranking_X, ranking_Y, 1, 0, ResourceLoader.GetGraph("image_result/back.png"));
 
                 //ランキングの表示
-                Game.hightScore.RankingDraw();
+                Game.hightScore.RankingDraw(_scenePlay.StageNum, scoreRank);
 
             }
             else if (state == State.Result)

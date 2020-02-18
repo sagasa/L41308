@@ -6,135 +6,120 @@ using System.Threading.Tasks;
 using DxLibDLL;
 using SAGASALib;
 
-namespace Giraffe
+namespace KUMALib
 {
     public static class NumberDraw
     {
-
-        public static void testScoreDraw()
+        //表示するスコア, 1文字目のx座標, y座標, 文字の間隔, 文字の拡縮, 使う画像の数字部分より前までのファイル名, ゼロ埋めするか(省略可), 左詰めするか(省略可)
+        public static void ScoreDraw(int score, int x, int y, int interval, float imageScale, string fileName, bool zeroPadding = false, bool leftPadding = true)
         {
-
+            int digit;
+            if (leftPadding)//桁数を調べる
+                digit = (score == 0) ? 1 : ((int)Math.Log10(score) + 1);
+            else
+                digit = 4;
+            for (int i = 0; i < digit; i++)
+            {
+                if (zeroPadding || score / (int)Math.Pow(10, digit - 1 - i) > 0 || i == digit - 1)
+                {
+                    DX.DrawRotaGraph(x + interval * i, y, imageScale, 0, ResourceLoader.GetGraph(fileName + (score / (int)Math.Pow(10, digit - 1 - i) % 10) + ".png"));
+                }
+            }
         }
 
-        //表示するスコア, 1文字目のx座標, y座標, 文字の間隔, 文字の拡縮, 使う画像の数字部分より前までのファイル名, ゼロ埋めするか(省略可), 左詰めするか(省略可)
-        public static void ScoreDraw(int score, int x, int y, int interval, float fontScale, string name, bool zeroPadding = false, bool leftPadding = true)
+        //レフトカウンターの値を返す　new等の描画に使うため
+        public static void ScoreDraw(int score, int x, int y, int interval, float imageScale, string fileName, ref int leftCounter, bool zeroPadding = false, bool leftPadding = true)
         {
             //桁数を調べる
-            int digit = 0;//桁数
-            for (int i = 0, s = score; i < s; digit++)
-            {
-                s = s / 10;
-            }
-            if (zeroPadding && digit < 4)//ゼロ埋め
-            {
+            int digit;
+            if (leftPadding)//桁数を調べる
+                digit = (score == 0) ? 1 : ((int)Math.Log10(score) + 1);
+            else
                 digit = 4;
-            }
-            //描画
-            for (int i = 0, leftCounter = 0, unit = (int)Math.Pow(10, digit - 1); i < digit; i++, unit /= 10)
+            for (leftCounter = 0; leftCounter < digit; leftCounter++)
             {
-                for (int j = 0; j < 10; j++)
+                if (zeroPadding || score / (int)Math.Pow(10, digit - 1 - leftCounter) > 0 || leftCounter == digit - 1)
                 {
-                    if (leftPadding && j == score / unit % 10 && (zeroPadding || score >= unit))//左詰めするとき
+                    DX.DrawRotaGraph(x + interval * leftCounter, y, imageScale, 0, ResourceLoader.GetGraph(fileName + (score / (int)Math.Pow(10, digit - 1 - leftCounter) % 10) + ".png"));
+                }
+            }
+        }
+
+        //表示するタイム, 1文字目のx座標, y座標, 文字の間隔, 文字の拡縮, 使う画像の数字部分より前までのファイル名, ミリ秒を表示するか(省略可), ゼロ埋めするか(省略可), 左詰めするか(省略可)
+        public static void TimeDraw(DateTime time, int x, int y, int interval, float imageScale, string fileName, bool milliDraw = false, bool zeroPadding = false, bool leftPadding = true)
+        {
+            int pointer = 0;
+
+            void Draw(int time_, int digit_, bool zeroPadding_ = true)
+            {
+                for (int i = 0; i < digit_; i++, pointer++)
+                {
+                    if (zeroPadding_ || time_ / (int)Math.Pow(10, digit_ - 1 - i) > 0 || i == digit_ - 1)
                     {
-                        DX.DrawRotaGraph(x + interval * leftCounter, y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
-                        leftCounter++;
-                        break;
-                    }
-                    else if (!leftPadding && j == score / unit % 10 && (zeroPadding || score >= unit))//左詰めしないとき
-                    {
-                        DX.DrawRotaGraph(x + interval * i, y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
-                        break;
+                        DX.DrawRotaGraph(x + interval * pointer, y, imageScale, 0, ResourceLoader.GetGraph(fileName + (time_ / (int)Math.Pow(10, digit_ - 1 - i) % 10) + ".png"));
                     }
                 }
             }
+
+            void SymbolDraw(string symbol)
+            {
+                DX.DrawRotaGraph(x + interval * pointer, y, imageScale, 0, ResourceLoader.GetGraph(fileName + symbol + ".png"));
+                pointer++;
+            }
+
+            int digit;
+            if (leftPadding)//桁数を調べる
+                digit = (time.Minute == 0) ? 1 : ((int)Math.Log10(time.Minute) + 1);
+            else
+                digit = 2;
+            Draw(time.Minute, digit, zeroPadding);
+            SymbolDraw("colon");
+            Draw(time.Second, 2);
+            if (milliDraw)
+            {
+                SymbolDraw("dot");
+                Draw(time.Millisecond, 2);
+            }
+        }
+
+        //レフトカウンターの値を返す　new等の描画に使うため
+        public static void TimeDraw(DateTime time, int x, int y, int interval, float imageScale, string fileName, ref int leftCouner, bool milliDraw = false, bool zeroPadding = false, bool leftPadding = true)
+        {
+            int pointer = 0;
+
+            void Draw(int time_, int digit_, bool zeroPadding_ = true)
+            {
+                for (int i = 0; i < digit_; i++, pointer++)
+                {
+                    if (zeroPadding_ || time_ / (int)Math.Pow(10, digit_ - 1 - i) > 0 || i == digit_ - 1)
+                    {
+                        DX.DrawRotaGraph(x + interval * pointer, y, imageScale, 0, ResourceLoader.GetGraph(fileName + (time_ / (int)Math.Pow(10, digit_ - 1 - i) % 10) + ".png"));
+                    }
+                }
+            }
+
+            void SymbolDraw(string symbol)
+            {
+                DX.DrawRotaGraph(x + interval * pointer, y, imageScale, 0, ResourceLoader.GetGraph(fileName + symbol + ".png"));
+                pointer++;
+            }
+
+            int digit;
+            if (leftPadding)//桁数を調べる
+                digit = (time.Minute == 0) ? 1 : ((int)Math.Log10(time.Minute) + 1);
+            else
+                digit = 2;
+            Draw(time.Minute, digit, zeroPadding);
+            SymbolDraw("colon");
+            Draw(time.Second, 2);
+            if (milliDraw)
+            {
+                SymbolDraw("dot");
+                Draw(time.Millisecond, 2);
+            }
+            leftCouner = pointer;
         }
         
-        //レフトカウンターの値を返す　new等の描画に使うため
-        public static void ScoreDraw(int score, int x, int y, int xInterval, float fontScale, string name, ref int leftCounter, bool zeroPadding = false, bool leftPadding = true)
-        {
-            //桁数を調べる
-            int digit = 0;//桁数
-            for (int i = 0, s = score; i < s; digit++)
-            {
-                s = s / 10;
-            }
-            if (zeroPadding && digit < 4)//ゼロ埋め
-            {
-                digit = 4;
-            }
-            //描画
-            leftCounter = 0;//左詰めに使用
-            for (int i = 0, unit = (int)Math.Pow(10, digit - 1); i < digit; i++, unit /= 10)
-            {
-                for (int j = 0; j < 10; j++)
-                {
-                    if (leftPadding && j == score / unit % 10 && (zeroPadding || score >= unit))//左詰めするとき
-                    {
-                        DX.DrawRotaGraph(x + xInterval * leftCounter, y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
-                        leftCounter++;
-                        break;
-                    }
-                    else if (!leftPadding && j == score / unit % 10 && (zeroPadding || score >= unit))//左詰めしないとき
-                    {
-                        DX.DrawRotaGraph(x + xInterval * i, y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
-                        break;
-                    }
-                }
-            }
-        }
-
-        //表示するタイム, 1文字目のx座標, y座標, 文字の間隔, 文字の拡縮, 使う画像の数字部分より前までのファイル名, レフトカウンターの値を返す(コロン用), フレーム数を表示するか(省略可), ゼロ埋めするか(省略可), 左詰めするか(省略可)
-        public static void TimeDraw(int[] time, int x, int y, int interval, float fontScale, string name, ref int leftCounter, bool fpsDraw = false, bool zeroPadding = false, bool leftPadding = true)
-        {
-            leftCounter = 0;
-            for (int i = 0, digit = 2, unit = (int)Math.Pow(10, digit - 1); i < digit; i++, unit /= 10)
-            {
-                for (int j = 0; j < 10; j++)//分
-                {
-                    if (leftPadding && j == time[0] / unit % 10 && (zeroPadding || unit == 1 || time[0] >= unit))
-                    {
-                        DX.DrawRotaGraph(x + interval * leftCounter, y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
-                        leftCounter++;
-                        break;
-                    }
-                    if (!leftPadding && j == time[0] / unit % 10 && (zeroPadding || unit == 1 || time[0] >= unit))
-                    {
-                        DX.DrawRotaGraph(x + interval * i, y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
-                        break;
-                    }
-                }
-                for (int j = 0; j < 10; j++)//秒
-                {
-                    if (leftPadding && j == time[1] / unit % 10)
-                    {
-                        DX.DrawRotaGraph(x + interval * (2 + leftCounter), y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
-                        break;
-                    }
-                    else if (!leftPadding && j == time[1] / unit % 10)
-                    {
-                        DX.DrawRotaGraph(x + interval * (3 + i), y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
-                        break;
-                    }
-                }
-                if (fpsDraw)//フレーム数
-                {
-                    for (int j = 0; j < 10; j++)
-                    {
-                        if (leftPadding && j == time[2] / unit % 10)
-                        {
-                            DX.DrawRotaGraph(x + interval * (5 + leftCounter), y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
-                            break;
-                        }
-                        else if (!leftPadding && j == time[2] / unit % 10)
-                        {
-                            DX.DrawRotaGraph(x + interval * (6 + i), y, fontScale, 0, ResourceLoader.GetGraph(name + j + ".png"));
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
         public static void TimeDraw(DateTime time, int x, int y,string name, int interval, float fontScale, bool zeroPadding = true)
         {
             int pointer = 0;
@@ -162,9 +147,29 @@ namespace Giraffe
             Draw(time.Millisecond, 4);
         }
 
-        public static void DateDraw()
+        public static void DateDraw(DateTime time, int x, int y, int interval, float imageScale, string fileName, bool zeroPadding = false, bool leftPadding = true)
         {
+            int pointer = 0;
 
+            void Draw(int time_, int digit_, bool zeroPadding_ = true)
+            {
+                for (int i = 0; i < digit_; i++, pointer++)
+                {
+                    DX.DrawRotaGraph(x + interval * pointer, y, imageScale, 0, ResourceLoader.GetGraph(fileName + (time_ / (int)Math.Pow(10, digit_ - 1 - i) % 10) + ".png"));
+                }
+            }
+            
+            void SlashDraw()
+            {
+                DX.DrawRotaGraph(x + interval * pointer, y, imageScale, 0, ResourceLoader.GetGraph(fileName + "slash" + ".png"));
+                pointer++;
+            }
+            
+            Draw(time.Year % 100, 2);
+            SlashDraw();
+            Draw(time.Month, 2);
+            SlashDraw();
+            Draw(time.Day, 2);
         }
     }
 }

@@ -2,6 +2,7 @@
 using DxLibDLL;
 using System.Collections.Generic;
 using SAGASALib;
+using KUMALib;
 
 namespace Giraffe
 {
@@ -203,7 +204,7 @@ namespace Giraffe
         {
             if (!IsGoal)
             {
-                time.Add(TimeSpan.FromMilliseconds(16.666666666f));
+                time = time.Add(TimeSpan.FromMilliseconds(16.666666666f));
             }
 
             Navi.Update();

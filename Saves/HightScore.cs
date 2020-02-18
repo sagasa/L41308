@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DxLibDLL;
 using SAGASALib;
+using KUMALib;
 
 namespace Giraffe.Saves
 {
@@ -116,23 +117,31 @@ namespace Giraffe.Saves
             return false;
         }
 
-        public void RankingDraw()
+        public void RankingDraw(int stageNum, int rank)
         {
-            int flameX = 50;
-            float fontScale = 0.18f;
-            int heightInterval = 50;
-            int widthInterval = 10;
-            for (int i = 1; i <= 10; i++)
+            const int rankX = 75;
+            const int nameX = rankX + 60;
+            const int dateX = nameX + 10;
+            const int scoreX = nameX + 250;
+            const int timeX = scoreX;
+            const int line1 = 140;
+            const int line2 = line1 + 50;
+            const int nameY = line1 - 15;
+            const int fontScale = 25;
+            const float imageScale = 0.18f;
+            int heightInterval = 120;
+            int widthInterval = 20;
+            DX.SetFontSize(fontScale);
+            for (int i = 0; i < 5; i++)
             {
-                if (i == 10)
-                {
-                    DX.DrawRotaGraph(flameX - widthInterval, 100 + heightInterval * (i - 1), fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + 1 + ".png"));
-                    DX.DrawRotaGraph(flameX, 100 + heightInterval * (i - 1), fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + 0 + ".png"));
-                }
+                DX.DrawRotaGraph(rankX, line1 + heightInterval * i, imageScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + (i + 1) + ".png"));
+                if (i == rank)//プレイヤーの色だけ違う色に
+                    DX.DrawString(nameX, nameY + heightInterval * i, scoreRankings[stageNum][i].name, DX.GetColor(255, 131, 0));
                 else
-                {
-                    DX.DrawRotaGraph(flameX, 100 + heightInterval * (i - 1), fontScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + i + ".png"));
-                }
+                    DX.DrawString(nameX, nameY + heightInterval * i, scoreRankings[stageNum][i].name, DX.GetColor(63, 42, 11));
+                NumberDraw.ScoreDraw(scoreRankings[stageNum][i].score, scoreX, line1 + heightInterval * i, widthInterval, imageScale, "image_result/result_num_");
+                NumberDraw.TimeDraw(DateTime.FromBinary(scoreRankings[stageNum][i].timeBinary), timeX, line2 + heightInterval * i, widthInterval, imageScale, "image_result/result_num_");
+                NumberDraw.DateDraw(DateTime.FromBinary(scoreRankings[stageNum][i].dateBinary), dateX, line2 + heightInterval * i, widthInterval, imageScale, "image_result/result_num_");
             }
         }
     }
