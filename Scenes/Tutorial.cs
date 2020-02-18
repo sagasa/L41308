@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using DxLibDLL;
 using SAGASALib;
 using System.Collections.Generic;
@@ -24,35 +24,33 @@ namespace Giraffe
         public static int Tutorialcount = 0;
         int SousaCount = 0;
         int CommentTime = 120;
-        int Sounsa;
-        readonly int[] cursorFixedPosY = new int[] { 502, 617 };
-        int cursorPosY;//キリンの頭の座標
+        int Sounsa;//進行ゲージ用の値
         private const int fadeTime = 90;
         private const int shortFadeTime = 30;
 
         private int titlebg = ResourceLoader.GetGraph("title_bg.png");
         private int select1 = ResourceLoader.GetGraph("select_3.png");
         private int select2 = ResourceLoader.GetGraph("select_4.png");
-        private int setumei = ResourceLoader.GetGraph("プレイ画面スクショ.jpg");
+        private int setumei = ResourceLoader.GetGraph("ScreenTutorialSc.jpg");
         private int window = ResourceLoader.GetGraph("mes11_02.png");
         private int playbg = ResourceLoader.GetGraph("play_bg.png");
         private int waku = ResourceLoader.GetGraph("waku.png");
         private int mes = ResourceLoader.GetGraph("mes11_02_.png");
         private int stagename2 = ResourceLoader.GetGraph("image_play/stagename_0.png");
 
-        string[] GamenText = new string[]//画面説明用コメント
+        string[] ScreenTutorialText = new string[]//画面説明用コメント
         {
           "画面説明です",//画面説明,1
-          "この生き物はキリン、このゲームの主人公。 ","プレーヤーはこのキャラを操作します",//キリン,2.3
-          "これは木の枝です。プレイヤーは、","つかまって上に登っていくことができます",//木の枝,4,5
+          "この生き物はキリン。首が伸びたり","回転したりできる、ただのキリンです",//キリン,2.3
+          "これは木の枝です。キリンを操作して","噛みついて上に登っていくことができます",//木の枝,4,5
           "ステージ名です。ここに今遊んでいる","ステージの名前が表示されます",//ステージ名,6,7
-          "スコアです。木の枝に噛みつく、ゴール","までにかかった時間の速さなどで","スコアが増加します",//8,8,10
-          "ミニマップです、ミニマップ上のキリンの","アイコンは,マップ上のキリンの","位置を表しています",//11,12,13
+          "スコアです。色違いの木の枝に噛みつく、","ゴールまでにかかった時間の速さ、","などでスコアが増加します",//8,8,10
+          "ミニマップです。ミニマップ上のキリンの","アイコンは、マップ上のキリンの","各ステージごとの進行度合いを表しています",//11,12,13
           "タイマーです。スタートからゴールまでに","かかった時間がここに表示されます",//14,15
           "タイトル画面へ戻りますか？","戻る場合は決定ボタンを押してください",//16,17
-          "また、スコアが多くもらえる","色違いのレアな枝がでることがあります"//レア木の枝18,19
+          "また、噛みつくとスコアが獲得できる","色違いのレアな枝も配置されています"//レア木の枝18,19
         };
-        string[] Gamennamae = new string[] //画面説明項目用コメント
+        string[] ScreenTutorialName = new string[] //画面説明項目用コメント
         {
             "～画面説明～","・キリン","・木の枝","・ステージ名",
             "・スコア", "・ミニマップ", "・タイマー", "・画面説明を終了"
@@ -60,13 +58,13 @@ namespace Giraffe
         string[] SousaText = new string[]//操作説明用コメント
         {
             "画面説明です",//1
-            "十字キーの⇒を押すと、","プレイヤーは右の方向に移動します",//右,2,3
-            "十字キーの⇐を押すと、","プレイヤーは左の方向に移動します",//左,4,5
-            "地面に足がついている状態でスペースキーを押すと、","ジャンプをすることができます",//ジャンプ,6,7
-            "スペースキーを押している状態で木の枝に触れると、","噛んでつかまることができます",//噛みつき,8,9
+            "方向キーーの⇒を押すと、","プレイヤーは右の方向に移動します",//右,2,3
+            "方向キーの⇐を押すと、","プレイヤーは左の方向に移動します",//左,4,5
+            "地面に足がついている状態でジャンプボタンを押すと、","ジャンプをすることができます",//ジャンプ,6,7
+            "ジャンプボタンを押している状態で木の枝に触れると、","噛んでつかまることができます",//噛みつき,8,9
             "木の枝に","噛みついているとき、キリンは自動でぐるぐる回り始めます",//方向転換,10
-            "回転の向きは、十字キーの左右で変えることができます!",//方向転換,11
-            "十字キーの上下を押すとキリンの首が","長くなったり縮んだりします",//首伸び縮み,12,13
+            "回転の向きは、方向キーの左右で変えることができます!",//方向転換,11
+            "方向キーの上下を押すとキリンの首が","長くなったり縮んだりします",//首伸び縮み,12,13
             "うまく首の長さを調節して、","うまく木の枝を飛び移りましょう",//まとめ,14
             "※これにて操作説明のチュートリアルは終了です",//画面終了,15
             "ステージセレクト画面に移ります",//戻る,16
@@ -111,9 +109,13 @@ namespace Giraffe
                 }
                 else if (Input.UP.IsPush())
                 {
-                    if (Tutorialcount <= 1)
+                    if (Tutorialcount <= 2)
                     {
                         Sound.Play("cancel_SE.mp3");
+                    }
+                    else if (Tutorialcount >= 99)
+                    {
+                        Tutorialcount += 0;
                     }
                     else
                     {
@@ -121,6 +123,21 @@ namespace Giraffe
                         Sound.Play("cursor_SE.mp3");
                     }
                 }
+            }
+        }
+        public void StopTutorialCount()//チュートリアルカウントの制限
+        {
+            if (Tutorialcount >= 8 && Tutorialcount <= 10)
+            {
+                Tutorialcount = 8;
+            }
+            else if (Tutorialcount <= 98 && Tutorialcount >= 11)
+            {
+                Tutorialcount = 99;
+            }
+            else if (Tutorialcount >= 112)
+            {
+                Tutorialcount = 99;
             }
         }
         public override void Draw()
@@ -142,24 +159,24 @@ namespace Giraffe
                 DX.DrawGraph(-150, 615, window);
                 DX.DrawGraph(390, 30, waku);
                 DX.DrawBox(0, 0, 640, 30,white, DX.TRUE);
-                DX.DrawString(420, 75, Gamennamae[0], white);
-                DX.DrawString(400, 145, Gamennamae[1], white);
-                DX.DrawString(400, 210, Gamennamae[2], white);
-                DX.DrawString(400, 277, Gamennamae[3], white);
-                DX.DrawString(400, 342, Gamennamae[4], white);
-                DX.DrawString(400, 410, Gamennamae[5], white);
-                DX.DrawString(400, 475, Gamennamae[6], white);
-                DX.DrawString(400, 540, Gamennamae[7], white);
+                DX.DrawString(420, 75,  ScreenTutorialName[0], white);
+                DX.DrawString(400, 145, ScreenTutorialName[1], white);
+                DX.DrawString(400, 210, ScreenTutorialName[2], white);
+                DX.DrawString(400, 277, ScreenTutorialName[3], white);
+                DX.DrawString(400, 342, ScreenTutorialName[4], white);
+                DX.DrawString(400, 410, ScreenTutorialName[5], white);
+                DX.DrawString(400, 475, ScreenTutorialName[6], white);
+                DX.DrawString(400, 540, ScreenTutorialName[7], white);
                 DX.DrawRotaGraph(110, 15, 0.7f, 0, stagename2);
             }
             if (Tutorialcount == 1)//画面説明(タイトル)
             {
-                DX.DrawString(50, 638, GamenText[0], white);
+                DX.DrawString(50, 638, ScreenTutorialText[0], white);
             }
             if (Tutorialcount == 2)//画面説明(キリン)
             {
-                DX.DrawString(50, 638, GamenText[1], white);
-                DX.DrawString(50, 674, GamenText[2], white);
+                DX.DrawString(50, 638, ScreenTutorialText[1], white);
+                DX.DrawString(50, 674, ScreenTutorialText[2], white);
                 DX.DrawBox(410, 172, 520, 174, black, DX.TRUE);
                 DX.DrawBox(150, 480, 210, 590, black, DX.FALSE);
                 DX.DrawBox(151, 481, 211, 591, black, DX.FALSE);
@@ -167,26 +184,23 @@ namespace Giraffe
             }
             if (Tutorialcount == 3)//画面説明(木の枝)
             {
-                CommentTime--;
-                DX.DrawString(50, 638, GamenText[3], white);
-                DX.DrawString(50, 674, GamenText[4], white);
+                DX.DrawString(50, 638, ScreenTutorialText[3], white);
+                DX.DrawString(50, 674, ScreenTutorialText[4], white);
+                DX.DrawString(50, 705, ScreenTutorialText[17], white);
+                DX.DrawString(50, 741, ScreenTutorialText[18], white);
                 DX.DrawBox(410, 237, 520, 239, black, DX.TRUE);
                 DX.DrawBox(130, 217, 204, 284, black, DX.FALSE);
                 DX.DrawBox(131, 218, 205, 285, black, DX.FALSE);
                 DX.DrawBox(132, 219, 206, 286, black, DX.FALSE);
-                if (CommentTime <= 0)
-                {
-                    DX.DrawString(50, 705, GamenText[17], white);
-                    DX.DrawString(50, 741, GamenText[18], white);
-                    DX.DrawBox(50, 125, 120, 194, red, DX.FALSE);
-                    DX.DrawBox(51, 126, 121, 195, red, DX.FALSE);
-                    DX.DrawBox(52, 127, 122, 196, red, DX.FALSE);
-                }
+                DX.DrawBox(50, 125, 120, 194, red, DX.FALSE);
+                DX.DrawBox(51, 126, 121, 195, red, DX.FALSE);
+                DX.DrawBox(52, 127, 122, 196, red, DX.FALSE);
+
             }
             if (Tutorialcount == 4)//画面説明(ステージ名)
             {
-                DX.DrawString(50, 638, GamenText[5], white);
-                DX.DrawString(50, 674, GamenText[6], white);
+                DX.DrawString(50, 638, ScreenTutorialText[5], white);
+                DX.DrawString(50, 674, ScreenTutorialText[6], white);
                 DX.DrawBox(410, 304, 570, 306, black, DX.TRUE);
                 DX.DrawBox(0, 30, 100, 60, black, DX.FALSE);
                 DX.DrawBox(1, 31, 101, 61, black, DX.FALSE);
@@ -194,9 +208,9 @@ namespace Giraffe
             }
             if (Tutorialcount == 5)//画面説明(スコア)
             {
-                DX.DrawString(50, 638, GamenText[7], white);
-                DX.DrawString(50, 674, GamenText[8], white);
-                DX.DrawString(50, 705, GamenText[9], white);
+                DX.DrawString(50, 638, ScreenTutorialText[7], white);
+                DX.DrawString(50, 674, ScreenTutorialText[8], white);
+                DX.DrawString(50, 705, ScreenTutorialText[9], white);
                 DX.DrawBox(410, 370, 520, 372, black, DX.TRUE);
                 DX.DrawBox(130, 30, 280, 60, black, DX.FALSE);
                 DX.DrawBox(131, 31, 281, 61, black, DX.FALSE);
@@ -204,9 +218,9 @@ namespace Giraffe
             }
             if (Tutorialcount == 6)//画面説明(ミニマップ)
             {
-                DX.DrawString(50, 638, GamenText[10], white);
-                DX.DrawString(50, 674, GamenText[11], white);
-                DX.DrawString(50, 705, GamenText[12], white);
+                DX.DrawString(50, 638, ScreenTutorialText[10], white);
+                DX.DrawString(50, 674, ScreenTutorialText[11], white);
+                DX.DrawString(50, 705, ScreenTutorialText[12], white);
                 DX.DrawBox(410, 437, 570, 439, black, DX.TRUE);
                 DX.DrawBox(330, 140, 390, 410, black, DX.FALSE);
                 DX.DrawBox(331, 141, 391, 411, black, DX.FALSE);
@@ -214,8 +228,8 @@ namespace Giraffe
             }
             if (Tutorialcount == 7)//画面説明(タイマー)
             {
-                DX.DrawString(50, 638, GamenText[13], white);
-                DX.DrawString(50, 674, GamenText[14], white);
+                DX.DrawString(50, 638, ScreenTutorialText[13], white);
+                DX.DrawString(50, 674, ScreenTutorialText[14], white);
                 DX.DrawBox(410, 502, 540, 504, black, DX.TRUE);
                 DX.DrawBox(300, 32, 390, 62, black, DX.FALSE);
                 DX.DrawBox(301, 33, 391, 63, black, DX.FALSE);
@@ -223,15 +237,12 @@ namespace Giraffe
             }
             if (Tutorialcount == 8)//画面説明(修了)
             {
-                DX.DrawString(50, 638, GamenText[15], white);
-                DX.DrawString(50, 674, GamenText[16], white);
+                DX.DrawString(50, 638, ScreenTutorialText[15], white);
+                DX.DrawString(50, 674, ScreenTutorialText[16], white);
                 DX.DrawBox(410, 568, 620, 570, black, DX.TRUE);
             }
             if (Tutorialcount >= 99)//操作画面(タイトル)
             {
-                DX.SetFontSize(15);
-                DX.ChangeFontType(DX.DX_FONTTYPE_NORMAL);
-                // DX.DrawGraph(0, 0, playbg);
                 Vec2f pos = GetScreenPos(Vec2f.ZERO);
                 DX.DrawGraph((int)pos.X, (int)pos.Y, playbg);
                 gameObjects.ForEach(obj => obj.Draw());
@@ -243,6 +254,7 @@ namespace Giraffe
                 DX.DrawBox(98, 133, 602, 162, black, DX.FALSE);//進行ゲージ外枠
                 DX.DrawString(110, 115, SousaText[20], black);
                 DX.DrawRotaGraph(530, 15, 0.6f, 0, stagename2);
+
                 if (Tutorialcount >= 99 && Tutorialcount <= 100)//右
                 {
                     DX.DrawString(100, 30, SousaText[1], black);
@@ -338,60 +350,13 @@ namespace Giraffe
         }
         public override void OnLoad()
         {
-            cursorPosY = cursorFixedPosY[0];
         }
         public override void Update()
         {
             if (!Game.fadeAction)
             {
-                ScreenTutorial();//操作画面の操作
-
-                if (Input.BACK.IsPush())
-                {
-                    Sound.Play("cancel_SE.mp3");
-                    Game.fadeAction = true;
-                    Game.bgmManager.Set(shortFadeTime, "title", "tutorial");
-                    Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                    Game.SetScene(new Title(Game, 0), new Fade(shortFadeTime, true, true));
-                }
-
-                
-                if (cursorPosY == 0 && Input.DOWN.IsPush())
-                {
-                    if (Tutorialcount >= 99)
-                    {
-                    }
-                    else
-                    {
-                        Tutorialcount += 1;
-                        Sound.Play("cursor_SE.mp3");
-                    }
-                }
-                else if (cursorPosY == 0 && Input.UP.IsPush())
-                {
-                    if (Tutorialcount <= 2)
-                    {
-                        Tutorialcount += 0;
-                        Sound.Play("cancel_SE.mp3");
-                    }
-                    else if (Tutorialcount >= 99)
-                    {
-                        Tutorialcount += 0;
-                    }
-                    else
-                    {
-                        Tutorialcount -= 1;
-                        Sound.Play("cursor_SE.mp3");
-                    }
-                }
-                if (Tutorialcount >= 8 && Tutorialcount <= 10)
-                {
-                    Tutorialcount = 8;
-                }
-                else if (Tutorialcount <= 98 && Tutorialcount >= 11)
-                {
-                    Tutorialcount = 99;
-                }
+                ScreenTutorial();//画面説明の操作　　96行目
+                StopTutorialCount();//チュートリアルかうんとの増加の制限　130行目
                 if (Tutorialcount == 8 && Input.ACTION.IsPush())
                 {
                     Game.bgmManager.Set(shortFadeTime, "title", "tutorial");
@@ -399,13 +364,9 @@ namespace Giraffe
                     Game.SetScene(new Title(Game,0), new Fade(shortFadeTime, true, true));
                     Sound.Play("decision_SE.mp3");
                     Tutorialcount = 0;
-                }
-                if (Tutorialcount == 4 || Tutorialcount == 2)
-                {
-                    if (CommentTime <= 0)
-                    {
-                        CommentTime = 120;
-                    }
+                    DX.ChangeFontType(DX.DX_FONTTYPE_NORMAL);
+                    DX.SetFontSize(15);
+                    DX.SetFontThickness(10);
                 }
                 if (Tutorialcount >= 99)//操作画面トップ
                 {
@@ -414,20 +375,11 @@ namespace Giraffe
                     ParticleManagerBottom.Update();
                     gameObjects.ForEach(obj => obj.Update());
                     gameObjects.RemoveAll(obj => obj.IsDead());
-                    if (Tutorialcount >= 112)
-                    {
-                        Tutorialcount = 99;
-                    }
+                   
                     if (CommentTime <= 0)
                     {
                         Tutorialcount += 1;
                         CommentTime = 120;
-                    }
-                    if (Input.BACK.IsPush())//Xボタンで戻ります
-                    {
-                        Tutorialcount = 0;
-                        cursorPosY = 502;
-                        Sound.Play("cancel_SE.mp3");
                     }
                     if (SousaCount == 200)
                     {
@@ -512,10 +464,16 @@ namespace Giraffe
                             Game.bgmManager.Set(fadeTime, "title", "tutorial");
                             Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
                             Game.SetScene(new Title(Game,1), new Fade(fadeTime, true, true));
-                            
-                            cursorPosY = cursorFixedPosY[0];
                         }
                     }
+                }
+                if (Input.BACK.IsPush())//X押すと戻る
+                {
+                    Sound.Play("cancel_SE.mp3");
+                    Game.fadeAction = true;
+                    Game.bgmManager.Set(shortFadeTime, "title", "tutorial");
+                    Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
+                    Game.SetScene(new Title(Game, 0), new Fade(shortFadeTime, true, true));
                 }
             }
         }

@@ -154,10 +154,6 @@ namespace Giraffe
                 DX.DrawGraphF(0 - BackgroundFixPosition, 0, stagename);
                 Dummy.Draw();
             }
-            DX.DrawString(400, 400, "ステージセレクト:" + stagePointer, DX.GetColor(0, 0, 0));//確認用
-            DX.DrawString(400, 450, "タイトル画面:" + selectCursor, DX.GetColor(0, 0, 0));//確認用
-            DX.DrawString(400, 500, "背景の座標:" + BackgroundFixPosition, DX.GetColor(0, 0, 0));//確認用
-            DX.DrawString(400, 550, "移動座標:" + tree, DX.GetColor(0, 0, 0));//確認用
         }
 
         public override void OnLoad()

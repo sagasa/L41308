@@ -211,7 +211,7 @@ namespace Giraffe
             gameObjects.ForEach(obj => player.CalcInteract(obj));
             player.Update();
             playerIcon.Update();
-            playerIcon.IconPos = (29 - player.Y) * 10.5f;
+            playerIcon.IconPos = (29 - player.Y) * 11.5f;
             gameObjects.ForEach(obj => obj.Update());
             gameObjects.RemoveAll(obj => obj.IsDead());
 
