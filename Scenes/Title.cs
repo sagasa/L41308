@@ -58,7 +58,12 @@ namespace Giraffe
 
             if (TreeFixedCount % 1 == 0 && isTreeRight)//⇨押したら右移動
             {
-                if (tree == BackgroundFixPosition) {}
+                if (tree == BackgroundFixPosition) {
+                    if (Sound.CheckPlaySound("step_SE.mp3"))
+                    {
+                        Sound.Stop("step_SE.mp3");
+                    }
+                }
                 else if(BackgroundFixPosition<treeMaxPos)
                 {
                     BackgroundFixPosition += Screen.Width / 80;
@@ -70,7 +75,12 @@ namespace Giraffe
             }
             else if (TreeFixedCount % 1 == 0 && !isTreeRight)//⇦押したら左移動
             {
-                if (tree == BackgroundFixPosition){}
+                if (tree == BackgroundFixPosition){
+                    if (Sound.CheckPlaySound("step_SE.mp3"))
+                    {
+                        Sound.Stop("step_SE.mp3");
+                    }
+                }
                 else if(BackgroundFixPosition>treeMinPos)
                 {
                     BackgroundFixPosition -= Screen.Width / 80;
@@ -236,11 +246,6 @@ namespace Giraffe
                         Reset();
                         Sound.Play("cancel_SE.mp3");
                     }
-                }
-
-                if (TitleCount == 0 && Sound.CheckPlaySound("step_SE.mp3"))
-                {
-                    Sound.Stop("step_SE.mp3");
                 }
             }
         }

@@ -355,8 +355,8 @@ namespace Giraffe
         {
             if (!Game.fadeAction)
             {
-                ScreenTutorial();//画面説明の操作　　96行目
-                StopTutorialCount();//チュートリアルかうんとの増加の制限　130行目
+                ScreenTutorial();//画面説明の操作　　94行目
+                StopTutorialCount();//チュートリアルかうんとの増加の制限　128行目
                 if (Tutorialcount == 8 && Input.ACTION.IsPush())
                 {
                     Game.bgmManager.Set(shortFadeTime, "title", "tutorial");
