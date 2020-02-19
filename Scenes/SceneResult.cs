@@ -41,6 +41,15 @@ namespace Giraffe
         
         private int counter = 0;//wait,fade,blinkのカウンター
         private const int fadeTime = 120;
+
+        //ランキング表示
+        enum Ranking { score=0,time=Screen.Width}
+        Ranking ranking = Ranking.score;
+        float rankingPos = 0;
+        delegate void RankingUpdate();
+        RankingUpdate rankingUpdate;
+        bool scroll = false;
+
         //描画用定数
         private const int frameX = 240;
         private const int frameY = 100;
@@ -57,19 +66,16 @@ namespace Giraffe
         private int playerAnimationTime = 100;
         private int playerMoveCounter = 0;
         private const int cursorWidth = 220;
-
-
+        
         private bool playerMove = false;
         private bool playerOnRight = true;
         private DummyPlayer dummyPlayer;
 
         private const string numImage = "image_result/num_";
-
         private int shadow = ResourceLoader.GetGraph("image_result/shadow25.png");
         private int cursor = ResourceLoader.GetGraph("image_result/cursor.png");
-        private int colon = ResourceLoader.GetGraph("image_result/rcolon.png");
         private int newImage = ResourceLoader.GetGraph("image_result/new.png");
-
+        
         enum State
         {
             NameGet,
@@ -240,14 +246,56 @@ namespace Giraffe
                 else if (state == State.Ranking)
                 {
                     //画面スクロール
-
+                    
                     //ランキングが表示しきれなかったら横スクロール出来るようにする
 
-                    if (Input.ACTION.IsPush())//画面スクロールが終わっているときにスペースキー
+                    if (!scroll && ranking == Ranking.score && Input.RIGHT.IsPush())
+                    {
+                        rankingUpdate = new RankingUpdate(Scroll);
+                    }
+                    else if (!scroll && ranking == Ranking.time && Input.LEFT.IsPush())
+                    {
+                        rankingUpdate = new RankingUpdate(Scroll);
+                    }
+
+                    void Scroll()
+                    {
+                        scroll = true;
+                        const int time = 60;
+                        if (ranking == Ranking.score)
+                        {
+                            rankingPos += Screen.Width / time;
+                            if (rankingPos >= (int)Ranking.time)
+                            {
+                                ranking = Ranking.time;
+                                rankingPos = (int)Ranking.time;
+                                scroll = false;
+                                rankingUpdate = Delegate.Remove(rankingUpdate, new RankingUpdate(Scroll)) as RankingUpdate;
+                            }
+
+                        }
+                        else
+                        {
+                            rankingPos -= Screen.Width / time;
+                            if (rankingPos <= (int)Ranking.score)
+                            {
+                                ranking = Ranking.score;
+                                rankingPos = (int)Ranking.score;
+                                scroll = false;
+                                rankingUpdate = Delegate.Remove(rankingUpdate, new RankingUpdate(Scroll)) as RankingUpdate;
+                            }
+                        }
+                    }
+
+                    if (rankingUpdate != null)
+                    {
+                        rankingUpdate();
+                    }
+
+                    if (!scroll && Input.ACTION.IsPush())//画面スクロールが終わっているときにスペースキー
                     {
                         state = State.Result;
                         result_XNum = Result_XNum.Ranking;
-                        //ダミープレイヤーの位置の初期化
                     }
                 }
                 else if (state == State.Result)
@@ -413,11 +461,13 @@ namespace Giraffe
             {
                 DX.DrawGraph(0, 0, shadow);
                 DX.DrawRotaGraph(ranking_X, ranking_Y, 1, 0, cursor);
-                DX.DrawGraph(0, -50, ResourceLoader.GetGraph("image_result/ranking_bg.png"));
+                //ランキング表示
+                DX.DrawGraph((int)rankingPos, -50, ResourceLoader.GetGraph("image_result/ranking_bg.png"));
+                Game.hightScore.ScoreRankingDraw(_scenePlay.StageNum, scoreRank, (int)rankingPos);
+                DX.DrawGraph(Screen.Width + (int)rankingPos, -50, ResourceLoader.GetGraph("image_result/ranking_bg.png"));
+                Game.hightScore.TimeRankingDraw(_scenePlay.StageNum, timeRank, Screen.Width + (int)rankingPos);
                 DX.DrawRotaGraph(ranking_X, ranking_Y, 1, 0, ResourceLoader.GetGraph("image_result/back.png"));
-
-                //ランキングの表示
-                Game.hightScore.ScoreRankingDraw(_scenePlay.StageNum, scoreRank);
+                Game.hightScore.ScoreRankingDraw(_scenePlay.StageNum, scoreRank, Screen.Width+(int)rankingPos);
             }
             else if (state == State.Result)
             {
