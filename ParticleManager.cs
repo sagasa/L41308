@@ -385,7 +385,7 @@ namespace Giraffe
                 OnDeath = (p) =>
                 {
                     //消滅時に、周囲に50個の粒子を飛ばす
-                    for (int i = 0; i < 15; i++)
+                    for (int i = 0; i < 25; i++)
                     {
                         float angle = MyRandom.PlusMinus(MyMath.PI);
                         float speed = MyRandom.Range(2f, 8f);
@@ -434,7 +434,7 @@ namespace Giraffe
                                 },
                             });
                     }
-                    for (int i = 0; i < 30; i++)
+                    for (int i = 0; i < 50; i++)
                     {
                         float angle = MyRandom.PlusMinus(MyMath.PI);
                         float speed = MyRandom.Range(2f, 8f);
@@ -510,39 +510,39 @@ namespace Giraffe
         }
 
         //セレクトエフェクト
-        public void Serekut(Title title, Vec2f pos)
-        {
-            if (title.ResourceName == "_1")
-            {
-                for (int i = 0; i < 15; i++)
-                {
-                    float angle = MyRandom.PlusMinus(MyMath.PI);
-                    //float anglex = MyRandom.Range(-0.08f, -0.12f);
-                    //float angley = MyRandom.Range(-0.08f, 0.02f);
-                    float speed = MyRandom.Range(2f, 8f);
+        //public void Serekut(Title title, Vec2f pos)
+        //{
+        //    if (title.ResourcesName == "_1")
+        //    {
+        //        for (int i = 0; i < 15; i++)
+        //        {
+        //            float angle = MyRandom.PlusMinus(MyMath.PI);
+        //            //float anglex = MyRandom.Range(-0.08f, -0.12f);
+        //            //float angley = MyRandom.Range(-0.08f, 0.02f);
+        //            float speed = MyRandom.Range(2f, 8f);
 
-                    particles.Add(new Particle(scene)
-                    {
-                        pos = pos + new Vec2f(MyRandom.PlusMinus(25), 0) * scale,
-                        lifeSpan = MyRandom.Range(60, 120),
-                        imageHndle = ResourceLoader.GetGraph("image_effect/effectleaf" + title.ResourceName + ".png"),
-                        vel = new Vec2f(0, -3f) * scale,
-                        //vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed) * scale,
-                        force = new Vec2f(MyRandom.Range(-0.08f, -0.12f), MyRandom.Range(-0.08f, 0.02f)) * scale,
-                        damp = 0.86f,
-                        fadeInTime = 0.1f,
-                        fadeOutTime = 1.4f,
-                        blendMode = DX.DX_BLENDMODE_ADD,
-                        angle = MyRandom.PlusMinus(MyMath.PI),
-                        angularDamp = 0.98f,
-                        //damp = 0.95f,
-                        red = 252,
-                        green = 174,
-                        blue = 242,
-                    });
-                }
-            }
-        }
+        //            particles.Add(new Particle(scene)
+        //            {
+        //                pos = pos + new Vec2f(MyRandom.PlusMinus(25), 0) * scale,
+        //                lifeSpan = MyRandom.Range(60, 120),
+        //                imageHndle = ResourceLoader.GetGraph("image_effect/effectleaf" + title.ResourcesName + ".png"),
+        //                vel = new Vec2f(0, -3f) * scale,
+        //                //vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed) * scale,
+        //                force = new Vec2f(MyRandom.Range(-0.08f, -0.12f), MyRandom.Range(-0.08f, 0.02f)) * scale,
+        //                damp = 0.86f,
+        //                fadeInTime = 0.1f,
+        //                fadeOutTime = 1.4f,
+        //                blendMode = DX.DX_BLENDMODE_ADD,
+        //                angle = MyRandom.PlusMinus(MyMath.PI),
+        //                angularDamp = 0.98f,
+        //                //damp = 0.95f,
+        //                red = 252,
+        //                green = 174,
+        //                blue = 242,
+        //            });
+        //        }
+        //    }
+        //}
 
 
 
