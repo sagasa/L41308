@@ -38,6 +38,11 @@ namespace Giraffe
             if (Input.BACK.IsPush())
             {
                 ((ScenePlay)scene).Goal(pos);
+
+                for (int i = 0; i < 3; i++)
+                {
+                    scene.ParticleManagerTop.FireWorks(pos);
+                }
             }
 #endif
             ((ScenePlay)scene).Navi.AddTarget(pos+ Offset, marker);
@@ -49,6 +54,12 @@ namespace Giraffe
             if (obj is Player)
             {
                 ((ScenePlay)scene).Goal(pos);
+
+                //花火エフェクト
+                for (int i = 0; i < 3; i++)
+                {
+                    scene.ParticleManagerTop.FireWorks(pos);
+                }
             }
             
         }

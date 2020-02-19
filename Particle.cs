@@ -88,6 +88,10 @@ namespace Giraffe
 
             //回転速度の分だけ回転
             angle += angularVelocity;
+
+            //カスタム処理
+            if (OnUpdate != null)
+                OnUpdate(this);
         }
 
         public void Draw()
@@ -97,14 +101,14 @@ namespace Giraffe
                 return;
 
             //進歩率
-            float progressRate = (float)age / lifeSpan;
+            //float progressRate = (float)age / lifeSpan;
 
             //拡大率を計算
-            float scale = MyMath.Lerp(startScale, endScale, progressRate);
+            //float scale = MyMath.Lerp(startScale, endScale, progressRate);
 
             //アルファ値の計算
-            int currentAlpha = (int)(Math.Min(Math.Min(progressRate /
-                fadeInTime, (1f - progressRate) / fadeOutTime), 1f) * alpha);
+            //int currentAlpha = (int)(Math.Min(Math.Min(progressRate /
+            //    fadeInTime, (1f - progressRate) / fadeOutTime), 1f) * alpha);
 
             //色を指定
             DxHelper.SetColor(red, green, blue);
@@ -114,12 +118,36 @@ namespace Giraffe
 
             Vec2f screeenpos = scene.GetScreenPos(pos);
             //描画する
-            DX.DrawRotaGraphF(screeenpos.X, screeenpos.Y, scale, angle, imageHndle);
+            DX.DrawRotaGraphF(screeenpos.X, screeenpos.Y, currentScale, angle, imageHndle);
 
             //アルファ値を元に戻す
             DxHelper.SetBlendMode(DX.DX_BLENDMODE_ALPHA, 255);
             //色を元に戻す
             DxHelper.SetColor(255, 255, 255);
+        }
+
+        ///<summary>
+        ///現在のスケール
+        ///</summary>
+        public float currentScale
+        {
+            get
+            {
+                float progressRate = (float)age / lifeSpan;
+                return MyMath.Lerp(startScale, endScale, progressRate);
+            }
+        }
+
+        ///<summary>
+        ///現在のアルファ値
+        ///</summary>
+        public int currentAlpha
+        {
+            get
+            {
+                float progressRate = (float)age / lifeSpan;
+                return (int)(Math.Min(Math.Min(progressRate / fadeInTime, (1f - progressRate) / fadeOutTime), 1f) * alpha);
+            }
         }
     }
 }
