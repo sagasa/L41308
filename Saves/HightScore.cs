@@ -35,7 +35,7 @@ namespace Giraffe.Saves
                     scoreRankings[i][j].dateBinary = DateTime.MinValue.ToBinary();
                     timeRankings[i][j].name = "No_data";
                     timeRankings[i][j].score = 0;
-                    timeRankings[i][j].timeBinary = DateTime.MinValue.ToBinary();
+                    timeRankings[i][j].timeBinary = DateTime.MaxValue.ToBinary();
                     timeRankings[i][j].dateBinary = DateTime.MinValue.ToBinary();
                 }
             }
