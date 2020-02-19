@@ -80,7 +80,7 @@ namespace SAGASALib
                 return p0 +  a* t2;
             }
             else
-                return null;
+                return Vec2f.ZERO;
         }
     }
 }

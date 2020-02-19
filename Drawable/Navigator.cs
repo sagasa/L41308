@@ -59,7 +59,7 @@ namespace Giraffe
                     void CheckAndDraw(Vec2f start, Vec2f end)
                     {
                         Vec2f res = MyMath.GetCrossPos(center, target, start, end);
-                        if (res != null)
+                        if (res !=Vec2f.ZERO)
                         {
                             DX.DrawRotaGraphF(res.X, res.Y, 0.8f, angle, entry.Item2);
                         }
