@@ -38,7 +38,7 @@ namespace Giraffe
 
         public bool isStageSelect = false;//タイトルと選択画面の移行フラグ
         public static bool isTreeRight = false;
-        public readonly string ResourceName;
+        public readonly string ResourcesName;
 
         private int titlebg = ResourceLoader.GetGraph("title_bg.png");
         private int icon = ResourceLoader.GetGraph("キリンアイコン.png");
@@ -142,7 +142,7 @@ namespace Giraffe
         
         public Title(Game game,int TitleStage,string name) : base(game)
         {
-            ResourceName = name;
+            ResourcesName = name;
             Dummy = new DummyPlayer(this);
             NeckDummy = new DummyPlayer(this);
             NeckDummy.Render.NeckExt = 7.5f;
