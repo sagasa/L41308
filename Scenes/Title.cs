@@ -166,8 +166,8 @@ namespace Giraffe
                 DX.DrawGraphF(0 - BackgroundFixPosition, 0, stagename);
                 for (int i = 1; i <= 3; i++)
                 {
-                    NumberDraw.ScoreDraw(Game.hightScore.scoreRankings[i][0].score, Screen.Width * i + 100 - (int)BackgroundFixPosition, 100, fontInterval, fontScale1, "image_select/mozi_");
-                    NumberDraw.TimeDraw(DateTime.FromBinary(Game.hightScore.timeRankings[i][0].timeBinary), Screen.Width * i + 100 - (int)BackgroundFixPosition, 200, fontInterval, fontScale1, "image_select/mozi_");
+                    NumberDraw.ScoreDraw(Game.hightScore.scoreRankings[i][0].score, Screen.Width * i + 300 - (int)BackgroundFixPosition, 468, fontInterval, fontScale1, "image_select/mozi_");
+                    NumberDraw.TimeDraw(DateTime.FromBinary(Game.hightScore.timeRankings[i][0].timeBinary), Screen.Width * i + 100 - (int)BackgroundFixPosition, 200, fontInterval, fontScale1, "image_select/mozi2_");
                 }
                 Dummy.Draw();
             }
