@@ -30,9 +30,14 @@ namespace SAGASALib
                     render.TailProgress = 0;
             },null,true);
 
-        public static readonly AnimationEntry<PlayerRender> Wink = new AnimationEntry<PlayerRender>(10,
+        public static readonly AnimationEntry<PlayerRender> Wink = new AnimationEntry<PlayerRender>(20,
             (render, animation) => { render.EyeProgress += animation.Delta; },
             (render, animation) => { render.EyeProgress=0; });
+
+        public static readonly AnimationEntry<PlayerRender> Ear = new AnimationEntry<PlayerRender>(20,
+            (render, animation) => { render.EarProgress += animation.Delta; },
+            (render, animation) => { render.EarProgress = 0; });
+
         //首を動かす
         public static readonly AnimationEntry<PlayerRender> IdleAnimation = new AnimationEntry<PlayerRender>(100,
             (render, animation) =>

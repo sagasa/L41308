@@ -35,14 +35,17 @@ namespace Giraffe
         }
 
         private PlayerState _state = PlayerState.Fly;
-        
-        
+
+        private int _winkTimer = 0;
+        private int _earTimer = 0;
 
         public Player(ScenePlay scene) : base(scene)
         {
             size = 0.6f;
             _render = new PlayerRender(this);
             _animation = new AnimationManager<PlayerRender>(_render);
+            _winkTimer = MyRandom.Range(120, 360);
+            _earTimer = MyRandom.Range(60, 300);
             angle = MyMath.Deg2Rad * 0;
             //velAngle = RotateSpeed/3;
         }
@@ -116,6 +119,20 @@ namespace Giraffe
                 ((ScenePlay)scene).Scroll(new Vec2f(0, 0.1f * f));
             }
 
+            //瞬き
+            if (_winkTimer <= 0)
+            {
+                _winkTimer = MyRandom.Range(120, 360);
+                _animation.Start(Animations.Wink);
+            }
+            _winkTimer--;
+            //耳
+            if (_earTimer <= 0)
+            {
+                _earTimer = MyRandom.Range(60, 300);
+                _animation.Start(Animations.Ear);
+            }
+            _earTimer--;
 
             /*
             if (_state == PlayerState.Dongle && Input.ACTION.IsPush())
