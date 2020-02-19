@@ -9,7 +9,7 @@ namespace Giraffe
     {
         private ScenePlay _scene;
 
-        private float _space = 10;
+        private static readonly float _space = 20;
 
         private readonly List<Tuple<Vec2f, int>> _list = new List<Tuple<Vec2f, int>>();
 
@@ -29,7 +29,7 @@ namespace Giraffe
             _list.Add(new Tuple<Vec2f, int>(vec,image));
         }
 
-        private  readonly Vec2f offset = new Vec2f(20f,20);
+        private static readonly Vec2f offset = new Vec2f(_space, _space);
 
         public void Draw()
         {
