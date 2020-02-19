@@ -46,7 +46,7 @@ namespace SAGASALib
                 else
                     render.MouthProgress -= animation.Delta * 2; ;
             },
-            (render, animation) => { animation.Progress = 1f - render.MouthProgress; },true);
+            (render, animation) => { render.MouthProgress=0; },true);
         //首を動かす
         public static readonly AnimationEntry<PlayerRender> IdleAnimation = new AnimationEntry<PlayerRender>(100,
             (render, animation) =>

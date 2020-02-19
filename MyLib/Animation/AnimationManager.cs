@@ -57,8 +57,9 @@ namespace SAGASALib
         }
 
         public void StopAll(bool finish = false)
-        {   
-            _list.ForEach(value=>value.Finish(_target));
+        {
+            if (finish)
+                _list.ForEach(value=>value.Finish(_target));
             _list.Clear();
         }
 
