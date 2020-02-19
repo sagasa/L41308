@@ -139,8 +139,8 @@ namespace Giraffe
         }
 
         public int stagePointer = 1;//ステージのかうんと」てきな
-
-        public Title(Game game, int TitleStage, string name = "_0") : base(game)
+        
+        public Title(Game game,int TitleStage,string name) : base(game)
         {
             ResourcesName = name;
             Dummy = new DummyPlayer(this);
