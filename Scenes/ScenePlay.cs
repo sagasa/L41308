@@ -177,9 +177,10 @@ namespace Giraffe
 
             int a = 0;
             //スコア
-            NumberDraw.ScoreDraw(score, Screen.Width / 2 - 10, 25, fontInterval, fontScale, "image_effect/time_", false, false);
+            NumberDraw.ScoreDraw(score, Screen.Width / 2 - 10, 25, fontInterval, fontScale, "image_effect/time_", true);
             //タイム
-            NumberDraw.TimeDraw(time, Screen.Width - 150, 25, "image_effect/time_", fontInterval, fontScale, true);
+            NumberDraw.TimeDraw(time, Screen.Width - 150, 25, fontInterval, fontScale, "image_effect/time_", true);
+            //NumberDraw.TimeDraw(time, Screen.Width - 150, 25, "image_effect/time_", fontInterval, fontScale, true);
         }
 
         public override void OnExit()
