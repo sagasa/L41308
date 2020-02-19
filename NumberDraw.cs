@@ -115,7 +115,7 @@ namespace KUMALib
             if (milliDraw)
             {
                 SymbolDraw("dot");
-                Draw(time.Millisecond, 2);
+                Draw(time.Millisecond, 4);
             }
             leftCouner = pointer;
         }

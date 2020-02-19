@@ -25,7 +25,7 @@ namespace Giraffe.Saves
             {
                 scoreRankings[i] = new List<Entry> { };
                 timeRankings[i] = new List<Entry> { };
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 5; j++)
                 {
                     scoreRankings[i].Add(new Entry());
                     timeRankings[i].Add(new Entry());
@@ -43,94 +43,94 @@ namespace Giraffe.Saves
         //ソート
         public void RankingSort(Entry entry, int stageNum)
         {
-            //10番を追加、データ代入
+            //5番を追加、データ代入
             scoreRankings[stageNum].Add(new Entry());
             timeRankings[stageNum].Add(new Entry());
-            scoreRankings[stageNum][10] = entry;
-            timeRankings[stageNum][10] = entry;
+            scoreRankings[stageNum][5] = entry;
+            timeRankings[stageNum][5] = entry;
             //ソート
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 5; i++)
             {
                 //スコアのソート
-                if (scoreRankings[stageNum][i].score <= scoreRankings[stageNum][10].score)
+                if (scoreRankings[stageNum][i].score <= scoreRankings[stageNum][5].score)
                 {
                     Entry w = scoreRankings[stageNum][i];
-                    scoreRankings[stageNum][i] = scoreRankings[stageNum][10];
-                    scoreRankings[stageNum][10] = w;
+                    scoreRankings[stageNum][i] = scoreRankings[stageNum][5];
+                    scoreRankings[stageNum][5] = w;
                 }
                 //タイム
-                if (DateTime.FromBinary(timeRankings[stageNum][i].timeBinary) >= DateTime.FromBinary(scoreRankings[stageNum][10].timeBinary))
+                if (DateTime.FromBinary(timeRankings[stageNum][i].timeBinary) >= DateTime.FromBinary(scoreRankings[stageNum][5].timeBinary))
                 {
                     Entry w = timeRankings[stageNum][i];
-                    timeRankings[stageNum][i] = scoreRankings[stageNum][10];
-                    scoreRankings[stageNum][10] = w;
+                    timeRankings[stageNum][i] = scoreRankings[stageNum][5];
+                    scoreRankings[stageNum][5] = w;
                 }
             }
-            //10番を削除
-            scoreRankings[stageNum].RemoveAt(10);
-            timeRankings[stageNum].RemoveAt(10);
+            //5番を削除
+            scoreRankings[stageNum].RemoveAt(5);
+            timeRankings[stageNum].RemoveAt(5);
         }
         //順位を返す
         public void RankingSort(Entry entry, int stageNum, ref int scoreRank, ref int timeRank)
         {
-            //10番を追加、データ代入
+            //5番を追加、データ代入
             scoreRankings[stageNum].Add(new Entry());
             timeRankings[stageNum].Add(new Entry());
-            scoreRankings[stageNum][10] = entry;
-            timeRankings[stageNum][10] = entry;
+            scoreRankings[stageNum][5] = entry;
+            timeRankings[stageNum][5] = entry;
             scoreRank = 10;
             timeRank = 10;
             //ソート
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 5; i++)
             {
                 //スコアのソート
-                if (scoreRankings[stageNum][i].score <= scoreRankings[stageNum][10].score)
+                if (scoreRankings[stageNum][i].score <= scoreRankings[stageNum][5].score)
                 {
                     if (scoreRank == 10)
                         scoreRank = i;
                     Entry w = scoreRankings[stageNum][i];
-                    scoreRankings[stageNum][i] = scoreRankings[stageNum][10];
-                    scoreRankings[stageNum][10] = w;
+                    scoreRankings[stageNum][i] = scoreRankings[stageNum][5];
+                    scoreRankings[stageNum][5] = w;
                 }
                 //タイム
-                if (DateTime.FromBinary(timeRankings[stageNum][i].timeBinary) >= DateTime.FromBinary(scoreRankings[stageNum][10].timeBinary))
+                if (DateTime.FromBinary(timeRankings[stageNum][i].timeBinary) >= DateTime.FromBinary(scoreRankings[stageNum][5].timeBinary))
                 {
                     if (timeRank == 10)
                         timeRank = i;
                     Entry w = timeRankings[stageNum][i];
-                    timeRankings[stageNum][i] = scoreRankings[stageNum][10];
-                    scoreRankings[stageNum][10] = w;
+                    timeRankings[stageNum][i] = scoreRankings[stageNum][5];
+                    scoreRankings[stageNum][5] = w;
                 }
             }
-            //10番を削除
-            scoreRankings[stageNum].RemoveAt(10);
-            timeRankings[stageNum].RemoveAt(10);
+            //5番を削除
+            scoreRankings[stageNum].RemoveAt(5);
+            timeRankings[stageNum].RemoveAt(5);
         }
 
         //記録更新を確認
         public bool BreakRecord(Entry entry, int stageNum)
         {
-            if (entry.score >= scoreRankings[stageNum][9].score)
+            if (entry.score >= scoreRankings[stageNum][4].score)
                 return true;
-            if (DateTime.FromBinary(entry.timeBinary) <= DateTime.FromBinary(timeRankings[stageNum][9].timeBinary))
+            if (DateTime.FromBinary(entry.timeBinary) <= DateTime.FromBinary(timeRankings[stageNum][4].timeBinary))
                 return true;
             return false;
         }
 
-        public void RankingDraw(int stageNum, int rank)
+        public void ScoreRankingDraw(int stageNum, int rank)
         {
-            const int rankX = 75;
-            const int nameX = rankX + 60;
+            const int rankX = 80;
+            const int nameX = rankX + 50;
             const int dateX = nameX + 10;
-            const int scoreX = nameX + 250;
+            const int scoreX = nameX + 300;
             const int timeX = scoreX;
-            const int line1 = 140;
+            const int line1 = 130;
             const int line2 = line1 + 50;
             const int nameY = line1 - 15;
-            const int fontScale = 25;
+            const int fontScale = 30;
             const float imageScale = 0.18f;
-            int heightInterval = 120;
-            int widthInterval = 20;
+            const int heightInterval = 110;
+            const int widthInterval = 25;
             DX.SetFontSize(fontScale);
             for (int i = 0; i < 5; i++)
             {
