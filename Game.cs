@@ -36,7 +36,7 @@ namespace Giraffe
             hightScore = SaveManager.Load<HightScore>(HIGHTSCORE);
             try
             {
-                int a = hightScore.scoreRankings[1][0].score;
+                int a = hightScore.scoreRankings[3][0].score;
             }
             catch
             {
@@ -50,7 +50,7 @@ namespace Giraffe
             bgmManager.update = new BgmManager.Update(bgmManager.FadeIn);
 
             DX.SetBackgroundColor(200, 200, 200);
-            SetScene(new Title(this,0));
+            SetScene(new Title(this, 0, "_0"));
             //for (int i = 0; i < 1; i++)
             //{
             //    //これ消せばクルクル消えます

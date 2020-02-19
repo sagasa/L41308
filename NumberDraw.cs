@@ -89,6 +89,11 @@ namespace KUMALib
 
             void Draw(int time_, int digit_, bool zeroPadding_ = true)
             {
+                int d = (time_ == 0) ? 1 : ((int)Math.Log10(time_) + 1);
+                for (int i = 0; d > digit_; i++)
+                {
+                    time_ %= (int)Math.Pow(10, d - digit_ - 1);
+                }
                 for (int i = 0; i < digit_; i++, pointer++)
                 {
                     if (zeroPadding_ || time_ / (int)Math.Pow(10, digit_ - 1 - i) > 0 || i == digit_ - 1)
@@ -115,7 +120,7 @@ namespace KUMALib
             if (milliDraw)
             {
                 SymbolDraw("dot");
-                Draw(time.Millisecond, 4);
+                Draw(time.Millisecond, 2);
             }
             leftCouner = pointer;
         }

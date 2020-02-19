@@ -21,7 +21,7 @@ namespace Giraffe.Saves
 
         public void RankingInit()
         {
-            for (int i = 1; i < 3; i++)
+            for (int i = 1; i <= 3; i++)
             {
                 scoreRankings[i] = new List<Entry> { };
                 timeRankings[i] = new List<Entry> { };
