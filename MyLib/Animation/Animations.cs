@@ -21,7 +21,7 @@ namespace SAGASALib
                 //歩く速度定数
                 const int speed = 2;
                 render.LegProgress += Math.Abs(render.Target.vel.X * speed);
-                render.TailProgress += Math.Abs(render.Target.vel.X * speed* 0.6f);
+                render.TailProgress += Math.Abs(render.Target.vel.X * speed* 0.4f);
 
                 // Console.WriteLine(render.TailProgress);
                 if (1f < render.LegProgress)

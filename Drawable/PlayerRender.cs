@@ -18,6 +18,8 @@ namespace Giraffe
         private static readonly int[] imageLeg = ResourceLoader.GetGraph("player/player_leg.png", 6);
         private static readonly int[] imageTail = ResourceLoader.GetGraph("player/player_tail.png", 5);
 
+        private static readonly int imageEye2 = ResourceLoader.GetGraph("player/player_eye2.png");
+
         //画像のポジション
         public static readonly Vec2f ImageSize = new Vec2f(128, 128);
         private static readonly Vec2f StandCenterPos = new Vec2f(64, 64) / ImageSize;
@@ -201,9 +203,14 @@ namespace Giraffe
             //頭
             Draw(imageHorn, _headCalc);
             Draw(AnimationUtils.GetImage(imageHead, MouthProgress), _headCalc);
+            //眼だけぶら下がり状態で変える
+            if (State == Player.PlayerState.Dongle)
+                Draw(imageEye2, _headCalc);
+            else
+                Draw(AnimationUtils.GetImageLoop(imageEye, EyeProgress), _headCalc);
             Draw(AnimationUtils.GetImageLoop(imageEar, EarProgress), _headCalc);
             Draw(AnimationUtils.GetImage(imageLeg, LegProgress), _bodyCalc);
-            Draw(AnimationUtils.GetImageLoop(imageEye, EyeProgress), _headCalc);
+            
             Draw(AnimationUtils.GetImageLoop(imageTail, TailProgress), _bodyCalc);
             
             //矢印
