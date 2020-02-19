@@ -361,7 +361,7 @@ namespace Giraffe
                 {
                     Game.bgmManager.Set(shortFadeTime, "title", "tutorial");
                     Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                    Game.SetScene(new Title(Game,0), new Fade(shortFadeTime, true, true));
+                    Game.SetScene(new Title(Game,0, "_0"), new Fade(shortFadeTime, true, true));
                     Sound.Play("decision_SE.mp3");
                     Tutorialcount = 0;
                     DX.ChangeFontType(DX.DX_FONTTYPE_NORMAL);
@@ -463,7 +463,7 @@ namespace Giraffe
                         {
                             Game.bgmManager.Set(fadeTime, "title", "tutorial");
                             Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                            Game.SetScene(new Title(Game,1), new Fade(fadeTime, true, true));
+                            Game.SetScene(new Title(Game,1, "_0"), new Fade(fadeTime, true, true));
                         }
                     }
                 }
@@ -473,7 +473,7 @@ namespace Giraffe
                     Game.fadeAction = true;
                     Game.bgmManager.Set(shortFadeTime, "title", "tutorial");
                     Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                    Game.SetScene(new Title(Game, 0), new Fade(shortFadeTime, true, true));
+                    Game.SetScene(new Title(Game, 0, "_0"), new Fade(shortFadeTime, true, true));
                 }
             }
         }

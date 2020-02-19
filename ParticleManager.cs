@@ -510,9 +510,9 @@ namespace Giraffe
         }
 
         //セレクトエフェクト
-        public void Serekut(ScenePlay scenePlay, Vec2f pos)
+        public void Serekut(Title title, Vec2f pos)
         {
-            if (scenePlay.ResourcesName == "_0")
+            if (title.ResourcesName == "_0")
             {
                 for (int i = 0; i < 15; i++)
                 {
@@ -525,7 +525,7 @@ namespace Giraffe
                     {
                         pos = pos + new Vec2f(MyRandom.PlusMinus(25), 0) * scale,
                         lifeSpan = MyRandom.Range(60, 120),
-                        imageHndle = ResourceLoader.GetGraph("image_effect/effectleaf" + scenePlay.ResourcesName + ".png"),
+                        imageHndle = ResourceLoader.GetGraph("image_effect/effectleaf" + title.ResourcesName + ".png"),
                         vel = new Vec2f(0, -3f) * scale,
                         //vel = new Vec2f((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed) * scale,
                         force = new Vec2f(MyRandom.Range(-0.08f, -0.12f), MyRandom.Range(-0.08f, 0.02f)) * scale,

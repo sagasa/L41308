@@ -283,7 +283,7 @@ namespace Giraffe
                         Game.fadeAction = true;
                         Game.bgmManager.Set(fadeTime, "title", "result");
                         Game.bgmManager.update = new BgmManager.Update(Game.bgmManager.CrossFade);
-                        Game.SetScene(new Title(Game, 1), new Fade(fadeTime, true, true));
+                        Game.SetScene(new Title(Game, 1, "_0"), new Fade(fadeTime, true, true));
                     }
                 }
             }

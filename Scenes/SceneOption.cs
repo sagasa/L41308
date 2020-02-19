@@ -109,7 +109,7 @@ namespace Giraffe
                     {
                         Sound.Play("decision_SE.mp3");
                         Game.fadeAction = true;
-                        Game.SetScene(new Title(Game,0), new Fade(30, true, true));
+                        Game.SetScene(new Title(Game,0, "_0"), new Fade(30, true, true));
                     }
                     else
                     {
