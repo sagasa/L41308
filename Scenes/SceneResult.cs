@@ -69,7 +69,7 @@ namespace Giraffe
 
         private int shadow = ResourceLoader.GetGraph("image_result/shadow25.png");
         private int cursor = ResourceLoader.GetGraph("image_result/cursor.png");
-        private int coron = ResourceLoader.GetGraph("image_result/rcolon.png");
+        private int colon = ResourceLoader.GetGraph("image_result/rcolon.png");
         private int newImage = ResourceLoader.GetGraph("image_result/new.png");
 
         enum State
@@ -92,6 +92,7 @@ namespace Giraffe
 
         public override void OnLoad()
         {
+            DX.InitFontToHandle();
             DX.SetFontSize(50);//文字サイズの指定
             //文字とか枠とかの色の指定
             DX.SetKeyInputStringColor(DX.GetColor(63, 42, 11),/*入力文字列の色*/
@@ -371,10 +372,12 @@ namespace Giraffe
         {
             DX.DrawGraph(0, 0, ResourceLoader.GetGraph("tree_top_" + _scenePlay.StageNum + ".png"));
             DX.DrawGraph(0, 0, ResourceLoader.GetGraph("image_result/result_bg.png"));
-
-            //タイムとスコアはずっと表示
-            NumberDraw.ScoreDraw(0, frameX, frameY, fontInterval1, fontScale1, "image_result/result_num_");
-
+            
+            int scoreLeftCounter = 0;
+            int bonusLeftCounter = 0;
+            int timeLeftCounter = 0;
+            NumberDraw.ScoreDraw(entry.score, frameX, frameY, fontInterval1, fontScale1, "image_result/result_num_", ref scoreLeftCounter);
+            NumberDraw.TimeDraw(DateTime.FromBinary(entry.timeBinary), frameX, frameY + 200, fontInterval1, fontScale1, "image_result/result_num_", ref timeLeftCounter);
             
             if (scoreEval != Eval.none)//スコアの評価
             {
@@ -383,10 +386,11 @@ namespace Giraffe
             if (timeEval != Eval.none)//タイムの評価
             {
                 DX.DrawRotaGraph(70, 190, rankImageScale * rankAnimationScale, 0, ResourceLoader.GetGraph("image_result/rank_" + (int)timeEval + ".png"));
+                NumberDraw.ScoreDraw(timeBonus[(int)timeEval], frameX + fontInterval1 * scoreLeftCounter, frameY + 40, fontInterval2, fontScale2, "image_result/result_num_", ref bonusLeftCounter);
                 //()と+
-                //DX.DrawRotaGraph(frameX + fontInterval1 * scoreLeftCounter - fontInterval1 / 3, frameY + 5, fontScale2, 0, ResourceLoader.GetGraph("image_result/brackets1.png"));
-                //DX.DrawRotaGraph(frameX + fontInterval1 * scoreLeftCounter, frameY + 5, fontScale2, 0, ResourceLoader.GetGraph("image_result/plus.png"));
-                //DX.DrawRotaGraph(frameX + fontInterval1 * scoreLeftCounter + fontInterval2 * (bonusLeftCounter + 1), frameY + 5, fontScale2, 0, ResourceLoader.GetGraph("image_result/brackets2.png"));
+                DX.DrawRotaGraph(frameX + fontInterval1 * scoreLeftCounter - fontInterval1 / 3, frameY + 5, fontScale2, 0, ResourceLoader.GetGraph("image_result/brackets(.png"));
+                DX.DrawRotaGraph(frameX + fontInterval1 * scoreLeftCounter, frameY + 5, fontScale2, 0, ResourceLoader.GetGraph("image_result/plus.png"));
+                DX.DrawRotaGraph(frameX + fontInterval1 * scoreLeftCounter + fontInterval2 * (bonusLeftCounter + 1), frameY + 5, fontScale2, 0, ResourceLoader.GetGraph("image_result/brackets).png"));
             }
 
             if (state == State.NameGet)
@@ -415,8 +419,7 @@ namespace Giraffe
                 DX.DrawRotaGraph(ranking_X, ranking_Y, 1, 0, ResourceLoader.GetGraph("image_result/back.png"));
 
                 //ランキングの表示
-                Game.hightScore.RankingDraw(_scenePlay.StageNum, scoreRank);
-
+                Game.hightScore.ScoreRankingDraw(_scenePlay.StageNum, scoreRank);
             }
             else if (state == State.Result)
             {
@@ -426,36 +429,6 @@ namespace Giraffe
                 DX.DrawRotaGraph(result_X[1], result_Y, 1, 0, ResourceLoader.GetGraph("image_result/ranking.png"));
                 DX.DrawRotaGraph(result_X[2], result_Y, 1, 0, ResourceLoader.GetGraph("image_result/back.png"));
             }
-
-            
-            int scoreLeftCounter = 0;
-            int bonusLeftCounter = 0;
-            int timeLeftCounter = 0;
-            ////スコア
-            //NumberDraw.ScoreDraw(bestScore, frameX, frameY + 50, fontInterval1, fontScale1, "image_result/result_num_");
-            //NumberDraw.ScoreDraw(currentScore, frameX, frameY, fontInterval1, fontScale1, "image_result/result_num_", ref scoreLeftCounter);
-            ////タイム
-            //NumberDraw.TimeDraw(bestTime, frameX, 246, fontInterval1, fontScale1, "image_result/result_num_", ref timeLeftCounter);
-            //DX.DrawRotaGraph(frameX + fontInterval1 * timeLeftCounter, 246, 0.2, 0, coron);
-            //NumberDraw.TimeDraw(currentTime, frameX, 200, fontInterval1, fontScale1, "image_result/result_num_", ref timeLeftCounter);
-            //DX.DrawRotaGraph(frameX + fontInterval1 * timeLeftCounter, 200, 0.2, 0, coron);
-            ////評価とタイムボーナス
-            //for (int i = 0; i < ranks.Length; i++)
-            //{
-            //    if (timeEval == ranks[i])
-            //    {   //タイムボーナス
-            //        NumberDraw.ScoreDraw(timeBonus[i], frameX + fontInterval2 + fontInterval1 * scoreLeftCounter, frameY + 5,
-            //            fontInterval2, fontScale2, "image_result/result_num_", ref bonusLeftCounter);
-            //    }
-            //}
-            //if (blinkMessage && currentScore > bestScore)
-            //{//スコアの「new」
-            //    DX.DrawRotaGraph(frameX + 65 + fontInterval1 * (scoreLeftCounter + 1) + fontInterval1 / 2 * bonusLeftCounter, frameY, 1, 0, newImage);
-            //}
-            //if (blinkMessage && (currentTime[0] * 3600 + currentTime[1] * 60 + currentTime[2] < bestTime[0] * 3600 + bestTime[1] * 60 + bestTime[2]))
-            //{//タイムの「new」
-            //    DX.DrawRotaGraph(frameX + 65 + fontInterval1 * (timeLeftCounter + 3), 200, 1, 0, newImage);
-            //}
         }
 
         public override void OnExit()
