@@ -38,6 +38,15 @@ namespace SAGASALib
             (render, animation) => { render.EarProgress += animation.Delta; },
             (render, animation) => { render.EarProgress = 0; });
 
+        public static readonly AnimationEntry<PlayerRender> Eat = new AnimationEntry<PlayerRender>(40,
+            (render, animation) =>
+            {
+                if (animation.Progress < 0.5f)
+                    render.MouthProgress += animation.Delta * 2;
+                else
+                    render.MouthProgress -= animation.Delta * 2; ;
+            },
+            (render, animation) => { animation.Progress = 1f - render.MouthProgress; },true);
         //首を動かす
         public static readonly AnimationEntry<PlayerRender> IdleAnimation = new AnimationEntry<PlayerRender>(100,
             (render, animation) =>

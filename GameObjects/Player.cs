@@ -73,6 +73,7 @@ namespace Giraffe
             _animation.StopAll();
             _animation.Start(Animations.GoalAngle);
             _animation.Start(Animations.GoalNeck);
+            _animation.StartNext(Animations.GoalNeck, Animations.Eat);
         }
         //Mapの1番下(地上)にいるか
         public bool IsOnGround() => GetMap().MapSize.Y <= pos.Y+StandOffset;
