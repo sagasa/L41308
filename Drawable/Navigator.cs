@@ -31,6 +31,9 @@ namespace Giraffe
 
         private static readonly Vec2f offset = new Vec2f(_space, _space);
 
+        private static readonly Vec2f upperOffset = new Vec2f(0, 35);
+
+
         public void Draw()
         {
             _list.ForEach(entry =>
@@ -43,8 +46,9 @@ namespace Giraffe
                     Vec2f center = Screen.Size / 2;
                     Vec2f target = _scene.GetScreenPos(entry.Item1);
 
-                    Vec2f pos0 = offset;
-                    Vec2f pos1 = Screen.Size.SetY(0) + offset * new Vec2f(-1, 1);
+                    
+                    Vec2f pos0 = offset+ upperOffset;
+                    Vec2f pos1 = Screen.Size.SetY(0) + offset * new Vec2f(-1, 1)+ upperOffset;
                     Vec2f pos2 = Screen.Size + offset * new Vec2f(-1, -1);
                     Vec2f pos3 = Screen.Size.SetX(0) + offset * new Vec2f(1, -1);
 
