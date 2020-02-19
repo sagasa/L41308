@@ -119,6 +119,7 @@ namespace Giraffe.Saves
 
         public void ScoreRankingDraw(int stageNum, int rank)
         {
+            const string image = "image_result/num_";
             const int rankX = 80;
             const int nameX = rankX + 50;
             const int dateX = nameX + 10;
@@ -134,14 +135,14 @@ namespace Giraffe.Saves
             DX.SetFontSize(fontScale);
             for (int i = 0; i < 5; i++)
             {
-                DX.DrawRotaGraph(rankX, line1 + heightInterval * i, imageScale, 0, ResourceLoader.GetGraph("image_result/result_num_" + (i + 1) + ".png"));
+                DX.DrawRotaGraph(rankX, line1 + heightInterval * i, imageScale, 0, ResourceLoader.GetGraph(image + (i + 1) + ".png"));
                 if (i == rank)//プレイヤーの色だけ違う色に
                     DX.DrawString(nameX, nameY + heightInterval * i, scoreRankings[stageNum][i].name, DX.GetColor(255, 131, 0));
                 else
                     DX.DrawString(nameX, nameY + heightInterval * i, scoreRankings[stageNum][i].name, DX.GetColor(63, 42, 11));
-                NumberDraw.ScoreDraw(scoreRankings[stageNum][i].score, scoreX, line1 + heightInterval * i, widthInterval, imageScale, "image_result/result_num_");
-                NumberDraw.TimeDraw(DateTime.FromBinary(scoreRankings[stageNum][i].timeBinary), timeX, line2 + heightInterval * i, widthInterval, imageScale, "image_result/result_num_");
-                NumberDraw.DateDraw(DateTime.FromBinary(scoreRankings[stageNum][i].dateBinary), dateX, line2 + heightInterval * i, widthInterval, imageScale, "image_result/result_num_");
+                NumberDraw.ScoreDraw(scoreRankings[stageNum][i].score, scoreX, line1 + heightInterval * i, widthInterval, imageScale, image);
+                NumberDraw.TimeDraw(DateTime.FromBinary(scoreRankings[stageNum][i].timeBinary), timeX, line2 + heightInterval * i, widthInterval, imageScale, image);
+                NumberDraw.DateDraw(DateTime.FromBinary(scoreRankings[stageNum][i].dateBinary), dateX, line2 + heightInterval * i, widthInterval, imageScale, image);
             }
         }
     }

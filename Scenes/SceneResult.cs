@@ -38,10 +38,6 @@ namespace Giraffe
         private Result_XNum result_XNum;
         private readonly int[] result_X = new int[] { 100, Screen.Width / 2, Screen.Width - 100 };//位置調整中
         private const int result_Y = Screen.Height - 200;
-
-
-
-
         
         private int counter = 0;//wait,fade,blinkのカウンター
         private const int fadeTime = 120;
@@ -66,6 +62,8 @@ namespace Giraffe
         private bool playerMove = false;
         private bool playerOnRight = true;
         private DummyPlayer dummyPlayer;
+
+        private const string numImage = "image_result/num_";
 
         private int shadow = ResourceLoader.GetGraph("image_result/shadow25.png");
         private int cursor = ResourceLoader.GetGraph("image_result/cursor.png");
@@ -376,8 +374,8 @@ namespace Giraffe
             int scoreLeftCounter = 0;
             int bonusLeftCounter = 0;
             int timeLeftCounter = 0;
-            NumberDraw.ScoreDraw(entry.score, frameX, frameY, fontInterval1, fontScale1, "image_result/result_num_", ref scoreLeftCounter);
-            NumberDraw.TimeDraw(DateTime.FromBinary(entry.timeBinary), frameX, frameY + 200, fontInterval1, fontScale1, "image_result/result_num_", ref timeLeftCounter);
+            NumberDraw.ScoreDraw(entry.score, frameX, frameY, fontInterval1, fontScale1, numImage, ref scoreLeftCounter);
+            NumberDraw.TimeDraw(DateTime.FromBinary(entry.timeBinary), frameX, frameY + 200, fontInterval1, fontScale1, numImage, ref timeLeftCounter);
             
             if (scoreEval != Eval.none)//スコアの評価
             {
@@ -386,7 +384,7 @@ namespace Giraffe
             if (timeEval != Eval.none)//タイムの評価
             {
                 DX.DrawRotaGraph(70, 190, rankImageScale * rankAnimationScale, 0, ResourceLoader.GetGraph("image_result/rank_" + (int)timeEval + ".png"));
-                NumberDraw.ScoreDraw(timeBonus[(int)timeEval], frameX + fontInterval1 * scoreLeftCounter, frameY + 40, fontInterval2, fontScale2, "image_result/result_num_", ref bonusLeftCounter);
+                NumberDraw.ScoreDraw(timeBonus[(int)timeEval], frameX + fontInterval1 * scoreLeftCounter, frameY + 40, fontInterval2, fontScale2, numImage, ref bonusLeftCounter);
                 //()と+
                 DX.DrawRotaGraph(frameX + fontInterval1 * scoreLeftCounter - fontInterval1 / 3, frameY + 5, fontScale2, 0, ResourceLoader.GetGraph("image_result/brackets(.png"));
                 DX.DrawRotaGraph(frameX + fontInterval1 * scoreLeftCounter, frameY + 5, fontScale2, 0, ResourceLoader.GetGraph("image_result/plus.png"));
