@@ -21,6 +21,7 @@ namespace SAGASALib
                 //歩く速度定数
                 const int speed = 2;
                 render.LegProgress += Math.Abs(render.Target.vel.X * speed);
+                render.TailProgress += Math.Abs(render.Target.vel.X * speed* 0.6f);
 
                 // Console.WriteLine(render.TailProgress);
                 if (1f < render.LegProgress)
@@ -28,6 +29,10 @@ namespace SAGASALib
                 if (1f < render.TailProgress)
                     render.TailProgress = 0;
             },null,true);
+
+        public static readonly AnimationEntry<PlayerRender> Wink = new AnimationEntry<PlayerRender>(10,
+            (render, animation) => { render.EyeProgress += animation.Delta; },
+            (render, animation) => { render.EyeProgress=0; });
         //首を動かす
         public static readonly AnimationEntry<PlayerRender> IdleAnimation = new AnimationEntry<PlayerRender>(100,
             (render, animation) =>

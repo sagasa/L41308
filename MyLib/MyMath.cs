@@ -77,7 +77,6 @@ namespace SAGASALib
 
             if ((0 < t1 && t1 < 1) && (0 < t2 && t2 < 1))
             {
-                Console.WriteLine("calc "+ p0+" "+a+" "+t2);
                 return p0 +  a* t2;
             }
             else
