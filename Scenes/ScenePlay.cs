@@ -171,15 +171,13 @@ namespace Giraffe
             playerIcon.Draw();
 
             DX.DrawRotaGraph(100, 23, 0.6, 0, stageName);
-            DX.DrawRotaGraph(Screen.Width / 2 - 22, 23, 0.6, 0, scoreImage);
-            DX.DrawRotaGraph(Screen.Width - 155, 25, 0.55, 0, watch);
-            DX.DrawRotaGraph(Screen.Width - 75, 25, 0.7, 0, colon);
-
-            int a = 0;
             //スコア
-            NumberDraw.ScoreDraw(score, Screen.Width / 2 - 10, 25, fontInterval, fontScale, "image_effect/time_", true);
+            DX.DrawRotaGraph(Screen.Width / 2 - 50, 23, 0.6, 0, scoreImage);
+            NumberDraw.ScoreDraw(score, Screen.Width / 2 - 30, 25, fontInterval, fontScale, "image_effect/time_", true, false);
             //タイム
-            NumberDraw.TimeDraw(time, Screen.Width - 150, 25, fontInterval, fontScale, "image_effect/time_", true);
+            DX.DrawRotaGraph(Screen.Width / 2 + 110, 25, 0.55, 0, watch);
+            NumberDraw.TimeDraw(time, Screen.Width / 2 + 150, 25, fontInterval, fontScale, "image_effect/time_", false);
+            
             //NumberDraw.TimeDraw(time, Screen.Width - 150, 25, "image_effect/time_", fontInterval, fontScale, true);
         }
 
