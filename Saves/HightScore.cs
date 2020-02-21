@@ -52,18 +52,18 @@ namespace Giraffe.Saves
             for (int i = 0; i < 5; i++)
             {
                 //スコアのソート
-                if (scoreRankings[stageNum][i].score <= scoreRankings[stageNum][5].score)
+                if (scoreRankings[stageNum][i].score < scoreRankings[stageNum][5].score)
                 {
                     Entry w = scoreRankings[stageNum][i];
                     scoreRankings[stageNum][i] = scoreRankings[stageNum][5];
                     scoreRankings[stageNum][5] = w;
                 }
                 //タイム
-                if (DateTime.FromBinary(timeRankings[stageNum][i].timeBinary) >= DateTime.FromBinary(scoreRankings[stageNum][5].timeBinary))
+                if (DateTime.FromBinary(timeRankings[stageNum][i].timeBinary) > DateTime.FromBinary(timeRankings[stageNum][5].timeBinary))
                 {
                     Entry w = timeRankings[stageNum][i];
-                    timeRankings[stageNum][i] = scoreRankings[stageNum][5];
-                    scoreRankings[stageNum][5] = w;
+                    timeRankings[stageNum][i] = timeRankings[stageNum][5];
+                    timeRankings[stageNum][5] = w;
                 }
             }
             //5番を削除
@@ -93,13 +93,13 @@ namespace Giraffe.Saves
                     scoreRankings[stageNum][5] = w;
                 }
                 //タイム
-                if (DateTime.FromBinary(timeRankings[stageNum][i].timeBinary) >= DateTime.FromBinary(scoreRankings[stageNum][5].timeBinary))
+                if (DateTime.FromBinary(timeRankings[stageNum][i].timeBinary) >= DateTime.FromBinary(timeRankings[stageNum][5].timeBinary))
                 {
                     if (timeRank == 10)
                         timeRank = i;
                     Entry w = timeRankings[stageNum][i];
-                    timeRankings[stageNum][i] = scoreRankings[stageNum][5];
-                    scoreRankings[stageNum][5] = w;
+                    timeRankings[stageNum][i] = timeRankings[stageNum][5];
+                    timeRankings[stageNum][5] = w;
                 }
             }
             //5番を削除
@@ -117,7 +117,7 @@ namespace Giraffe.Saves
             return false;
         }
 
-        public void ScoreRankingDraw(int stageNum, int rank, int x = 0)
+        public void ScoreRankingDraw(int stageNum, int rank, int x = 0, int y = 0)
         {
             const string image = "image_result/num_";
             const int rankX = 80;
@@ -135,18 +135,18 @@ namespace Giraffe.Saves
             DX.SetFontSize(fontScale);
             for (int i = 0; i < 5; i++)
             {
-                DX.DrawRotaGraph(x+rankX, line1 + heightInterval * i, imageScale, 0, ResourceLoader.GetGraph(image + (i + 1) + ".png"));
+                DX.DrawRotaGraph(x + rankX, y + line1 + heightInterval * i, imageScale, 0, ResourceLoader.GetGraph(image + (i + 1) + ".png"));
                 if (i == rank)//プレイヤーの色だけ違う色に
-                    DX.DrawString(x+nameX, nameY + heightInterval * i, scoreRankings[stageNum][i].name, DX.GetColor(255, 131, 0));
+                    DX.DrawString(x + nameX, y + nameY + heightInterval * i, scoreRankings[stageNum][i].name, DX.GetColor(255, 131, 0));
                 else
-                    DX.DrawString(x+nameX, nameY + heightInterval * i, scoreRankings[stageNum][i].name, DX.GetColor(63, 42, 11));
-                NumberDraw.ScoreDraw(scoreRankings[stageNum][i].score, x+scoreX, line1 + heightInterval * i, widthInterval, imageScale, image);
-                NumberDraw.TimeDraw(DateTime.FromBinary(scoreRankings[stageNum][i].timeBinary), x+timeX, line2 + heightInterval * i, widthInterval, imageScale, image);
-                NumberDraw.DateDraw(DateTime.FromBinary(scoreRankings[stageNum][i].dateBinary), x+dateX, line2 + heightInterval * i, widthInterval, imageScale, image);
+                    DX.DrawString(x + nameX, y + nameY + heightInterval * i, scoreRankings[stageNum][i].name, DX.GetColor(63, 42, 11));
+                NumberDraw.ScoreDraw(scoreRankings[stageNum][i].score, x + scoreX, y + line1 + heightInterval * i, widthInterval, imageScale, image);
+                NumberDraw.TimeDraw(DateTime.FromBinary(scoreRankings[stageNum][i].timeBinary), x + timeX, y + line2 + heightInterval * i, widthInterval, imageScale, image);
+                NumberDraw.DateDraw(DateTime.FromBinary(scoreRankings[stageNum][i].dateBinary), x + dateX, y + line2 + heightInterval * i, widthInterval, imageScale, image);
             }
         }
 
-        public void TimeRankingDraw(int stageNum, int rank, int x = 0)
+        public void TimeRankingDraw(int stageNum, int rank, int x = 0, int y = 0)
         {
             const string image = "image_result/num_";
             const int rankX = 80;
@@ -164,14 +164,14 @@ namespace Giraffe.Saves
             DX.SetFontSize(fontScale);
             for (int i = 0; i < 5; i++)
             {
-                DX.DrawRotaGraph(x + rankX, line1 + heightInterval * i, imageScale, 0, ResourceLoader.GetGraph(image + (i + 1) + ".png"));
+                DX.DrawRotaGraph(x + rankX, y + line1 + heightInterval * i, imageScale, 0, ResourceLoader.GetGraph(image + (i + 1) + ".png"));
                 if (i == rank)//プレイヤーの色だけ違う色に
-                    DX.DrawString(x + nameX, nameY + heightInterval * i, timeRankings[stageNum][i].name, DX.GetColor(255, 131, 0));
+                    DX.DrawString(x + nameX, y + nameY + heightInterval * i, timeRankings[stageNum][i].name, DX.GetColor(255, 131, 0));
                 else
-                    DX.DrawString(x + nameX, nameY + heightInterval * i, timeRankings[stageNum][i].name, DX.GetColor(63, 42, 11));
-                NumberDraw.ScoreDraw(timeRankings[stageNum][i].score, x + scoreX, line1 + heightInterval * i, widthInterval, imageScale, image);
-                NumberDraw.TimeDraw(DateTime.FromBinary(timeRankings[stageNum][i].timeBinary), x + timeX, line2 + heightInterval * i, widthInterval, imageScale, image);
-                NumberDraw.DateDraw(DateTime.FromBinary(timeRankings[stageNum][i].dateBinary), x + dateX, line2 + heightInterval * i, widthInterval, imageScale, image);
+                    DX.DrawString(x + nameX, y + nameY + heightInterval * i, timeRankings[stageNum][i].name, DX.GetColor(63, 42, 11));
+                NumberDraw.ScoreDraw(timeRankings[stageNum][i].score, x + scoreX, y + line2 + heightInterval * i, widthInterval, imageScale, image);
+                NumberDraw.TimeDraw(DateTime.FromBinary(timeRankings[stageNum][i].timeBinary), x + timeX, y + line1 + heightInterval * i, widthInterval, imageScale, image);
+                NumberDraw.DateDraw(DateTime.FromBinary(timeRankings[stageNum][i].dateBinary), x + dateX, y + line2 + heightInterval * i, widthInterval, imageScale, image);
             }
         }
     }

@@ -43,12 +43,12 @@ namespace Giraffe
         private const int fadeTime = 120;
 
         //ランキング表示
-        enum Ranking { score=0,time=Screen.Width}
+        enum Ranking { score = 0, time = Screen.Width }
         Ranking ranking = Ranking.score;
-        float rankingPos = 0;
-        delegate void RankingUpdate();
-        RankingUpdate rankingUpdate;
-        bool scroll = false;
+        float rankingPosX = 0;
+        float rankingPosY = 0;
+        delegate void ScrollUpdate();
+        ScrollUpdate scrollUpdate;
 
         //描画用定数
         private const int frameX = 240;
@@ -240,59 +240,62 @@ namespace Giraffe
                         Sound.Play("decision_SE.mp3");
                         Game.settings.nickname = entry.name;
                         Game.hightScore.RankingSort(entry, _scenePlay.StageNum, ref scoreRank, ref timeRank);
+                        SaveManager.Save(HIGHTSCORE, Game.hightScore);
                         state = State.Ranking;
                     }
                 }
                 else if (state == State.Ranking)
                 {
-                    //画面スクロール
-                    
                     //ランキングが表示しきれなかったら横スクロール出来るようにする
-
-                    if (!scroll && ranking == Ranking.score && Input.RIGHT.IsPush())
+                    if (scrollUpdate == null && rankingPosY > -Screen.Height)
                     {
-                        rankingUpdate = new RankingUpdate(Scroll);
+                        scrollUpdate = new ScrollUpdate(DownScroll);
                     }
-                    else if (!scroll && ranking == Ranking.time && Input.LEFT.IsPush())
+                    else if (scrollUpdate == null && ranking == Ranking.score && Input.RIGHT.IsPush())
                     {
-                        rankingUpdate = new RankingUpdate(Scroll);
+                        scrollUpdate = new ScrollUpdate(RightScroll);
                     }
-
-                    void Scroll()
+                    else if (scrollUpdate == null && ranking == Ranking.time && Input.LEFT.IsPush())
                     {
-                        scroll = true;
+                        scrollUpdate = new ScrollUpdate(LeftScroll);
+                    }
+                    //画面スクロール
+                    void RightScroll()
+                    {
                         const int time = 60;
-                        if (ranking == Ranking.score)
+                        rankingPosX += (float)Screen.Width / time;
+                        if (rankingPosX >= (int)Ranking.time)
                         {
-                            rankingPos += Screen.Width / time;
-                            if (rankingPos >= (int)Ranking.time)
-                            {
-                                ranking = Ranking.time;
-                                rankingPos = (int)Ranking.time;
-                                scroll = false;
-                                rankingUpdate = Delegate.Remove(rankingUpdate, new RankingUpdate(Scroll)) as RankingUpdate;
-                            }
-
-                        }
-                        else
-                        {
-                            rankingPos -= Screen.Width / time;
-                            if (rankingPos <= (int)Ranking.score)
-                            {
-                                ranking = Ranking.score;
-                                rankingPos = (int)Ranking.score;
-                                scroll = false;
-                                rankingUpdate = Delegate.Remove(rankingUpdate, new RankingUpdate(Scroll)) as RankingUpdate;
-                            }
+                            ranking = Ranking.time;
+                            rankingPosX = (int)Ranking.time;
+                            scrollUpdate = Delegate.Remove(scrollUpdate, new ScrollUpdate(RightScroll)) as ScrollUpdate;
                         }
                     }
-
-                    if (rankingUpdate != null)
+                    void LeftScroll()
                     {
-                        rankingUpdate();
+                        const int time = 60;
+                        rankingPosX -= (float)Screen.Width / time;
+                        if (rankingPosX <= (int)Ranking.score)
+                        {
+                            ranking = Ranking.score;
+                            rankingPosX = (int)Ranking.score;
+                            scrollUpdate = Delegate.Remove(scrollUpdate, new ScrollUpdate(LeftScroll)) as ScrollUpdate;
+                        }
+                    }
+                    void DownScroll()
+                    {
+                        const int time = 120;
+                        rankingPosY -= (float)Screen.Height * 2 / time;
+                        if (rankingPosY <= -Screen.Height * 2)
+                        {
+                            rankingPosY = -Screen.Height * 2;
+                            scrollUpdate = Delegate.Remove(scrollUpdate, new ScrollUpdate(DownScroll)) as ScrollUpdate;
+                        }
                     }
 
-                    if (!scroll && Input.ACTION.IsPush())//画面スクロールが終わっているときにスペースキー
+                    scrollUpdate?.Invoke();
+
+                    if (scrollUpdate == null && Input.ACTION.IsPush())//画面スクロールが終わっているときにスペースキー
                     {
                         state = State.Result;
                         result_XNum = Result_XNum.Ranking;
@@ -333,85 +336,7 @@ namespace Giraffe
                     }
                 }
             }
-
-
-            /*
-            if (!playerMove)
-            {
-                if (playerOnRight && cursorPosX == fixedPosX[0])
-                {
-                    playerMove = true;
-                }
-                else if (!playerOnRight && cursorPosX == fixedPosX[1])
-                {
-                    playerMove = true;
-                }
-            }
-            else if (playerMove)
-            {
-                if (playerOnRight && cursorPosX == fixedPosX[1])
-                {
-                    playerMove = false;
-                }
-                else if (!playerOnRight && cursorPosX == fixedPosX[0])
-                {
-                    playerMove = false;
-                }
-            }
-
-            if (playerMove)
-            {
-                if (playerOnRight)
-                {
-                    dummyPlayer.AnimationManager.Start(Animations.Test2);
-                    dummyPlayer.isDunnyRight = false;
-                    playerMoveCounter++;
-                    if (playerMoveCounter == playerAnimationTime)
-                    {
-                        playerOnRight = !playerOnRight;
-                        playerMoveCounter = 0;
-                    }
-                }
-                else
-                {
-                    dummyPlayer.isDunnyRight = true;
-                    dummyPlayer.AnimationManager.Start(Animations.Test);
-                    playerMoveCounter++;
-                    if (playerMoveCounter == playerAnimationTime)
-                    {
-                        playerOnRight = !playerOnRight;
-                        playerMoveCounter = 0;
-                    }
-                }
-                //if (dummyPlayer.pos.X < fixedPosX[0])
-                //{
-                //    dummyPlayer.pos.X
-                //}
-            }
-
-            else if (!Game.fadeAction)
-            {
-                if (Input.LEFT.IsPush())
-                {
-                    dummyPlayer.isDunnyRight = false;
-                }
-                else if (Input.RIGHT.IsPush())
-                {
-                    dummyPlayer.isDunnyRight = true;
-                }
-            }
-
-            dummyPlayer.Update();
             
-            if (cursorPosX == result_X[result_X.Length - 1] && (Input.RIGHT.IsPush() || Input.RIGHT.IsHold()))
-            {
-                if (playerMove)
-                {
-                    dummyPlayer.isDunnyRight = true;
-                }
-            }
-            */
-
         }
 
         public override void Draw()
@@ -443,13 +368,7 @@ namespace Giraffe
             {
                 DX.DrawGraph(0, 0, shadow);
                 if (!nameGet)
-                {
                     DX.DrawRotaGraph(nameGet_X[(int)nameGet_XNum], nameGet_Y, 1, 0, cursor);
-                }
-                else
-                {
-                    //ネームスペース用のカーソル
-                }
                 DX.DrawGraph(0, 0, ResourceLoader.GetGraph("image_result/nameget_message.png"));
                 DX.DrawRotaGraph(Screen.Width / 2, Screen.Height / 2, 1, 0, ResourceLoader.GetGraph("image_result/name_space.png"));
                 if (!nameGet)//入力した名前を表示
@@ -459,19 +378,20 @@ namespace Giraffe
             }
             else if (state == State.Ranking)
             {
-                DX.DrawGraph(0, 0, shadow);
-                DX.DrawRotaGraph(ranking_X, ranking_Y, 1, 0, cursor);
+                DX.DrawGraph(0, -Screen.Height * 2 - (int)rankingPosY, ResourceLoader.GetGraph("image_result/scroll_shadow.png"));
+                DX.DrawRotaGraph(ranking_X, -Screen.Height * 2 - (int)rankingPosY + ranking_Y, 1, 0, cursor);
                 //ランキング表示
-                DX.DrawGraph((int)rankingPos, -50, ResourceLoader.GetGraph("image_result/ranking_bg.png"));
-                Game.hightScore.ScoreRankingDraw(_scenePlay.StageNum, scoreRank, (int)rankingPos);
-                DX.DrawGraph(Screen.Width + (int)rankingPos, -50, ResourceLoader.GetGraph("image_result/ranking_bg.png"));
-                Game.hightScore.TimeRankingDraw(_scenePlay.StageNum, timeRank, Screen.Width + (int)rankingPos);
-                DX.DrawRotaGraph(ranking_X, ranking_Y, 1, 0, ResourceLoader.GetGraph("image_result/back.png"));
-                Game.hightScore.ScoreRankingDraw(_scenePlay.StageNum, scoreRank, Screen.Width+(int)rankingPos);
+                DX.DrawGraph((int)Ranking.score - (int)rankingPosX, -Screen.Height * 2 - (int)rankingPosY - 50, ResourceLoader.GetGraph("image_result/ranking_bg.png"));
+                Game.hightScore.ScoreRankingDraw(_scenePlay.StageNum, scoreRank, (int)Ranking.score - (int)rankingPosX, -Screen.Height * 2 - (int)rankingPosY);
+                DX.DrawGraph((int)Ranking.time - (int)rankingPosX, -Screen.Height * 2 - (int)rankingPosY - 50, ResourceLoader.GetGraph("image_result/ranking_bg.png"));
+                Game.hightScore.TimeRankingDraw(_scenePlay.StageNum, timeRank, (int)Ranking.time - (int)rankingPosX, -Screen.Height * 2 - (int)rankingPosY);
+
+                DX.DrawRotaGraph(ranking_X, -Screen.Height * 2 - (int)rankingPosY + ranking_Y, 1, 0, ResourceLoader.GetGraph("image_result/back.png"));
+                Game.hightScore.ScoreRankingDraw(_scenePlay.StageNum, scoreRank, Screen.Width + (int)rankingPosX);
             }
             else if (state == State.Result)
             {
-                dummyPlayer.Draw();
+                //dummyPlayer.Draw();
                 DX.DrawRotaGraph(result_X[(int)result_XNum], result_Y, 1, 0, cursor);
                 DX.DrawRotaGraph(result_X[0], result_Y, 1, 0, ResourceLoader.GetGraph("image_result/restart.png"));
                 DX.DrawRotaGraph(result_X[1], result_Y, 1, 0, ResourceLoader.GetGraph("image_result/ranking.png"));
